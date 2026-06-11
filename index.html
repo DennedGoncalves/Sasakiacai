@@ -192,19 +192,19 @@ textarea.inp{resize:vertical;min-height:65px;}
     <div class="chip" style="font-size:9px;border-color:var(--b2);color:var(--m2);">Supabase ready</div>
   </div>
   <div style="display:flex;flex-direction:column;gap:9px;width:100%;max-width:340px;">
-    <div onclick="doLogin('cliente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div onclick="window.doLogin('cliente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#2d0a40,#5c1a7a);display:flex;align-items:center;justify-content:center;font-size:22px;">👤</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Cliente</div><div style="font-size:10px;color:var(--m1);">Cardápio e pedidos</div></div>
     </div>
-    <div onclick="doLogin('atendente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div onclick="window.doLogin('atendente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#0a2040,#1a5c7a);display:flex;align-items:center;justify-content:center;font-size:22px;">🧑‍💼</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Atendente / Caixa</div><div style="font-size:10px;color:var(--m1);">Pedidos, PDV e caixa</div></div>
     </div>
-    <div onclick="doLogin('entregador')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div onclick="window.doLogin('entregador')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#0a3020,#1a7a3a);display:flex;align-items:center;justify-content:center;font-size:22px;">🛵</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Entregador</div><div style="font-size:10px;color:var(--m1);">Minhas entregas</div></div>
     </div>
-    <div onclick="doLogin('admin')" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(168,85,247,.04));border:1px solid rgba(168,85,247,.3);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div onclick="window.doLogin('admin')" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(168,85,247,.04));border:1px solid rgba(168,85,247,.3);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#3a1800,#7a4000);display:flex;align-items:center;justify-content:center;font-size:22px;">👑</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Administrador</div><div style="font-size:10px;color:var(--m1);">Acesso total · 16 módulos</div></div>
     </div>
@@ -214,16 +214,16 @@ textarea.inp{resize:vertical;min-height:65px;}
 <div id="shell" style="display:none;">
   <div id="topbar">
     <div style="display:flex;align-items:center;gap:9px;">
-      <div class="ib" onclick="toggleSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+      <div class="ib" onclick="window.toggleSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
       <div class="tb-logo">SASAKI</div>
     </div>
     <div class="tb-r">
       <div class="tb-role" id="tb-role">—</div>
-      <div class="ib" onclick="openM('modal-notifs')">
+      <div class="ib" onclick="window.openM('modal-notifs')">
         <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <div class="ib-bd hidden" id="notif-badge">0</div>
       </div>
-      <div class="ib" onclick="doLogin('login')"><svg viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg></div>
+      <div class="ib" onclick="window.doLogin('login')"><svg viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg></div>
     </div>
   </div>
   <div id="content">
@@ -247,7 +247,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         <div class="chart-wrap" id="dash-chart"></div>
         <div class="chart-lbls" id="dash-lbls"></div>
       </div>
-      <div class="sh mt20"><span class="sh-t">Pedidos recentes</span><span class="sh-a" onclick="goTo('gestao-pedidos')">Ver todos →</span></div>
+      <div class="sh mt20"><span class="sh-t">Pedidos recentes</span><span class="sh-a" onclick="window.goTo('gestao-pedidos')">Ver todos →</span></div>
       <div class="card px" style="margin:0 16px;" id="dash-recent"></div>
       <div class="sp3"></div>
     </div>
@@ -259,7 +259,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         <span class="sh-t">Novos pedidos</span>
         <div class="flex gap8 aic">
           <div class="chip ch-o npulse" id="np-ct">0 aguardando</div>
-          <button class="btn btn-sm btn-s" onclick="playBeep()">🔔 Som</button>
+          <button class="btn btn-sm btn-s" onclick="window.playBeep()">🔔 Som</button>
         </div>
       </div>
       <div class="fcol gap8 px" id="np-list"></div>
@@ -270,11 +270,11 @@ textarea.inp{resize:vertical;min-height:65px;}
     <div class="view" id="v-gestao-pedidos">
       <div class="sp"></div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="fltOrd(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="fltOrd(this,'pendente')">Pendentes</div>
-        <div class="chip ch-d" onclick="fltOrd(this,'preparo')">Preparo</div>
-        <div class="chip ch-d" onclick="fltOrd(this,'entrega')">Entrega</div>
-        <div class="chip ch-d" onclick="fltOrd(this,'entregue')">Entregues</div>
+        <div class="chip ch-p" onclick="window.fltOrd(this,'todos')">Todos</div>
+        <div class="chip ch-d" onclick="window.fltOrd(this,'pendente')">Pendentes</div>
+        <div class="chip ch-d" onclick="window.fltOrd(this,'preparo')">Preparo</div>
+        <div class="chip ch-d" onclick="window.fltOrd(this,'entrega')">Entrega</div>
+        <div class="chip ch-d" onclick="window.fltOrd(this,'entregue')">Entregues</div>
       </div>
       <div class="fcol gap8 px" id="gp-list"></div>
       <div class="sp3"></div>
@@ -290,11 +290,11 @@ textarea.inp{resize:vertical;min-height:65px;}
         </h1>
       </div>
       <div class="scr" style="padding-bottom:10px;">
-        <div class="chip ch-p" onclick="fltCli(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="fltCli(this,'acai')">🍇 Açaí</div>
-        <div class="chip ch-d" onclick="fltCli(this,'tigela')">🥣 Tigela</div>
-        <div class="chip ch-d" onclick="fltCli(this,'adicional')">➕ Adicional</div>
-        <div class="chip ch-d" onclick="fltCli(this,'bebida')">🥤 Bebida</div>
+        <div class="chip ch-p" onclick="window.fltCli(this,'todos')">Todos</div>
+        <div class="chip ch-d" onclick="window.fltCli(this,'acai')">🍇 Açaí</div>
+        <div class="chip ch-d" onclick="window.fltCli(this,'tigela')">🥣 Tigela</div>
+        <div class="chip ch-d" onclick="window.fltCli(this,'adicional')">➕ Adicional</div>
+        <div class="chip ch-d" onclick="window.fltCli(this,'bebida')">🥤 Bebida</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px;" id="client-grid"></div>
       <div class="sp3"></div>
@@ -353,7 +353,7 @@ textarea.inp{resize:vertical;min-height:65px;}
 
         <div class="fld"><div class="lbl">Observações</div><input class="inp" id="cp-obs" placeholder="Sem açúcar, extra granola..."></div>
 
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="createOrder()">
+        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.createOrder()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           Criar pedido
         </button>
@@ -385,10 +385,10 @@ textarea.inp{resize:vertical;min-height:65px;}
           <!-- Cliente + ações rápidas -->
           <div style="display:flex;gap:7px;align-items:center;">
             <input id="cmd-cliente" class="inp" style="flex:1;padding:7px 10px;font-size:12px;" placeholder="👤 Cliente (opcional)">
-            <button class="btn btn-s btn-sm" onclick="cmdScanner()" id="cmd-scanner-btn" title="Modo scanner (Ctrl+B)">
+            <button class="btn btn-s btn-sm" onclick="window.cmdScanner()" id="cmd-scanner-btn" title="Modo scanner (Ctrl+B)">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9V6a1 1 0 011-1h3M3 15v3a1 1 0 001 1h3m11-13h3a1 1 0 011 1v3m-4 11h3a1 1 0 001-1v-3"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
             </button>
-            <button class="btn btn-d btn-sm" onclick="cmdNova()" title="Nova comanda">🗑️</button>
+            <button class="btn btn-d btn-sm" onclick="window.cmdNova()" title="Nova comanda">🗑️</button>
           </div>
         </div>
 
@@ -400,19 +400,19 @@ textarea.inp{resize:vertical;min-height:65px;}
               <div style="font-size:9px;color:var(--m1);font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px;">⚖️ Peso em gramas</div>
               <div style="display:flex;gap:5px;align-items:center;">
                 <input id="cmd-peso-g" class="inp" type="number" placeholder="Ex: 350" style="padding:9px 11px;font-size:16px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;width:110px;"
-                  onkeydown="if(event.key==='Enter')cmdAddPeso()">
+                  onkeydown="if(event.key==='Enter')window.cmdAddPeso()">
                 <div style="font-size:10px;color:var(--m1);min-width:52px;" id="cmd-peso-preview">→ 0,000 kg<br><span style="color:var(--p);" id="cmd-peso-val-preview">R$ 0,00</span></div>
-                <button class="btn btn-p" style="padding:9px 14px;font-size:18px;font-weight:700;" onclick="cmdAddPeso()">+</button>
+                <button class="btn btn-p" style="padding:9px 14px;font-size:18px;font-weight:700;" onclick="window.cmdAddPeso()">+</button>
               </div>
             </div>
           </div>
           <!-- Botões de ação -->
           <div style="display:flex;gap:7px;">
-            <button class="btn btn-s f1 btn-sm" onclick="openM('modal-cmd-produtos')">
+            <button class="btn btn-s f1 btn-sm" onclick="window.openM('modal-cmd-produtos')">
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.94-1.5L23 6H6"/></svg>
               Cardápio
             </button>
-            <button class="btn btn-s f1 btn-sm" onclick="cmdPendentes()" id="cmd-pend-btn">
+            <button class="btn btn-s f1 btn-sm" onclick="window.cmdPendentes()" id="cmd-pend-btn">
               📋 Pendentes <span id="cmd-pend-ct" style="background:var(--acc);color:#fff;border-radius:100px;padding:0 5px;font-size:9px;margin-left:2px;display:none;">0</span>
             </button>
           </div>
@@ -427,16 +427,16 @@ textarea.inp{resize:vertical;min-height:65px;}
         <!-- RODAPÉ — FINALIZAR -->
         <div style="background:var(--s1);border-top:1px solid var(--b1);padding:10px 14px;flex-shrink:0;padding-bottom:calc(10px + env(safe-area-inset-bottom));">
           <div style="display:flex;gap:7px;margin-bottom:7px;">
-            <button class="btn btn-s btn-sm f1" onclick="cmdSalvarPendente()">💾 Salvar</button>
-            <button class="btn btn-o btn-sm f1" onclick="openM('modal-cmd-entregar')">🛵 Entrega</button>
-            <button class="btn btn-ok btn-sm f1" onclick="openM('modal-cmd-fiado')">🤝 Fiado</button>
+            <button class="btn btn-s btn-sm f1" onclick="window.cmdSalvarPendente()">💾 Salvar</button>
+            <button class="btn btn-o btn-sm f1" onclick="window.openM('modal-cmd-entregar')">🛵 Entrega</button>
+            <button class="btn btn-ok btn-sm f1" onclick="window.openM('modal-cmd-fiado')">🤝 Fiado</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;">
-            <button class="btn btn-s btn-sm" onclick="cmdPagar('dinheiro')">💵 Dinheiro</button>
-            <button class="btn btn-p btn-sm" onclick="cmdPagar('pix')">💳 PIX</button>
-            <button class="btn btn-s btn-sm" onclick="cmdPagar('cartao')">💳 Cartão</button>
+            <button class="btn btn-s btn-sm" onclick="window.cmdPagar('dinheiro')">💵 Dinheiro</button>
+            <button class="btn btn-p btn-sm" onclick="window.cmdPagar('pix')">💳 PIX</button>
+            <button class="btn btn-s btn-sm" onclick="window.cmdPagar('cartao')">💳 Cartão</button>
           </div>
-          <button class="btn btn-s btn-w btn-sm" style="margin-top:7px;" onclick="cmdPagar('multiplo')">⚡ Múltiplos pagamentos</button>
+          <button class="btn btn-s btn-w btn-sm" style="margin-top:7px;" onclick="window.cmdPagar('multiplo')">⚡ Múltiplos pagamentos</button>
         </div>
       </div>
     </div>
@@ -448,17 +448,17 @@ textarea.inp{resize:vertical;min-height:65px;}
 
       <!-- Busca + botão novo -->
       <div class="flex gap8 px aic" style="margin-bottom:10px;">
-        <input class="inp f1" placeholder="🔍 Buscar produto..." oninput="fltProds(this.value)" id="prod-search">
-        <button class="btn btn-p btn-sm" onclick="openProdM(null)">＋ Novo</button>
+        <input class="inp f1" placeholder="🔍 Buscar produto..." oninput="window.fltProds(this.value)" id="prod-search">
+        <button class="btn btn-p btn-sm" onclick="window.openProdM(null)">＋ Novo</button>
       </div>
 
       <!-- Filtro categoria -->
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="fltPCat(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="fltPCat(this,'acai')">🍇 Açaí</div>
-        <div class="chip ch-d" onclick="fltPCat(this,'tigela')">🥣 Tigela</div>
-        <div class="chip ch-d" onclick="fltPCat(this,'adicional')">➕ Adicional</div>
-        <div class="chip ch-d" onclick="fltPCat(this,'bebida')">🥤 Bebida</div>
+        <div class="chip ch-p" onclick="window.fltPCat(this,'todos')">Todos</div>
+        <div class="chip ch-d" onclick="window.fltPCat(this,'acai')">🍇 Açaí</div>
+        <div class="chip ch-d" onclick="window.fltPCat(this,'tigela')">🥣 Tigela</div>
+        <div class="chip ch-d" onclick="window.fltPCat(this,'adicional')">➕ Adicional</div>
+        <div class="chip ch-d" onclick="window.fltPCat(this,'bebida')">🥤 Bebida</div>
       </div>
 
       <!-- Resumo estoque -->
@@ -485,7 +485,7 @@ textarea.inp{resize:vertical;min-height:65px;}
           <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;">Adicionais / Toppings</div>
           <div style="font-size:10px;color:var(--m1);">Itens que o cliente pode adicionar ao pedido</div>
         </div>
-        <button class="btn btn-p btn-sm" onclick="openAdicM(null)">＋ Novo</button>
+        <button class="btn btn-p btn-sm" onclick="window.openAdicM(null)">＋ Novo</button>
       </div>
       <div class="g2 px gap8" style="margin-bottom:12px;">
         <div style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:12px;">
@@ -509,7 +509,7 @@ textarea.inp{resize:vertical;min-height:65px;}
           <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;">Entregadores</div>
           <div style="font-size:10px;color:var(--m1);">Controle de equipe, comissões e saldos</div>
         </div>
-        <button class="btn btn-p btn-sm" onclick="openDelM(null)">＋ Novo</button>
+        <button class="btn btn-p btn-sm" onclick="window.openDelM(null)">＋ Novo</button>
       </div>
 
       <!-- Stats -->
@@ -566,18 +566,18 @@ textarea.inp{resize:vertical;min-height:65px;}
       <!-- Filtro tipo -->
       <div class="sh mt20">
         <span class="sh-t">Lançamentos</span>
-        <button class="btn btn-p btn-sm" onclick="openM('modal-fin-add')">＋ Lançar</button>
+        <button class="btn btn-p btn-sm" onclick="window.openM('modal-fin-add')">＋ Lançar</button>
       </div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="fltFin(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="fltFin(this,'receita')">↑ Receitas</div>
-        <div class="chip ch-d" onclick="fltFin(this,'despesa')">↓ Despesas</div>
-        <div class="chip ch-d" onclick="fltFin(this,'recorrente')">🔁 Recorrentes</div>
+        <div class="chip ch-p" onclick="window.fltFin(this,'todos')">Todos</div>
+        <div class="chip ch-d" onclick="window.fltFin(this,'receita')">↑ Receitas</div>
+        <div class="chip ch-d" onclick="window.fltFin(this,'despesa')">↓ Despesas</div>
+        <div class="chip ch-d" onclick="window.fltFin(this,'recorrente')">🔁 Recorrentes</div>
       </div>
       <div class="card px" style="margin:0 16px;" id="fin-list"></div>
 
       <!-- Recorrentes fixas -->
-      <div class="sh mt20"><span class="sh-t">Despesas fixas / recorrentes</span><span class="sh-a" onclick="openM('modal-recorrente')">＋ Adicionar</span></div>
+      <div class="sh mt20"><span class="sh-t">Despesas fixas / recorrentes</span><span class="sh-a" onclick="window.openM('modal-recorrente')">＋ Adicionar</span></div>
       <div class="card px" style="margin:0 16px;" id="fin-recorrentes"></div>
 
       <!-- Pró-labore -->
@@ -589,7 +589,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         </div>
         <div class="g2 gap8">
           <div class="fld"><div class="lbl">Novo valor (R$)</div><input class="inp" id="prolabore-inp" type="number" placeholder="2000"></div>
-          <button class="btn btn-gld btn-w" style="margin-top:auto;" onclick="saveProlabore()">Registrar retirada</button>
+          <button class="btn btn-gld btn-w" style="margin-top:auto;" onclick="window.saveProlabore()">Registrar retirada</button>
         </div>
       </div>
 
@@ -625,14 +625,14 @@ textarea.inp{resize:vertical;min-height:65px;}
       <!-- Lista -->
       <div class="flex gap8 px aic mt14">
         <span class="sh-t f1">Clientes a prazo</span>
-        <button class="btn btn-p btn-sm" onclick="openM('modal-cred-add')">＋ Novo</button>
+        <button class="btn btn-p btn-sm" onclick="window.openM('modal-cred-add')">＋ Novo</button>
       </div>
       <div class="sp"></div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="fltCred(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="fltCred(this,'devendo')">Com dívida</div>
-        <div class="chip ch-d" onclick="fltCred(this,'limite')">No limite</div>
-        <div class="chip ch-d" onclick="fltCred(this,'quites')">Quites</div>
+        <div class="chip ch-p" onclick="window.fltCred(this,'todos')">Todos</div>
+        <div class="chip ch-d" onclick="window.fltCred(this,'devendo')">Com dívida</div>
+        <div class="chip ch-d" onclick="window.fltCred(this,'limite')">No limite</div>
+        <div class="chip ch-d" onclick="window.fltCred(this,'quites')">Quites</div>
       </div>
       <div class="card px" style="margin:0 16px;" id="cred-list"></div>
 
@@ -675,7 +675,7 @@ textarea.inp{resize:vertical;min-height:65px;}
           <div id="cd-chart-lbls" style="display:flex;gap:4px;margin-top:3px;"></div>
         </div>
 
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="fecharCaixaDia()">
+        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.fecharCaixaDia()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           Fechar caixa do dia e gerar relatório
         </button>
@@ -693,11 +693,11 @@ textarea.inp{resize:vertical;min-height:65px;}
 
         <!-- Botões de movimentação -->
         <div class="g2 gap8">
-          <button class="btn btn-ok btn-w" onclick="openM('modal-sup')">
+          <button class="btn btn-ok btn-w" onclick="window.openM('modal-sup')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
             Suprimento
           </button>
-          <button class="btn btn-d btn-w" onclick="openM('modal-san')">
+          <button class="btn btn-d btn-w" onclick="window.openM('modal-san')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
             Sangria
           </button>
@@ -718,7 +718,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         </div>
 
         <!-- Fechar turno -->
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="openM('modal-fech')">
+        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.openM('modal-fech')">
           🔐 Conferir e fechar turno
         </button>
 
@@ -747,10 +747,10 @@ textarea.inp{resize:vertical;min-height:65px;}
         <span class="sh-t">Histórico de turnos</span>
       </div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="fltHC(this,7)">7 dias</div>
-        <div class="chip ch-d" onclick="fltHC(this,15)">15 dias</div>
-        <div class="chip ch-d" onclick="fltHC(this,30)">30 dias</div>
-        <div class="chip ch-d" onclick="fltHC(this,999)">Todos</div>
+        <div class="chip ch-p" onclick="window.fltHC(this,7)">7 dias</div>
+        <div class="chip ch-d" onclick="window.fltHC(this,15)">15 dias</div>
+        <div class="chip ch-d" onclick="window.fltHC(this,30)">30 dias</div>
+        <div class="chip ch-d" onclick="window.fltHC(this,999)">Todos</div>
       </div>
 
       <div class="card px" style="margin:0 16px;" id="hc-list"></div>
@@ -762,9 +762,9 @@ textarea.inp{resize:vertical;min-height:65px;}
 
       <!-- Período -->
       <div class="scr" style="padding-bottom:10px;">
-        <div class="chip ch-p" onclick="fltAna(this,7)">7 dias</div>
-        <div class="chip ch-d" onclick="fltAna(this,14)">14 dias</div>
-        <div class="chip ch-d" onclick="fltAna(this,30)">30 dias</div>
+        <div class="chip ch-p" onclick="window.fltAna(this,7)">7 dias</div>
+        <div class="chip ch-d" onclick="window.fltAna(this,14)">14 dias</div>
+        <div class="chip ch-d" onclick="window.fltAna(this,30)">30 dias</div>
       </div>
 
       <!-- KPIs principais -->
@@ -977,12 +977,12 @@ INSERT INTO config (chave, valor) VALUES ('preco_kg', '49.90'::jsonb)
 ON CONFLICT (chave) DO NOTHING;</div>
             <div class="fld"><div class="lbl">Supabase Project URL</div><input class="inp" id="sb-url" placeholder="https://xxxxx.supabase.co"></div>
             <div class="fld"><div class="lbl">Anon / Public Key</div><input class="inp" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIs..."></div>
-            <button class="btn btn-ok btn-w" onclick="testSB()">
+            <button class="btn btn-ok btn-w" onclick="window.testSB()">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Testar conexão
             </button>
             <div id="sb-res" style="font-size:11px;text-align:center;color:var(--m1);"></div>
-            <button class="btn btn-s btn-w" onclick="sbSyncNow()" style="margin-top:6px;">
+            <button class="btn btn-s btn-w" onclick="window.sbSyncNow()" style="margin-top:6px;">
               🔄 Sincronizar dados agora
             </button>
           </div>
@@ -996,12 +996,12 @@ ON CONFLICT (chave) DO NOTHING;</div>
           </div>
           <div class="cfg-body">
             <div style="font-size:11px;color:var(--m2);">Ações irreversíveis. Confirme antes de executar.</div>
-            <button class="btn btn-d btn-w" onclick="toast('⚠️ Ação bloqueada: use o painel Supabase para resetar dados')">🗑️ Limpar todos os pedidos</button>
-            <button class="btn btn-d btn-w" onclick="toast('⚠️ Ação bloqueada: contate o suporte')">⚠️ Resetar sistema completo</button>
+            <button class="btn btn-d btn-w" onclick="window.toast('⚠️ Ação bloqueada: use o painel Supabase para resetar dados')">🗑️ Limpar todos os pedidos</button>
+            <button class="btn btn-d btn-w" onclick="window.toast('⚠️ Ação bloqueada: contate o suporte')">⚠️ Resetar sistema completo</button>
           </div>
         </div>
 
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="saveConfig()">
+        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.saveConfig()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Salvar todas as configurações
         </button>
@@ -1024,21 +1024,21 @@ ON CONFLICT (chave) DO NOTHING;</div>
       <!-- Lista + botão novo -->
       <div class="flex gap8 px aic" style="margin-bottom:12px;">
         <span class="sh-t f1">Usuários do sistema</span>
-        <button class="btn btn-p btn-sm" onclick="openUsrM(null)">＋ Novo usuário</button>
+        <button class="btn btn-p btn-sm" onclick="window.openUsrM(null)">＋ Novo usuário</button>
       </div>
 
       <!-- Filtro perfil -->
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="fltUsr(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="fltUsr(this,'admin')">👑 Admin</div>
-        <div class="chip ch-d" onclick="fltUsr(this,'atendente')">🧑‍💼 Atendente</div>
-        <div class="chip ch-d" onclick="fltUsr(this,'entregador')">🛵 Entregador</div>
+        <div class="chip ch-p" onclick="window.fltUsr(this,'todos')">Todos</div>
+        <div class="chip ch-d" onclick="window.fltUsr(this,'admin')">👑 Admin</div>
+        <div class="chip ch-d" onclick="window.fltUsr(this,'atendente')">🧑‍💼 Atendente</div>
+        <div class="chip ch-d" onclick="window.fltUsr(this,'entregador')">🛵 Entregador</div>
       </div>
 
       <div class="card px" style="margin:0 16px;" id="usr-list"></div>
 
       <!-- Permissões por perfil -->
-      <div class="sh mt20"><span class="sh-t">Permissões por perfil</span><span class="sh-a" onclick="openM('modal-perms')">Ver / editar →</span></div>
+      <div class="sh mt20"><span class="sh-t">Permissões por perfil</span><span class="sh-a" onclick="window.openM('modal-perms')">Ver / editar →</span></div>
       <div class="card px" style="margin:0 16px;" id="perm-summary"></div>
 
       <div class="sp3"></div>
@@ -1047,7 +1047,7 @@ ON CONFLICT (chave) DO NOTHING;</div>
   <div id="bnav"></div>
 </div>
 
-<div id="sidebar" onclick="closeSBOut(event)">
+<div id="sidebar" onclick="window.closeSBOut(event)">
   <div id="sbp">
     <div class="sb-head"><div class="sb-logo">SASAKI ERP</div><div class="sb-role" id="sb-role-lbl">—</div></div>
     <div id="sb-menu"></div>
@@ -1055,11 +1055,11 @@ ON CONFLICT (chave) DO NOTHING;</div>
 </div>
 
 <div id="toast"></div>
-<div class="overlay" id="modal-notifs" onclick="closeOL(event,'modal-notifs')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Notificações</div><button class="m-close" onclick="closeM('modal-notifs')">✕</button></div><div class="m-body" id="notifs-body"></div></div></div>
-<div class="overlay" id="modal-order" onclick="closeOL(event,'modal-order')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="od-title">Pedido</div><button class="m-close" onclick="closeM('modal-order')">✕</button></div><div class="m-body" id="od-body"></div></div></div>
-<div class="overlay" id="modal-prod-det" onclick="closeOL(event,'modal-prod-det')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="pd-title">Produto</div><button class="m-close" onclick="closeM('modal-prod-det')">✕</button></div><div class="m-body" id="pd-body"></div></div></div>
-<div class="overlay" id="modal-cart" onclick="closeOL(event,'modal-cart')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Carrinho</div><button class="m-close" onclick="closeM('modal-cart')">✕</button></div><div class="m-body" id="cart-body"></div></div></div>
-<div class="overlay" id="modal-pdv-pay" onclick="closeOL(event,'modal-pdv-pay')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Pagamento</div><button class="m-close" onclick="closeM('modal-pdv-pay')">✕</button></div><div class="m-body"><div style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--p);margin-bottom:4px;" id="pdv-pay-val">R$ 0,00</div><div style="text-align:center;font-size:11px;color:var(--m1);margin-bottom:14px;" id="pdv-pay-items">—</div><div class="g2 gap8"><button class="btn btn-p" onclick="pdvFinish('PIX')">💳 PIX</button><button class="btn btn-s" onclick="pdvFinish('Débito')">💳 Débito</button><button class="btn b<script>
+<div class="overlay" id="modal-notifs" onclick="window.closeOL(event,'modal-notifs')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Notificações</div><button class="m-close" onclick="window.closeM('modal-notifs')">✕</button></div><div class="m-body" id="notifs-body"></div></div></div>
+<div class="overlay" id="modal-order" onclick="window.closeOL(event,'modal-order')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="od-title">Pedido</div><button class="m-close" onclick="window.closeM('modal-order')">✕</button></div><div class="m-body" id="od-body"></div></div></div>
+<div class="overlay" id="modal-prod-det" onclick="window.closeOL(event,'modal-prod-det')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="pd-title">Produto</div><button class="m-close" onclick="window.closeM('modal-prod-det')">✕</button></div><div class="m-body" id="pd-body"></div></div></div>
+<div class="overlay" id="modal-cart" onclick="window.closeOL(event,'modal-cart')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Carrinho</div><button class="m-close" onclick="window.closeM('modal-cart')">✕</button></div><div class="m-body" id="cart-body"></div></div></div>
+<div class="overlay" id="modal-pdv-pay" onclick="window.closeOL(event,'modal-pdv-pay')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Pagamento</div><button class="m-close" onclick="window.closeM('modal-pdv-pay')">✕</button></div><div class="m-body"><div style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--p);margin-bottom:4px;" id="pdv-pay-val">R$ 0,00</div><div style="text-align:center;font-size:11px;color:var(--m1);margin-bottom:14px;" id="pdv-pay-items">—</div><div class="g2 gap8"><button class="btn btn-p" onclick="window.pdvFinish('PIX')">💳 PIX</button><button class="btn btn-s" onclick="window.pdvFinish('Débito')">💳 Débito</button><button class="btn b<script>
 
 /* ═══ STATE ═══ */
 const S = {
@@ -1220,7 +1220,7 @@ function buildSB(){
     h+='<div class="sb-grp"><div class="sb-lbl">'+g.grp+'</div>';
     g.items.forEach(i=>{
       const bc=i.bd?S.orders.filter(o=>o.st==='pendente').length:0;
-      h+='<div class="sbi" data-id="'+i.id+'" onclick="goTo(\''+i.id+'\')"><div class="sbi-ic">'+i.ic+'</div><div><div class="sbi-nm">'+i.nm+'</div><div class="sbi-ds">'+i.ds+'</div></div>'+(bc>0?'<div class="sbi-bd">'+bc+'</div>':'')+'</div>';
+      h+='<div class="sbi" data-id="'+i.id+'" onclick="window.goTo(\''+i.id+'\')"><div class="sbi-ic">'+i.ic+'</div><div><div class="sbi-nm">'+i.nm+'</div><div class="sbi-ds">'+i.ds+'</div></div>'+(bc>0?'<div class="sbi-bd">'+bc+'</div>':'')+'</div>';
     });
     h+='</div>';
   });
@@ -1228,7 +1228,7 @@ function buildSB(){
 }
 function buildBnav(){
   const items=BNAV[S.role]||[];
-  document.getElementById('bnav').innerHTML=items.map(i=>'<button class="bn" data-id="'+i.id+'" onclick="goTo(\''+i.id+'\')"><span style="font-size:17px;">'+i.ic+'</span><span class="bn-lbl">'+i.lb+'</span></button>').join('');
+  document.getElementById('bnav').innerHTML=items.map(i=>'<button class="bn" data-id="'+i.id+'" onclick="window.goTo(\''+i.id+'\')"><span style="font-size:17px;">'+i.ic+'</span><span class="bn-lbl">'+i.lb+'</span></button>').join('');
 }
 function renderStub(){}
 
@@ -1260,7 +1260,7 @@ function renderDash(){
   }
   const rec=document.getElementById('dash-recent');
   if(rec)rec.innerHTML=S.orders.slice(0,3).map(o=>`
-    <div class="ri" onclick="openOrderM('${o.id}')">
+    <div class="ri" onclick="window.openOrderM('${o.id}')">
       <div class="ri-ic">${o.st==='entregue'?'✅':o.st==='entrega'?'🛵':'🍇'}</div>
       <div class="ri-info"><div class="ri-nm">#${o.id} · ${o.cli}</div><div class="ri-sub">${o.its.substring(0,32)}...</div></div>
       <div class="ri-r"><div class="chip ${SC[o.st]}" style="font-size:9px;padding:3px 7px;">${SL[o.st]}</div><div class="ri-val">R$${o.tot}</div></div>
@@ -1281,7 +1281,7 @@ function renderNovos(){
       <div class="oc-it">${o.its}</div>
       <div class="oc-ft">
         <div class="oc-tot">R$ ${o.tot.toFixed(2).replace('.',',')}</div>
-        <button class="btn btn-p btn-sm" onclick="advOrder('${o.id}');renderNovos();">✅ Aceitar</button>
+        <button class="btn btn-p btn-sm" onclick="window.advOrder('${o.id}');window.renderNovos();">✅ Aceitar</button>
       </div>
     </div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--m1);">Nenhum pedido novo 🎉</div>';
   updNotifBadge();
@@ -1291,7 +1291,7 @@ function renderGestao(filter='todos'){
   let orders=filter==='todos'?S.orders:S.orders.filter(o=>o.st===filter);
   const el=document.getElementById('gp-list');if(!el)return;
   el.innerHTML=orders.map(o=>`
-    <div class="oc" onclick="openOrderM('${o.id}')">
+    <div class="oc" onclick="window.openOrderM('${o.id}')">
       <div class="oc-hd">
         <div><div class="oc-id">#${o.id} · ${o.cli}</div><div class="oc-tm">${o.tm} · ${o.pgto}${o.del?' · 🛵 '+o.del:''}</div></div>
         <div class="chip ${SC[o.st]}" style="font-size:10px;">${SL[o.st]}</div>
@@ -1299,7 +1299,7 @@ function renderGestao(filter='todos'){
       <div class="oc-it">${o.its}</div>
       <div class="oc-ft">
         <div class="oc-tot">R$ ${o.tot.toFixed(2).replace('.',',')}</div>
-        ${o.st!=='entregue'?`<button class="btn btn-p btn-sm" onclick="event.stopPropagation();advOrder('${o.id}');renderGestao();">${SNLBL[o.st]}</button>`:'<div class="chip ch-g" style="font-size:9px;">✅ Concluído</div>'}
+        ${o.st!=='entregue'?`<button class="btn btn-p btn-sm" onclick="event.window.stopPropagation();window.advOrder('${o.id}');window.renderGestao();">${SNLBL[o.st]}</button>`:'<div class="chip ch-g" style="font-size:9px;">✅ Concluído</div>'}
       </div>
     </div>`).join('');
 }
@@ -1314,7 +1314,7 @@ function renderCardapio(cat='todos'){
   if(cat!=='todos')prods=prods.filter(p=>p.cat===cat);
   const g=document.getElementById('client-grid');if(!g)return;
   g.innerHTML=prods.map(p=>`
-    <div onclick="openProdDet(${p.id})" style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);overflow:hidden;cursor:pointer;transition:all .18s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">
+    <div onclick="window.openProdDet(${p.id})" style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);overflow:hidden;cursor:pointer;transition:all .18s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">
       <div style="width:100%;aspect-ratio:1;background:linear-gradient(145deg,#1a0d24,#271040);display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;">
         ${p.emoji}
         ${p.badge?`<div style="position:absolute;top:7px;left:7px;background:var(--acc);color:#fff;font-size:8px;font-weight:700;font-family:'Syne',sans-serif;padding:2px 5px;border-radius:4px;text-transform:uppercase;">${p.badge}</div>`:''}
@@ -1324,7 +1324,7 @@ function renderCardapio(cat='todos'){
         <div style="font-size:9px;color:var(--m1);margin-bottom:7px;">${p.desc}</div>
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--p);">R$${p.preco}</div>
-          <button onclick="event.stopPropagation();addCart(${p.id})" style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmousedown="this.style.transform='scale(.88)'" onmouseup="this.style.transform=''">
+          <button onclick="event.window.stopPropagation();window.addCart(${p.id})" style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmousedown="this.style.transform='window.scale(.88)'" onmouseup="this.style.transform=''">
             <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           </button>
         </div>
@@ -1352,7 +1352,7 @@ function updCartBar(){
   if(!bar){
     bar=document.createElement('div');bar.id='cli-cart-bar';
     bar.style.cssText='padding:11px 16px calc(11px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(7,5,10,1) 52%,transparent);position:sticky;bottom:0;';
-    bar.innerHTML=`<button onclick="openM('modal-cart')" style="width:100%;padding:14px 18px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;border-radius:var(--rr);display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 5px 22px rgba(168,85,247,.38);">
+    bar.innerHTML=`<button onclick="window.openM('modal-cart')" style="width:100%;padding:14px 18px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;border-radius:var(--rr);display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 5px 22px rgba(168,85,247,.38);">
       <div style="display:flex;align-items:center;gap:10px;"><div id="cli-cc" style="width:26px;height:26px;border-radius:6px;background:rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;">0</div><span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;">Ver carrinho</span></div>
       <span id="cli-cp" style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff;">R$0</span>
     </button>`;
@@ -1376,12 +1376,12 @@ function openProdDet(id){
       <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:var(--m1);">Status</span><div class="chip ${p.on?'ch-g':'ch-r'}" style="font-size:9px;">${p.on?'Ativo':'Inativo'}</div></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--s2);border-radius:var(--rs);">
         <span style="font-size:11px;font-family:'Syne',sans-serif;font-weight:700;">Disponível no cardápio</span>
-        <div class="toggle ${p.on?'tog-on':'tog-off'}" onclick="toggleProdOn(${p.id},this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${p.on?'tog-on':'tog-off'}" onclick="window.toggleProdOn(${p.id},this)"><div class="tgl-k"></div></div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-      <button class="btn btn-s" onclick="closeM('modal-prod-det')">Fechar</button>
-      <button class="btn btn-p" onclick="closeM('modal-prod-det');openProdM(${p.id})">✏️ Editar</button>
+      <button class="btn btn-s" onclick="window.closeM('modal-prod-det')">Fechar</button>
+      <button class="btn btn-p" onclick="window.closeM('modal-prod-det');window.openProdM(${p.id})">✏️ Editar</button>
     </div>`;
   openM('modal-prod-det');
 }
@@ -1395,15 +1395,15 @@ function buildCartM(){
       <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--b1);">
         <span style="font-size:26px;">${i.emoji}</span>
         <div style="flex:1;"><div class="font-b" style="font-size:12px;">${i.nome}</div><div style="font-size:10px;color:var(--m1);">R$${i.preco} cada</div></div>
-        <button class="btn btn-s btn-ico" onclick="chgCartQty(${i.id},-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+        <button class="btn btn-s btn-ico" onclick="window.chgCartQty(${i.id},-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
         <span class="font-b" style="font-size:13px;min-width:18px;text-align:center;">${i.qty}</span>
-        <button class="btn btn-s btn-ico" onclick="chgCartQty(${i.id},1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="btn btn-s btn-ico" onclick="window.chgCartQty(${i.id},1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
         <span class="font-b tx-p" style="font-size:12px;min-width:38px;text-align:right;">R$${(i.preco*i.qty).toFixed(0)}</span>
       </div>`).join('')}
     <div style="display:flex;justify-content:space-between;padding:10px 0;" class="font-b"><span>Total</span><span style="color:var(--p);">R$${total.toFixed(2).replace('.',',')}</span></div>
     ${S.cart.length>0?`
       <div class="fld"><div class="lbl">Endereço de entrega</div><input class="inp" id="checkout-addr" placeholder="Rua, número..."></div>
-      <button class="btn btn-p btn-w" onclick="cliCheckout()">Confirmar pedido</button>`:''}`
+      <button class="btn btn-p btn-w" onclick="window.cliCheckout()">Confirmar pedido</button>`:''}`
   ;
 }
 
@@ -1433,7 +1433,7 @@ function renderDelView(){
       <div style="display:flex;align-items:center;gap:8px;padding:8px 0;"><span style="font-size:16px;">📍</span><span style="font-size:11px;color:var(--m2);">${o.end}</span></div>
       <div class="oc-ft">
         <div class="oc-tot">R$ ${o.tot.toFixed(0)}</div>
-        <button class="btn btn-ok btn-sm" onclick="advOrder('${o.id}');renderDelView();">✅ Entregue</button>
+        <button class="btn btn-ok btn-sm" onclick="window.advOrder('${o.id}');window.renderDelView();">✅ Entregue</button>
       </div>
     </div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--m1);">Nenhuma entrega 🛵</div>';
 }
@@ -1449,7 +1449,7 @@ function renderCriarPedido(){
   const chips=document.getElementById('cp-prod-chips');
   if(chips){
     chips.innerHTML=S.products.filter(p=>p.on).map(p=>
-      `<button onclick="cpAddItem(${p.id})" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .14s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${p.emoji} ${p.nome.substring(0,14)} · R$${p.preco}</button>`
+      `<button onclick="window.cpAddItem(${p.id})" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .14s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${p.emoji} ${p.nome.substring(0,14)} · R$${p.preco}</button>`
     ).join('');
   }
   renderCpItems();
@@ -1469,7 +1469,7 @@ function renderProds(cat=_prodCat,q=''){
 
   const el=document.getElementById('prod-list');if(!el)return;
   el.innerHTML=prods.map(p=>`
-    <div class="ri" onclick="openProdDet(${p.id})">
+    <div class="ri" onclick="window.openProdDet(${p.id})">
       <div class="ri-ic">${p.emoji}</div>
       <div class="ri-info">
         <div class="ri-nm">${p.nome} ${p.badge?`<span style="background:var(--acc);color:#fff;font-size:8px;font-family:'Syne',sans-serif;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;">${p.badge}</span>`:''}</div>
@@ -1478,7 +1478,7 @@ function renderProds(cat=_prodCat,q=''){
       <div class="ri-r">
         <div class="chip ${p.on?'ch-g':'ch-r'}" style="font-size:9px;padding:3px 7px;">${p.on?'Ativo':'Off'}</div>
         <div class="ri-val">R$${p.preco}</div>
-        <button class="btn btn-d btn-xs" onclick="event.stopPropagation();delProd(${p.id})">Del</button>
+        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();window.delProd(${p.id})">Del</button>
       </div>
     </div>`).join('');
 }
@@ -1488,7 +1488,7 @@ function renderAdics(){
   if(ct)ct.textContent=S.adicionais.length;
   const el=document.getElementById('adic-list');if(!el)return;
   el.innerHTML=S.adicionais.map(a=>`
-    <div class="ri" onclick="openAdicDet(${a.id})">
+    <div class="ri" onclick="window.openAdicDet(${a.id})">
       <div class="ri-ic">${a.emoji}</div>
       <div class="ri-info">
         <div class="ri-nm">${a.nome}</div>
@@ -1497,7 +1497,7 @@ function renderAdics(){
       <div class="ri-r">
         <div class="chip ${a.on?'ch-g':'ch-r'}" style="font-size:9px;padding:3px 7px;">${a.on?'Ativo':'Off'}</div>
         <div class="ri-val">R$${a.preco}</div>
-        <button class="btn btn-d btn-xs" onclick="event.stopPropagation();delAdic(${a.id})">Del</button>
+        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();window.delAdic(${a.id})">Del</button>
       </div>
     </div>`).join('');
 }
@@ -1511,7 +1511,7 @@ function renderDels(){
 
   const el=document.getElementById('del-list');if(!el)return;
   el.innerHTML=S.entregadores.map(d=>`
-    <div class="ri" onclick="openDelDet(${d.id})">
+    <div class="ri" onclick="window.openDelDet(${d.id})">
       <div class="ri-ic">🛵</div>
       <div class="ri-info">
         <div class="ri-nm">${d.nome}</div>
@@ -1627,7 +1627,7 @@ function renderHC(dias=7){
   const el=document.getElementById('hc-list');
   if(!el)return;
   el.innerHTML=list.map(h=>`
-    <div class="ri" onclick="openTurnoDet(${h.id})">
+    <div class="ri" onclick="window.openTurnoDet(${h.id})">
       <div class="ri-ic" style="background:${h.dif===0?'rgba(52,211,153,.12)':h.dif>0?'rgba(251,191,36,.12)':'rgba(248,113,113,.12)'};">
         ${h.dif===0?'✅':h.dif>0?'⬆️':'⬇️'}
       </div>
@@ -1650,7 +1650,7 @@ function renderConfig(){
     metEl.innerHTML=Object.entries(S.cfgMetodos).map(([k,v])=>`
       <div class="cfg-row">
         <div><div class="cfg-row-lbl">${metLabels[k]}</div></div>
-        <div class="toggle ${v?'tog-on':'tog-off'}" data-cfg-met="${k}" onclick="togCfgMet('${k}',this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${v?'tog-on':'tog-off'}" data-cfg-met="${k}" onclick="window.togCfgMet('${k}',this)"><div class="tgl-k"></div></div>
       </div>`).join('');
   }
 
@@ -1667,7 +1667,7 @@ function renderConfig(){
     opEl.innerHTML=Object.entries(S.cfgOps).map(([k,v])=>`
       <div class="cfg-row">
         <div><div class="cfg-row-lbl">${opLabels[k].lbl}</div><div class="cfg-row-sub">${opLabels[k].sub}</div></div>
-        <div class="toggle ${v?'tog-on':'tog-off'}" onclick="togCfgOp('${k}',this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${v?'tog-on':'tog-off'}" onclick="window.togCfgOp('${k}',this)"><div class="tgl-k"></div></div>
       </div>`).join('');
   }
 
@@ -1684,7 +1684,7 @@ function renderConfig(){
     nfEl.innerHTML=Object.entries(S.cfgNotifs).map(([k,v])=>`
       <div class="cfg-row">
         <div><div class="cfg-row-lbl">${nfLabels[k].lbl}</div><div class="cfg-row-sub">${nfLabels[k].sub}</div></div>
-        <div class="toggle ${v?'tog-on':'tog-off'}" onclick="togCfgNf('${k}',this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${v?'tog-on':'tog-off'}" onclick="window.togCfgNf('${k}',this)"><div class="tgl-k"></div></div>
       </div>`).join('');
   }
 }
@@ -1836,8 +1836,8 @@ function openOrderM(id){
       ${o.del?`<div style="display:flex;justify-content:space-between;"><span style="color:var(--m1);font-size:12px;">Entregador</span><span class="font-b" style="font-size:12px;">🛵 ${o.del}</span></div>`:''}
       <div style="height:1px;background:var(--b1);"></div>
       <div style="font-size:11px;color:var(--m2);line-height:1.6;">${o.its}</div>
-      ${o.st!=='entregue'?`<button class="btn btn-p btn-w" onclick="advOrder('${o.id}');closeM('modal-order');renderView(S.view);">${SNLBL[o.st]}</button>`:''}
-      <button class="btn btn-s btn-w" onclick="closeM('modal-order')">Fechar</button>
+      ${o.st!=='entregue'?`<button class="btn btn-p btn-w" onclick="window.advOrder('${o.id}');window.closeM('modal-order');window.renderView(S.view);">${SNLBL[o.st]}</button>`:''}
+      <button class="btn btn-s btn-w" onclick="window.closeM('modal-order')">Fechar</button>
     </div>`;
   openM('modal-order');
 }
@@ -1930,11 +1930,11 @@ function renderCpItems(){
     <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b1);">
       <span style="font-size:22px;">${i.emoji}</span>
       <span style="flex:1;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;">${i.nome}</span>
-      <button class="btn btn-s btn-ico" onclick="cpChgQty(${i.id},-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <button class="btn btn-s btn-ico" onclick="window.cpChgQty(${i.id},-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
       <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;min-width:20px;text-align:center;">${i.qty}</span>
-      <button class="btn btn-s btn-ico" onclick="cpChgQty(${i.id},1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="btn btn-s btn-ico" onclick="window.cpChgQty(${i.id},1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
       <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--p);min-width:42px;text-align:right;">R$${(i.preco*i.qty).toFixed(0)}</span>
-      <button class="btn btn-d btn-ico" onclick="cpRemItem(${i.id})"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="btn btn-d btn-ico" onclick="window.cpRemItem(${i.id})"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>`).join('');
 }
 
@@ -2000,7 +2000,7 @@ function pdvSearch(q){
   const found=S.products.filter(p=>p.on&&(p.bc===q||p.nome.toLowerCase().includes(q.toLowerCase())));
   if(!found.length){res.innerHTML='<div style="font-size:11px;color:var(--m1);padding:4px 0;">Nenhum produto encontrado</div>';return;}
   res.innerHTML=found.slice(0,4).map(p=>`
-    <button onclick="pdvAddProd(${p.id});document.getElementById('pdv-bc').value='';document.getElementById('pdv-search-result').innerHTML='';" style="width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rs);cursor:pointer;margin-bottom:5px;text-align:left;">
+    <button onclick="window.pdvAddProd(${p.id});document.window.getElementById('pdv-bc').value='';document.window.getElementById('pdv-search-result').innerHTML='';" style="width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rs);cursor:pointer;margin-bottom:5px;text-align:left;">
       <span style="font-size:24px;">${p.emoji}</span>
       <div style="flex:1;"><div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--tx);">${p.nome}</div><div style="font-size:10px;color:var(--m1);">cód: ${p.bc}</div></div>
       <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--p);">R$${p.preco}</span>
@@ -2019,9 +2019,9 @@ function renderPDVCart(){
     <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid var(--b1);">
       <span style="font-size:20px;">${i.emoji}</span>
       <span style="flex:1;font-size:11px;font-family:'Syne',sans-serif;font-weight:700;">${i.nome}</span>
-      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" onclick="pdvQtyChange(${i.id},-1)">−</button>
+      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" onclick="window.pdvQtyChange(${i.id},-1)">−</button>
       <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;min-width:18px;text-align:center;">${i.qty}</span>
-      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" onclick="pdvQtyChange(${i.id},1)">+</button>
+      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" onclick="window.pdvQtyChange(${i.id},1)">+</button>
       <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--p);min-width:38px;text-align:right;">R$${(i.preco*i.qty).toFixed(0)}</span>
     </div>`).join('');
 }
@@ -2163,12 +2163,12 @@ function openAdicDet(id){
       <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:var(--m1);">Descrição</span><span style="font-size:11px;text-align:right;max-width:60%;">${a.desc||'—'}</span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--s2);border-radius:var(--rs);">
         <span style="font-size:11px;font-family:'Syne',sans-serif;font-weight:700;">Disponível para seleção</span>
-        <div class="toggle ${a.on?'tog-on':'tog-off'}" onclick="toggleAdicOn(${a.id},this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${a.on?'tog-on':'tog-off'}" onclick="window.toggleAdicOn(${a.id},this)"><div class="tgl-k"></div></div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-      <button class="btn btn-s" onclick="closeM('modal-prod-det')">Fechar</button>
-      <button class="btn btn-p" onclick="closeM('modal-prod-det');openAdicM(${a.id})">✏️ Editar</button>
+      <button class="btn btn-s" onclick="window.closeM('modal-prod-det')">Fechar</button>
+      <button class="btn btn-p" onclick="window.closeM('modal-prod-det');window.openAdicM(${a.id})">✏️ Editar</button>
     </div>`;
   openM('modal-prod-det');
 }
@@ -2224,11 +2224,11 @@ function openDelDet(id){
       </div>
       ${d.sal>0?`
         <div class="fld"><div class="lbl">Registrar pagamento (R$)</div><input class="inp" id="del-pag-${d.id}" type="number" max="${d.sal}" placeholder="0,00"></div>
-        <button class="btn btn-ok btn-w" onclick="pagarDel(${d.id})">✅ Registrar pagamento</button>
+        <button class="btn btn-ok btn-w" onclick="window.pagarDel(${d.id})">✅ Registrar pagamento</button>
       `:''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button class="btn btn-s" onclick="closeM('modal-del-det')">Fechar</button>
-        <button class="btn btn-p" onclick="closeM('modal-del-det');openDelM(${d.id})">✏️ Editar</button>
+        <button class="btn btn-s" onclick="window.closeM('modal-del-det')">Fechar</button>
+        <button class="btn btn-p" onclick="window.closeM('modal-del-det');window.openDelM(${d.id})">✏️ Editar</button>
       </div>
     </div>`;
   openM('modal-del-det');
@@ -2308,7 +2308,7 @@ function renderFinancas(flt=_finFlt){
       </div>
       <div class="ri-r">
         <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${f.tipo==='receita'?'var(--g)':'var(--r)'};">${f.tipo==='receita'?'+':'-'}R$${f.val.toFixed(2)}</div>
-        <button class="btn btn-d btn-xs" onclick="event.stopPropagation();delFin(${f.id})">Del</button>
+        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();window.delFin(${f.id})">Del</button>
       </div>
     </div>`).join(''):'<div style="text-align:center;padding:20px;font-size:11px;color:var(--m1);">Nenhum lançamento</div>';
 
@@ -2320,7 +2320,7 @@ function renderFinancas(flt=_finFlt){
       <div class="ri-info"><div class="ri-nm">${r.desc}</div><div class="ri-sub">${r.cat} · todo dia ${r.dia}</div></div>
       <div class="ri-r">
         <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--r);">-R$${r.val.toLocaleString('pt-BR')}/mês</div>
-        <button class="btn btn-d btn-xs" onclick="event.stopPropagation();S.recorrentes=S.recorrentes.filter(x=>x.id!=${r.id});renderFinancas();">Del</button>
+        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();S.recorrentes=S.recorrentes.window.filter(x=>x.id!=${r.id});window.renderFinancas();">Del</button>
       </div>
     </div>`).join('');
 }
@@ -2395,7 +2395,7 @@ function renderCredito(flt=_credFlt){
     const pct=c.lim>0?Math.min(100,(c.div/c.lim*100)):0;
     const cor=pct>=100?'var(--r)':pct>=70?'var(--o)':'var(--g)';
     return `
-      <div class="ri" onclick="openCredDet(${c.id})">
+      <div class="ri" onclick="window.openCredDet(${c.id})">
         <div class="ri-ic" style="background:rgba(168,85,247,.1);">🤝</div>
         <div class="ri-info">
           <div class="ri-nm">${c.nome}</div>
@@ -2449,19 +2449,18 @@ function openCredDet(id){
 
       <div style="height:1px;background:var(--b1);"></div>
 
-      <!-- Ações -->
       <div>
         <div class="lbl" style="margin-bottom:6px;">Registrar pagamento</div>
         <div style="display:flex;gap:8px;">
           <input class="inp f1" id="cred-pag-${id}" type="number" step="0.01" placeholder="R$ 0,00">
-          <button class="btn btn-ok" onclick="credPagar(${id})">✅ Pagar</button>
+          <button class="btn btn-ok" onclick="window.credPagar(${id})">✅ Pagar</button>
         </div>
       </div>
       <div>
         <div class="lbl" style="margin-bottom:6px;">Adicionar dívida (fiado)</div>
         <div style="display:flex;gap:8px;">
           <input class="inp f1" id="cred-add-${id}" type="number" step="0.01" placeholder="R$ 0,00">
-          <button class="btn btn-d" onclick="credFiado(${id})">+ Fiado</button>
+          <button class="btn btn-d" onclick="window.credFiado(${id})">+ Fiado</button>
         </div>
       </div>
 
@@ -2476,8 +2475,8 @@ function openCredDet(id){
       }
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-        <button class="btn btn-s" onclick="closeM('modal-cred-det')">Fechar</button>
-        <button class="btn btn-p" onclick="editCred(${id})">✏️ Editar</button>
+        <button class="btn btn-s" onclick="window.closeM('modal-cred-det')">Fechar</button>
+        <button class="btn btn-p" onclick="window.editCred(${id})">✏️ Editar</button>
       </div>
     </div>`;
   openM('modal-cred-det');
@@ -2595,7 +2594,7 @@ function openTurnoDet(id){
         <span style="font-size:16px;">${h.dif===0?'✅':h.dif>0?'⬆️':'⬇️'}</span>
         <div><div class="font-b" style="font-size:12px;">${h.dif===0?'Conferido sem divergência':h.dif>0?'Sobra de R$'+h.dif.toFixed(2):'Falta de R$'+Math.abs(h.dif).toFixed(2)}</div>${h.obs?`<div class="font-xs tx-m">${h.obs}</div>`:''}</div>
       </div>
-      <button class="btn btn-s btn-w" onclick="closeM('modal-turno-det')">Fechar</button>
+      <button class="btn btn-s btn-w" onclick="window.closeM('modal-turno-det')">Fechar</button>
     </div>`;
   openM('modal-turno-det');
 }
@@ -2637,7 +2636,7 @@ function renderUsuarios(){
   const el=document.getElementById('usr-list');
   if(el){
     el.innerHTML=list.map(u=>`
-      <div class="user-card" onclick="openUsrDet(${u.id})">
+      <div class="user-card" onclick="window.openUsrDet(${u.id})">
         <div class="user-avatar" style="background:${ROLE_COLORS[u.role]};">${u.nome.charAt(0)}</div>
         <div class="user-info">
           <div class="user-nm">${u.nome} ${!u.ativo?'<span style="font-size:9px;color:var(--r);background:rgba(248,113,113,.1);padding:1px 6px;border-radius:4px;font-family:Syne,sans-serif;">inativo</span>':''}</div>
@@ -2657,7 +2656,7 @@ function renderUsuarios(){
       const count=Object.values(perms).filter(v=>v).length;
       const total=Object.keys(perms).length;
       return `
-        <div class="ri" onclick="openM('modal-perms');showPermTab('${r}')">
+        <div class="ri" onclick="window.openM('modal-perms');window.showPermTab('${r}')">
           <div class="ri-ic" style="background:${ROLE_COLORS[r]};">${r==='admin'?'👑':r==='atendente'?'🧑‍💼':'🛵'}</div>
           <div class="ri-info"><div class="ri-nm">${ROLE_LABELS[r]}</div><div class="ri-sub">${count} de ${total} módulos habilitados</div></div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
@@ -2727,10 +2726,10 @@ function openUsrDet(id){
         ${u.log.slice(0,4).map(l=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--b1);"><span style="font-size:14px;">📌</span><span style="font-size:11px;color:var(--m2);">${l}</span></div>`).join('')}
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-        <button class="btn btn-s" onclick="closeM('modal-usr-det')">Fechar</button>
-        <button class="btn btn-p" onclick="closeM('modal-usr-det');openUsrM(${u.id})">✏️ Editar</button>
+        <button class="btn btn-s" onclick="window.closeM('modal-usr-det')">Fechar</button>
+        <button class="btn btn-p" onclick="window.closeM('modal-usr-det');window.openUsrM(${u.id})">✏️ Editar</button>
       </div>
-      ${u.id!==1?`<button class="btn btn-d btn-w" onclick="toggleUsrAtivo(${u.id})">${u.ativo?'🔴 Desativar conta':'✅ Reativar conta'}</button>`:''}
+      ${u.id!==1?`<button class="btn btn-d btn-w" onclick="window.toggleUsrAtivo(${u.id})">${u.ativo?'🔴 Desativar conta':'✅ Reativar conta'}</button>`:''}
     </div>`;
   openM('modal-usr-det');
 }
@@ -2754,7 +2753,7 @@ function showPermTab(role){
   const perms=S.permissions[role];
   el.innerHTML=S.permModules.map(m=>`
     <div class="perm-row">
-      <div class="perm-chk ${perms[m.id]?'on':''}" onclick="togPerm('${role}','${m.id}',this)">
+      <div class="perm-chk ${perms[m.id]?'on':''}" onclick="window.togPerm('${role}','${m.id}',this)">
         ${perms[m.id]?'<svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>':''}
       </div>
       <div style="flex:1;">
@@ -2801,7 +2800,7 @@ function renderPesoSection() {
   const chips = document.getElementById('peso-adic-chips');
   if (chips) {
     chips.innerHTML = S.adicionais.filter(a => a.on).map(a =>
-      `<button onclick="pesoAddAdic(${a.id})" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .12s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${a.emoji} ${a.nome.substring(0,12)} R$${a.preco}</button>`
+      `<button onclick="window.pesoAddAdic(${a.id})" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .12s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${a.emoji} ${a.nome.substring(0,12)} R$${a.preco}</button>`
     ).join('');
   }
 
@@ -2851,9 +2850,9 @@ function renderPesoAdicList() {
     `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--s2);border-radius:var(--rx);border:1px solid var(--b1);">
       <span style="font-size:18px;">${i.emoji}</span>
       <span style="flex:1;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;">${i.nome}</span>
-      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="pesoRemAdic(${i.id})">−</button>
+      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.pesoRemAdic(${i.id})">−</button>
       <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;min-width:16px;text-align:center;">${i.qty}</span>
-      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="pesoAddAdic(${i.id})">+</button>
+      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.pesoAddAdic(${i.id})">+</button>
       <span style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--p);min-width:36px;text-align:right;">R$${(i.preco * i.qty).toFixed(2)}</span>
     </div>`
   ).join('');
@@ -2970,7 +2969,7 @@ function buildNotifBody() {
       '<span style="font-size:18px;">🔔</span><div><div style="font-size:12px;">' + S.notifs[i].msg + '</div>' +
       '<div style="font-size:10px;color:var(--m1);">' + S.notifs[i].time + '</div></div></div>';
   }
-  h += '<button class="btn btn-s btn-w" style="margin-top:8px;" onclick="S.notifs=[];updNotifBadge();closeM(' + "'modal-notifs'" + ')">Limpar</button>';
+  h += '<button class="btn btn-s btn-w" style="margin-top:8px;" onclick="S.notifs=[];window.updNotifBadge();window.closeM(' + "'modal-notifs'" + ')">Limpar</button>';
   nb.innerHTML = h;
 }
 
@@ -2989,7 +2988,7 @@ function renderPDV() {
     var prods = S.products.filter(function(p){return p.on;}).slice(0,8);
     for (var i=0; i<prods.length; i++) {
       var p = prods[i];
-      html2 += '<button onclick="pdvAddProd(' + p.id + ')" style="display:inline-flex;flex-direction:column;align-items:center;padding:8px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);cursor:pointer;min-width:68px;">' +
+      html2 += '<button onclick="window.pdvAddProd(' + p.id + ')" style="display:inline-flex;flex-direction:column;align-items:center;padding:8px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);cursor:pointer;min-width:68px;">' +
         '<span style="font-size:26px;">' + p.emoji + '</span>' +
         '<span style="font-size:9px;font-family:Syne,sans-serif;font-weight:700;margin-top:4px;">' + p.nome.substring(0,12) + '</span>' +
         '<span style="font-size:10px;color:var(--p);font-weight:700;margin-top:2px;">R$' + p.preco + '</span></button>';
@@ -3074,14 +3073,14 @@ function cmdRenderItens() {
           : '<div style="font-size:10px;color:var(--m1);">Un: ' + cmdFmtVal(it.unitario) + '</div>') +
         (it.tipo !== 'peso' ?
           '<div style="display:flex;align-items:center;gap:8px;margin-top:5px;">' +
-          '<button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="cmdChgQtd(' + idx + ',-1)">−</button>' +
+          '<button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.cmdChgQtd(' + idx + ',-1)">−</button>' +
           '<span style="font-family:\'Syne\',sans-serif;font-size:13px;font-weight:800;min-width:18px;text-align:center;">' + it.qty + '</span>' +
-          '<button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="cmdChgQtd(' + idx + ',1)">+</button>' +
+          '<button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.cmdChgQtd(' + idx + ',1)">+</button>' +
           '</div>' : '') +
       '</div>' +
       '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">' +
         '<div style="font-family:\'Syne\',sans-serif;font-size:13px;font-weight:800;color:var(--p);">' + cmdFmtVal(it.total) + '</div>' +
-        '<button class="btn btn-d btn-xs" onclick="cmdRemItem(' + idx + ')">✕</button>' +
+        '<button class="btn btn-d btn-xs" onclick="window.cmdRemItem(' + idx + ')">✕</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -3162,7 +3161,7 @@ function cmdAbrirCardapio() {
     var cats = ['todos','acai','tigela','adicional','bebida'];
     var labels = {todos:'Todos',acai:'🍇 Açaí',tigela:'🥣 Tigela',adicional:'➕ Adicionais',bebida:'🥤 Bebidas'};
     chips.innerHTML = cats.map(function(c) {
-      return '<div class="chip ' + (c==='todos'?'ch-p':'ch-d') + '" onclick="cmdCatFlt(this,\'' + c + '\')">' + labels[c] + '</div>';
+      return '<div class="chip ' + (c==='todos'?'ch-p':'ch-d') + '" onclick="window.cmdCatFlt(this,\'' + c + '\')">' + labels[c] + '</div>';
     }).join('');
   }
 }
@@ -3191,7 +3190,7 @@ function cmdFiltrarProd() {
   }
   grid.innerHTML = prods.map(function(p) {
     var semEst = p.est <= 0;
-    return '<div onclick="' + (semEst ? '' : 'cmdSelecionarProd(' + p.id + ')') + '" style="background:var(--s2);border:1.5px solid ' + (semEst?'rgba(248,113,113,.25)':'var(--b1)') + ';border-radius:var(--rr);overflow:hidden;cursor:' + (semEst?'not-allowed':'pointer') + ';opacity:' + (semEst?'.5':'1') + ';transition:all .14s;" ' + (!semEst?'onmouseenter="this.style.borderColor=\'var(--b2)\'" onmouseleave="this.style.borderColor=\'var(--b1)\'"':'') + '>' +
+    return '<div onclick="' + (semEst ? '' : 'window.cmdSelecionarProd(' + p.id + ')') + '" style="background:var(--s2);border:1.5px solid ' + (semEst?'rgba(248,113,113,.25)':'var(--b1)') + ';border-radius:var(--rr);overflow:hidden;cursor:' + (semEst?'not-allowed':'pointer') + ';opacity:' + (semEst?'.5':'1') + ';transition:all .14s;" ' + (!semEst?'onmouseenter="this.style.borderColor=\'var(--b2)\'" onmouseleave="this.style.borderColor=\'var(--b1)\'"':'') + '>' +
       '<div style="width:100%;aspect-ratio:1.2;background:linear-gradient(145deg,#1a0d24,#271040);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;">' +
         p.emoji +
         (semEst ? '<div style="position:absolute;inset:0;background:rgba(248,113,113,.15);display:flex;align-items:center;justify-content:center;font-family:\'Syne\',sans-serif;font-size:9px;font-weight:700;color:var(--r);">SEM ESTOQUE</div>' : '') +
@@ -3351,8 +3350,8 @@ function cmdPendentes() {
           '<div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:700;">#' + String(c.num).padStart(3,'0') + ' · ' + c.cliente + '</div>' +
           '<div style="font-size:10px;color:var(--m1);">' + c.itens.length + ' item(ns) · ' + cmdFmtVal(c.totalSnapshot) + '</div>' +
         '</div>' +
-        '<button class="btn btn-p btn-sm" onclick="cmdReabrir(' + i + ')">↩️ Reabrir</button>' +
-        '<button class="btn btn-d btn-sm" onclick="cmdDeletarPend(' + i + ')">✕</button>' +
+        '<button class="btn btn-p btn-sm" onclick="window.cmdReabrir(' + i + ')">↩️ Reabrir</button>' +
+        '<button class="btn btn-d btn-sm" onclick="window.cmdDeletarPend(' + i + ')">✕</button>' +
       '</div>';
     }).join('');
   }
@@ -3410,7 +3409,7 @@ function cmdPagar(metodo) {
     var atalhos = [5,10,20,50,100];
     var atch = document.getElementById('din-atalhos');
     if (atch) atch.innerHTML = atalhos.filter(function(v){ return v >= total; }).map(function(v) {
-      return '<button class="btn btn-s btn-sm" onclick="document.getElementById(\'din-recebido\').value=\'' + v + '\';calcTroco()">R$' + v + '</button>';
+      return '<button class="btn btn-s btn-sm" onclick="document.window.getElementById(\'din-recebido\').value=\'' + v + '\';window.calcTroco()">R$' + v + '</button>';
     }).join('');
     openM('modal-cmd-dinheiro');
   } else if (metodo === 'pix') {
@@ -4045,9 +4044,9 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
 </script>
 
 <!-- PAGAMENTO VENDA POR PESO -->
-<div class="overlay" id="modal-peso-pay" onclick="closeOL(event,'modal-peso-pay')">
+<div class="overlay" id="modal-peso-pay" onclick="window.closeOL(event,'modal-peso-pay')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">⚖️ Cobrar por peso</div><button class="m-close" onclick="closeM('modal-peso-pay')">✕</button></div>
+    <div class="m-head"><div class="m-title">⚖️ Cobrar por peso</div><button class="m-close" onclick="window.closeM('modal-peso-pay')">✕</button></div>
     <div class="m-body">
       <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;margin-bottom:4px;">
         <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
@@ -4066,19 +4065,19 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
         </div>
       </div>
       <div class="g2 gap8">
-        <button class="btn btn-p" onclick="pesoFinish('PIX')">💳 PIX</button>
-        <button class="btn btn-s" onclick="pesoFinish('Débito')">💳 Débito</button>
-        <button class="btn btn-s" onclick="pesoFinish('Crédito')">💳 Crédito</button>
-        <button class="btn btn-s" onclick="pesoFinish('Dinheiro')">💵 Dinheiro</button>
+        <button class="btn btn-p" onclick="window.pesoFinish('PIX')">💳 PIX</button>
+        <button class="btn btn-s" onclick="window.pesoFinish('Débito')">💳 Débito</button>
+        <button class="btn btn-s" onclick="window.pesoFinish('Crédito')">💳 Crédito</button>
+        <button class="btn btn-s" onclick="window.pesoFinish('Dinheiro')">💵 Dinheiro</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- CONFIGURAR PREÇO/KG (admin) -->
-<div class="overlay" id="modal-peso-config" onclick="closeOL(event,'modal-peso-config')">
+<div class="overlay" id="modal-peso-config" onclick="window.closeOL(event,'modal-peso-config')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">⚙️ Preço por kg</div><button class="m-close" onclick="closeM('modal-peso-config')">✕</button></div>
+    <div class="m-head"><div class="m-title">⚙️ Preço por kg</div><button class="m-close" onclick="window.closeM('modal-peso-config')">✕</button></div>
     <div class="m-body">
       <div style="font-size:11px;color:var(--m2);background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:var(--rs);padding:10px 12px;">
         Esse preço vale para açaí, sorvete e qualquer mistura vendida por peso no Self-Service.
@@ -4092,11 +4091,11 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
           <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;">Venda por peso ativa</div>
           <div style="font-size:10px;color:var(--m1);">Exibe seção no PDV</div>
         </div>
-        <div class="toggle tog-on" id="peso-ativo-tog" onclick="togEl(this)"><div class="tgl-k"></div></div>
+        <div class="toggle tog-on" id="peso-ativo-tog" onclick="window.togEl(this)"><div class="tgl-k"></div></div>
       </div>
       <div class="g2 gap8">
-        <button class="btn btn-s" onclick="closeM('modal-peso-config')">Cancelar</button>
-        <button class="btn btn-p" onclick="savePesoConfig()">✅ Salvar</button>
+        <button class="btn btn-s" onclick="window.closeM('modal-peso-config')">Cancelar</button>
+        <button class="btn btn-p" onclick="window.savePesoConfig()">✅ Salvar</button>
       </div>
     </div>
   </div>
@@ -4104,15 +4103,15 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
 
 
 <!-- MODAL: Produtos do cardápio -->
-<div class="overlay" id="modal-cmd-produtos" onclick="closeOL(event,'modal-cmd-produtos')">
+<div class="overlay" id="modal-cmd-produtos" onclick="window.closeOL(event,'modal-cmd-produtos')">
   <div class="modal" style="max-height:94dvh;">
     <div class="mh"></div>
     <div class="m-head">
       <div class="m-title">🍇 Adicionar produto</div>
-      <button class="m-close" onclick="closeM('modal-cmd-produtos')">✕</button>
+      <button class="m-close" onclick="window.closeM('modal-cmd-produtos')">✕</button>
     </div>
     <div style="padding:12px 16px 0;">
-      <input class="inp" id="cmd-prod-search" placeholder="🔍 Buscar por nome ou código..." oninput="cmdFiltrarProd()" style="margin-bottom:8px;">
+      <input class="inp" id="cmd-prod-search" placeholder="🔍 Buscar por nome ou código..." oninput="window.cmdFiltrarProd()" style="margin-bottom:8px;">
       <div class="scr" style="padding:0;margin-bottom:10px;" id="cmd-cat-chips"></div>
     </div>
     <div id="cmd-prod-grid" style="padding:0 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:9px;overflow-y:auto;max-height:55dvh;"></div>
@@ -4120,9 +4119,9 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
 </div>
 
 <!-- MODAL: Quantidade/variação ao adicionar produto -->
-<div class="overlay" id="modal-cmd-qtd" onclick="closeOL(event,'modal-cmd-qtd')">
+<div class="overlay" id="modal-cmd-qtd" onclick="window.closeOL(event,'modal-cmd-qtd')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title" id="cmdqtd-title">Produto</div><button class="m-close" onclick="closeM('modal-cmd-qtd')">✕</button></div>
+    <div class="m-head"><div class="m-title" id="cmdqtd-title">Produto</div><button class="m-close" onclick="window.closeM('modal-cmd-qtd')">✕</button></div>
     <div class="m-body">
       <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--s2);border-radius:var(--rs);">
         <div style="font-size:44px;" id="cmdqtd-emoji"></div>
@@ -4134,30 +4133,30 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
       <div class="fld">
         <div class="lbl">Quantidade</div>
         <div style="display:flex;align-items:center;gap:12px;">
-          <button class="btn btn-s btn-ico" onclick="cmdQtdChg(-1)">−</button>
+          <button class="btn btn-s btn-ico" onclick="window.cmdQtdChg(-1)">−</button>
           <span id="cmdqtd-val" style="font-family:'Bebas Neue',sans-serif;font-size:32px;min-width:40px;text-align:center;">1</span>
-          <button class="btn btn-s btn-ico" onclick="cmdQtdChg(1)">+</button>
+          <button class="btn btn-s btn-ico" onclick="window.cmdQtdChg(1)">+</button>
         </div>
       </div>
       <div id="cmdqtd-obs-wrap" class="fld"><div class="lbl">Observação (opcional)</div><input class="inp" id="cmdqtd-obs" placeholder="Ex: sem granola, extra mel..."></div>
       <div id="cmdqtd-aviso" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:var(--rs);padding:9px 12px;font-size:11px;color:var(--r);"></div>
       <div class="g2 gap8">
-        <button class="btn btn-s" onclick="closeM('modal-cmd-qtd')">Cancelar</button>
-        <button class="btn btn-p" id="cmdqtd-confirm" onclick="cmdConfirmarProd()">✅ Adicionar</button>
+        <button class="btn btn-s" onclick="window.closeM('modal-cmd-qtd')">Cancelar</button>
+        <button class="btn btn-p" id="cmdqtd-confirm" onclick="window.cmdConfirmarProd()">✅ Adicionar</button>
       </div>
     </div>
   </div>
 </div>
 
 <!-- MODAL: Pagamento Dinheiro -->
-<div class="overlay" id="modal-cmd-dinheiro" onclick="closeOL(event,'modal-cmd-dinheiro')">
+<div class="overlay" id="modal-cmd-dinheiro" onclick="window.closeOL(event,'modal-cmd-dinheiro')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">💵 Pagamento em Dinheiro</div><button class="m-close" onclick="closeM('modal-cmd-dinheiro')">✕</button></div>
+    <div class="m-head"><div class="m-title">💵 Pagamento em Dinheiro</div><button class="m-close" onclick="window.closeM('modal-cmd-dinheiro')">✕</button></div>
     <div class="m-body">
       <div class="stat hi"><div class="sl">Total da comanda</div><div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--p);" id="din-total">R$ 0,00</div></div>
       <div class="fld">
         <div class="lbl">Valor recebido (R$)</div>
-        <input class="inp" id="din-recebido" type="number" step="0.01" placeholder="0,00" style="font-size:20px;font-family:'Bebas Neue',sans-serif;" oninput="calcTroco()">
+        <input class="inp" id="din-recebido" type="number" step="0.01" placeholder="0,00" style="font-size:20px;font-family:'Bebas Neue',sans-serif;" oninput="window.calcTroco()">
       </div>
       <div id="din-troco-wrap" style="display:none;padding:14px;border-radius:var(--rs);text-align:center;">
         <div style="font-size:11px;color:var(--m1);font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.8px;">Troco</div>
@@ -4165,22 +4164,22 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
       </div>
       <!-- Atalhos de troco -->
       <div style="display:flex;gap:6px;flex-wrap:wrap;" id="din-atalhos"></div>
-      <button class="btn btn-p btn-w" style="padding:14px;" onclick="cmdFinalizarDinheiro()">✅ Finalizar venda</button>
+      <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.cmdFinalizarDinheiro()">✅ Finalizar venda</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL: Pagamento Múltiplo -->
-<div class="overlay" id="modal-cmd-multiplo" onclick="closeOL(event,'modal-cmd-multiplo')">
+<div class="overlay" id="modal-cmd-multiplo" onclick="window.closeOL(event,'modal-cmd-multiplo')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">⚡ Múltiplos pagamentos</div><button class="m-close" onclick="closeM('modal-cmd-multiplo')">✕</button></div>
+    <div class="m-head"><div class="m-title">⚡ Múltiplos pagamentos</div><button class="m-close" onclick="window.closeM('modal-cmd-multiplo')">✕</button></div>
     <div class="m-body">
       <div class="stat hi"><div class="sl">Total</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="mult-total">R$ 0,00</div></div>
       <div class="g2 gap8">
         <div class="fld"><div class="lbl">Método 1</div>
           <select class="inp" id="mult-met1"><option value="pix">💳 PIX</option><option value="cartao">💳 Cartão</option><option value="dinheiro">💵 Dinheiro</option></select>
         </div>
-        <div class="fld"><div class="lbl">Valor (R$)</div><input class="inp" id="mult-val1" type="number" step="0.01" placeholder="0,00" oninput="calcMultResto()"></div>
+        <div class="fld"><div class="lbl">Valor (R$)</div><input class="inp" id="mult-val1" type="number" step="0.01" placeholder="0,00" oninput="window.calcMultResto()"></div>
       </div>
       <div class="g2 gap8">
         <div class="fld"><div class="lbl">Método 2</div>
@@ -4189,31 +4188,31 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
         <div class="fld"><div class="lbl">Restante</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--p);padding:8px 0;" id="mult-resto">R$ 0,00</div></div>
       </div>
       <div id="mult-aviso" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.22);border-radius:var(--rs);padding:9px 12px;font-size:11px;color:var(--r);"></div>
-      <button class="btn btn-p btn-w" style="padding:14px;" onclick="cmdFinalizarMultiplo()">✅ Confirmar pagamento</button>
+      <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.cmdFinalizarMultiplo()">✅ Confirmar pagamento</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL: Fiado -->
-<div class="overlay" id="modal-cmd-fiado" onclick="closeOL(event,'modal-cmd-fiado')">
+<div class="overlay" id="modal-cmd-fiado" onclick="window.closeOL(event,'modal-cmd-fiado')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">🤝 Venda a Prazo</div><button class="m-close" onclick="closeM('modal-cmd-fiado')">✕</button></div>
+    <div class="m-head"><div class="m-title">🤝 Venda a Prazo</div><button class="m-close" onclick="window.closeM('modal-cmd-fiado')">✕</button></div>
     <div class="m-body">
       <div class="stat hi"><div class="sl">Total</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="fiado-total">R$ 0,00</div></div>
       <div class="fld"><div class="lbl">Selecionar cliente</div>
-        <select class="inp" id="fiado-cliente-sel" onchange="cmdVerificaFiado()"><option value="">— Selecione —</option></select>
+        <select class="inp" id="fiado-cliente-sel" onchange="window.cmdVerificaFiado()"><option value="">— Selecione —</option></select>
       </div>
       <div id="fiado-status" style="display:none;border-radius:var(--rs);padding:12px 14px;font-size:11px;"></div>
       <div class="fld" id="fiado-venc-wrap" style="display:none;"><div class="lbl">Vencimento</div><input class="inp" id="fiado-venc" type="date"></div>
-      <button class="btn btn-p btn-w" style="padding:14px;" id="fiado-btn-ok" onclick="cmdFinalizarFiado()" disabled>✅ Registrar venda a prazo</button>
+      <button class="btn btn-p btn-w" style="padding:14px;" id="fiado-btn-ok" onclick="window.cmdFinalizarFiado()" disabled>✅ Registrar venda a prazo</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL: Entregador -->
-<div class="overlay" id="modal-cmd-entregar" onclick="closeOL(event,'modal-cmd-entregar')">
+<div class="overlay" id="modal-cmd-entregar" onclick="window.closeOL(event,'modal-cmd-entregar')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">🛵 Converter em Entrega</div><button class="m-close" onclick="closeM('modal-cmd-entregar')">✕</button></div>
+    <div class="m-head"><div class="m-title">🛵 Converter em Entrega</div><button class="m-close" onclick="window.closeM('modal-cmd-entregar')">✕</button></div>
     <div class="m-body">
       <div class="fld"><div class="lbl">Endereço de entrega</div><input class="inp" id="del-end" placeholder="Rua, número, bairro..."></div>
       <div class="fld"><div class="lbl">Entregador</div>
@@ -4222,15 +4221,15 @@ if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
       <div class="fld"><div class="lbl">Forma de pagamento</div>
         <select class="inp" id="del-pgto"><option value="pix">PIX</option><option value="dinheiro">Dinheiro</option><option value="cartao">Cartão</option></select>
       </div>
-      <button class="btn btn-p btn-w" style="padding:14px;" onclick="cmdFinalizarEntrega()">✅ Registrar entrega</button>
+      <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.cmdFinalizarEntrega()">✅ Registrar entrega</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL: Comandas Pendentes -->
-<div class="overlay" id="modal-cmd-pendentes" onclick="closeOL(event,'modal-cmd-pendentes')">
+<div class="overlay" id="modal-cmd-pendentes" onclick="window.closeOL(event,'modal-cmd-pendentes')">
   <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">📋 Comandas Pendentes</div><button class="m-close" onclick="closeM('modal-cmd-pendentes')">✕</button></div>
+    <div class="m-head"><div class="m-title">📋 Comandas Pendentes</div><button class="m-close" onclick="window.closeM('modal-cmd-pendentes')">✕</button></div>
     <div class="m-body" id="cmd-pend-list"></div>
   </div>
 </div>
