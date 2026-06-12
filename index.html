@@ -1328,78 +1328,20 @@ const S = {
   role:null, view:null, cart:[], notifs:[], nextOrderId:50, newOrderTimer:null, _pQty:1,
   pdvInput:'', pdvCart:[], pdvHistory:[],
   cpItems:[], cpItemsTotal:0,
-  caixaAberto:true, caixaAbertura:'10:02', caixaOperador:'',
-  coMoves:[], coVendas:{pix:218,debito:124,credito:48,dinheiro:22},
-  prolabore:2000, credLancamentos:[], analPeriodo:7,
-  recorrentes:[
-    {id:1,desc:'Aluguel do ponto',val:1200,dia:5,cat:'Aluguel'},
-    {id:2,desc:'Energia elétrica',val:380,dia:10,cat:'Energia'},
-    {id:3,desc:'Internet + telefone',val:120,dia:15,cat:'Internet'},
-    {id:4,desc:'Salário atendente',val:1400,dia:5,cat:'Funcionário'},
-  ],
+  caixaAberto:true, caixaAbertura:'', caixaOperador:'',
+  coMoves:[], coVendas:{}, prolabore:0, recorrentes:[], credLancamentos:[],
   cfgMetodos:{pix:true,debito:true,credito:true,dinheiro:true,fiado:false},
   cfgOps:{aceitarPedidos:true,modoOffline:false,pedidoAutoAceitar:false,notifSonora:true,alertaEstoqueBaixo:true},
   cfgNotifs:{novoPedido:true,pedidoCancelado:true,estoqueBaixo:true,creditoLimite:true,fechamentoCaixa:false},
   _permTab:'admin', _prodCat:'todos', _finFlt:'todos', _credFlt:'todos', _usrFlt:'todos',
-  products:[
-    {id:1,nome:'Açaí Puro 300ml',desc:'Cremoso puro',preco:14,cat:'acai',emoji:'🍇',badge:'',on:true,est:80,min:10,bc:'001'},
-    {id:2,nome:'Açaí Especial 500ml',desc:'Granola, banana, mel',preco:22,cat:'acai',emoji:'🍓',badge:'Popular',on:true,est:60,min:10,bc:'002'},
-    {id:3,nome:'Açaí Premium 700ml',desc:'Completo premium',preco:32,cat:'acai',emoji:'💜',badge:'',on:true,est:40,min:5,bc:'003'},
-    {id:4,nome:'Tigela Choco',desc:'Nutella + leite ninho',preco:26,cat:'tigela',emoji:'🍫',badge:'Novo',on:true,est:35,min:5,bc:'004'},
-    {id:5,nome:'Tigela Tropical',desc:'Manga, coco, banana',preco:24,cat:'tigela',emoji:'🥥',badge:'',on:true,est:8,min:10,bc:'005'},
-    {id:6,nome:'Tigela Fit',desc:'Sem açúcar',preco:20,cat:'tigela',emoji:'🌿',badge:'',on:true,est:50,min:5,bc:'006'},
-    {id:7,nome:'Granola Extra',desc:'Porção extra',preco:4,cat:'adicional',emoji:'🌾',badge:'',on:true,est:3,min:10,bc:'007'},
-    {id:8,nome:'Frutas Mix',desc:'Morango, uva, banana',preco:5,cat:'adicional',emoji:'🍓',badge:'',on:true,est:30,min:5,bc:'008'},
-    {id:9,nome:'Leite Ninho',desc:'Porção generosa',preco:4,cat:'adicional',emoji:'🥛',badge:'',on:true,est:2,min:5,bc:'009'},
-    {id:10,nome:'Açaí Shake',desc:'Batido cremoso',preco:15,cat:'bebida',emoji:'🥤',badge:'',on:true,est:20,min:5,bc:'010'},
-  ],
-  adicionais:[
-    {id:1,nome:'Granola Crocante',emoji:'🌾',preco:4,est:40,desc:'Granola artesanal',on:true},
-    {id:2,nome:'Leite Ninho',emoji:'🥛',preco:4,est:15,desc:'Polvilhado na hora',on:true},
-    {id:3,nome:'Nutella',emoji:'🍫',preco:6,est:10,desc:'Colher generosa',on:true},
-    {id:4,nome:'Mel',emoji:'🍯',preco:3,est:20,desc:'Mel puro',on:true},
-    {id:5,nome:'Morango Fresco',emoji:'🍓',preco:5,est:18,desc:'Selecionados',on:true},
-    {id:6,nome:'Banana',emoji:'🍌',preco:3,est:35,desc:'Fatias frescas',on:true},
-    {id:7,nome:'Paçoca',emoji:'🟤',preco:3,est:25,desc:'Esfarelada',on:true},
-    {id:8,nome:'Coco Ralado',emoji:'🥥',preco:3,est:30,desc:'Fresco ralado',on:true},
-  ],
-  entregadores:[
-    {id:1,nome:'Marcos Silva',tel:'66 99001-1111',com:10,sal:0,st:'ativo',vei:'Honda Pop 110 — Preta',corridas:12},
-    {id:2,nome:'Pedro Lima',tel:'66 99002-2222',com:12,sal:45,st:'ativo',vei:'Biz 125 — Vermelha',corridas:8},
-    {id:3,nome:'Lucas Mota',tel:'66 99003-3333',com:10,sal:0,st:'inativo',vei:'Fan 150 — Branca',corridas:0},
-  ],
-  orders:[
-    {id:'041',cli:'Ana Lima',its:'1x Açaí Especial, 1x Granola',tot:26,st:'pendente',end:'Rua das Flores, 12',tm:'2 min',pgto:'PIX',del:''},
-    {id:'042',cli:'João Carlos',its:'2x Tigela Choco',tot:52,st:'preparo',end:'Av. Central, 305',tm:'8 min',pgto:'Débito',del:'Marcos Silva'},
-    {id:'043',cli:'Maria Souza',its:'1x Açaí Premium 700ml',tot:32,st:'entrega',end:'Rua Orquídeas, 42',tm:'15 min',pgto:'PIX',del:'Pedro Lima'},
-    {id:'044',cli:'Pedro Alves',its:'3x Açaí Puro 300ml',tot:42,st:'entregue',end:'Travessa Sol, 8',tm:'30 min',pgto:'Dinheiro',del:'Marcos Silva'},
-  ],
-  finances:[
-    {id:1,tipo:'receita',desc:'Vendas turno manhã',val:180,cat:'Vendas',data:'2025-06-08'},
-    {id:2,tipo:'receita',desc:'Vendas turno tarde',val:232,cat:'Vendas',data:'2025-06-08'},
-    {id:3,tipo:'despesa',desc:'Compra de polpa de açaí 5kg',val:280,cat:'Insumos',data:'2025-06-08'},
-    {id:4,tipo:'despesa',desc:'Embalagens descartáveis',val:85,cat:'Insumos',data:'2025-06-07'},
-    {id:5,tipo:'despesa',desc:'Pagamento entregador Marcos',val:62,cat:'Funcionário',data:'2025-06-07'},
-  ],
-  credits:[
-    {id:1,nome:'Dona Graça',tel:'66 99100-1111',lim:200,div:120,obs:'Vizinha da padaria'},
-    {id:2,nome:'Zé do Bar',tel:'66 99200-2222',lim:150,div:150,obs:'Paga todo sábado'},
-    {id:3,nome:'Família Matos',tel:'66 99300-3333',lim:300,div:45,obs:''},
-    {id:4,nome:'João Mecânico',tel:'66 99400-4444',lim:100,div:0,obs:'Quite'},
-    {id:5,nome:'Pedro Farmácia',tel:'66 99600-6666',lim:100,div:100,obs:'No limite'},
-  ],
-  caixaHistorico:[
-    {id:1,data:'2025-06-08',aber:'10:02',fech:'22:15',op:'Carla',total:412,pedidos:21,sangrias:50,suprimentos:200,dif:0,obs:'',metodos:{pix:218,debito:124,credito:48,dinheiro:22}},
-    {id:2,data:'2025-06-07',aber:'10:00',fech:'22:08',op:'Carla',total:388,pedidos:19,sangrias:0,suprimentos:200,dif:-5,obs:'Falta R$5',metodos:{pix:200,debito:110,credito:40,dinheiro:38}},
-    {id:3,data:'2025-06-06',aber:'10:05',fech:'22:20',op:'Denned',total:441,pedidos:24,sangrias:100,suprimentos:200,dif:0,obs:'',metodos:{pix:241,debito:130,credito:50,dinheiro:20}},
-    {id:4,data:'2025-06-05',aber:'10:01',fech:'22:10',op:'Carla',total:320,pedidos:17,sangrias:0,suprimentos:200,dif:2,obs:'Sobra R$2',metodos:{pix:180,debito:90,credito:30,dinheiro:20}},
-    {id:5,data:'2025-06-03',aber:'10:00',fech:'22:30',op:'Carla',total:512,pedidos:27,sangrias:100,suprimentos:200,dif:0,obs:'Sábado',metodos:{pix:280,debito:150,credito:55,dinheiro:27}},
-  ],
-  usuarios:[
-    {id:1,nome:'Denned (Dono)',email:'denned@sasakiacai.com',role:'admin',tel:'66 99000-0001',ativo:true,criado:'2025-01-10',ultimo:'Hoje',log:['Login às 10:02','Fechou caixa às 22:15','Editou produto']},
-    {id:2,nome:'Carla Atendente',email:'carla@sasakiacai.com',role:'atendente',tel:'66 99000-0002',ativo:true,criado:'2025-02-01',ultimo:'Hoje',log:['Login às 10:00','Criou pedido #044']},
-    {id:3,nome:'Marcos Entregador',email:'marcos@sasakiacai.com',role:'entregador',tel:'66 99001-1111',ativo:true,criado:'2025-02-01',ultimo:'Hoje',log:['Login às 10:30','Confirmou entrega #042']},
-  ],
+  products:[],
+  adicionais:[],
+  entregadores:[],
+  orders:[],
+  finances:[],
+  credits:[],
+  caixaHistorico:[],
+  usuarios:[],
   permissions:{
     admin:{dashboard:true,pedidos:true,pdv:true,produtos:true,adicionais:true,entregadores:true,financas:true,credito:true,caixa:true,analytics:true,config:true,usuarios:true},
     atendente:{dashboard:true,pedidos:true,pdv:true,produtos:false,adicionais:false,entregadores:false,financas:false,credito:true,caixa:true,analytics:false,config:false,usuarios:false},
@@ -2124,21 +2066,8 @@ function updNotifBadge(){
 }
 
 function startOrderSim(){
+  /* Simulação de pedidos desativada — sistema usa apenas dados reais */
   clearInterval(S.newOrderTimer);
-  S.newOrderTimer=setInterval(()=>{
-    if(Math.random()<0.3){
-      const names=['Lucas Mota','Fernanda Costa','Bruna Lima','Rafael Torres'];
-      const prods=['2x Açaí Especial','1x Tigela Choco + Granola','3x Açaí Puro 300ml'];
-      const n=names[Math.floor(Math.random()*names.length)];
-      const p=prods[Math.floor(Math.random()*prods.length)];
-      const tot=(Math.random()*40+15).toFixed(0);
-      const id=String(S.nextId++).padStart(3,'0');
-      S.orders.unshift({id,cli:n,its:p,tot:parseFloat(tot),st:'pendente',end:'Rua '+id+', '+Math.floor(Math.random()*200+1),tm:'agora',pgto:['PIX','Débito','Crédito'][Math.floor(Math.random()*3)],del:''});
-      addNotif(`🔔 Novo pedido #${id} de ${n}`);playBeep();
-      if(S.view==='novos-pedidos')renderNovos();
-      if(S.view==='dashboard')renderDash();
-    }
-  },25000);
 }
 
 
@@ -2548,8 +2477,8 @@ function renderFinancas(flt=_finFlt){
   si('fin-lucro','R$'+lucro.toLocaleString('pt-BR'));
   document.getElementById('fin-lucro').style.color=lucro>=0?'var(--g)':'var(--r)';
   si('fin-margem','Margem '+margem+'%');
-  si('fin-prolabore','R$'+S.prolabore.toLocaleString('pt-BR'));
-  si('prolabore-val','R$'+S.prolabore.toLocaleString('pt-BR'));
+  si('fin-prolabore','R$'+(S.prolabore||0).toLocaleString('pt-BR'));
+  si('prolabore-val','R$'+(S.prolabore||0).toLocaleString('pt-BR'));
 
   // Categorias
   const cats={};
@@ -2558,7 +2487,7 @@ function renderFinancas(flt=_finFlt){
   const catEl=document.getElementById('fin-cats');
   if(catEl)catEl.innerHTML=Object.entries(cats).sort((a,b)=>b[1]-a[1]).map(([cat,val])=>`
     <div class="prog-wrap">
-      <div class="prog-label"><span>${cat}</span><span style="color:var(--r);">-R$${val.toLocaleString('pt-BR')}</span></div>
+      <div class="prog-label"><span>${cat}</span><span style="color:var(--r);">-R$${(val||0).toLocaleString('pt-BR')}</span></div>
       <div class="prog-bar"><div class="prog-fill" style="width:${(val/maxCat*100).toFixed(0)}%;background:linear-gradient(90deg,var(--r),var(--o));"></div></div>
     </div>`).join('');
 
@@ -2589,7 +2518,7 @@ function renderFinancas(flt=_finFlt){
       <div class="ri-ic">🔁</div>
       <div class="ri-info"><div class="ri-nm">${r.desc}</div><div class="ri-sub">${r.cat} · todo dia ${r.dia}</div></div>
       <div class="ri-r">
-        <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--r);">-R$${r.val.toLocaleString('pt-BR')}/mês</div>
+        <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--r);">-R$${(r.val||0).toLocaleString('pt-BR')}/mês</div>
         <button class="btn btn-d btn-xs" data-onclick="event.stopPropagation();S.recorrentes=S.recorrentes.filter(x=>x.id!=${r.id});renderFinancas();">Del</button>
       </div>
     </div>`).join('');
