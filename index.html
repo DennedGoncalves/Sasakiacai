@@ -216,29 +216,12 @@ textarea.inp{resize:vertical;min-height:65px;}
   /* Grids de cards aproveitam a largura */
   .view .g2 { grid-template-columns: repeat(3, 1fr) !important; }
 
-  /* ═══ SELF-SERVICE: duas colunas (adição | comanda) ═══ */
+  /* ═══ SELF-SERVICE: aproveitar largura no desktop ═══ */
   #v-self-service { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
-  #v-self-service > div:first-child {
-    flex-direction: row !important; min-height: 0 !important;
-    height: calc(100dvh - 64px) !important; gap: 0; align-items: stretch;
-  }
-  /* Coluna esquerda: peso + atalhos + cardápio (rola) */
-  #ss-left {
-    flex: 1.3 !important; overflow-y: auto; padding: 4px 0;
-    border-right: 1px solid var(--b1); flex-direction: column; min-width: 0;
-  }
-  /* Coluna direita: comanda — lista rola, total e pagamento fixos */
-  #ss-right {
-    flex: 1 !important; min-width: 360px; max-width: 480px;
-    flex-direction: column; background: var(--s1); height: 100%; min-height: 0;
-  }
-  /* Dentro da comanda: lista de itens cresce e rola; rodapé fica fixo embaixo */
-  #ss-right #cmd-itens { flex: 1 1 auto !important; overflow-y: auto; min-height: 0 !important; }
-  #ss-right > div:last-child { flex-shrink: 0; }
-  /* Total da comanda maior no desktop */
-  #cmd-total-display { font-size: 34px !important; }
-  /* Cardápio em grade maior */
-  #cmd-prod-grid { grid-template-columns: repeat(3, 1fr) !important; }
+  /* Cardápio em grade maior no desktop */
+  #cmd-prod-grid { grid-template-columns: repeat(4, 1fr) !important; }
+  /* Total da comanda maior */
+  #cmd-total-display { font-size: 32px !important; }
 
   /* Tabelas/listas mais largas */
   .list-row, .prod-row, .order-row { font-size: 13px; }
@@ -255,11 +238,7 @@ textarea.inp{resize:vertical;min-height:65px;}
 }
 
 
-/* ss-left / ss-right: neutros no mobile, viram colunas só no desktop */
-#ss-left, #ss-right { display: contents; }
-@media (min-width: 900px) {
-  #ss-left, #ss-right { display: flex; }
-}
+
 
 </style>
 </head>
@@ -461,8 +440,7 @@ textarea.inp{resize:vertical;min-height:65px;}
     <div class="view" id="v-self-service">
       <div style="display:flex;flex-direction:column;min-height:100%;">
 
-        <div id="ss-left">
-        <!-- TOP BAR DA COMANDA -->
+                <!-- TOP BAR DA COMANDA -->
         <div style="background:var(--s1);border-bottom:1px solid var(--b1);padding:10px 14px;flex-shrink:0;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
             <div style="display:flex;align-items:center;gap:8px;">
@@ -510,10 +488,8 @@ textarea.inp{resize:vertical;min-height:65px;}
           </div>
         </div>
 
-        </div><!-- /ss-left -->
-
-        <div id="ss-right">
-        <!-- LISTA DE ITENS DA COMANDA -->
+        
+                <!-- LISTA DE ITENS DA COMANDA -->
         <div id="cmd-itens" style="flex:1;min-height:120px;padding:8px 14px;"></div>
 
         <!-- SCANNER INPUT OCULTO -->
@@ -1137,8 +1113,7 @@ ON CONFLICT (chave) DO NOTHING;</div>
       <div class="card px" style="margin:0 16px;" id="perm-summary"></div>
 
       <div class="sp3"></div>
-    </div><!-- /ss-right -->
-      </div>
+          </div>
   </div>
   <div id="bnav"></div>
 
