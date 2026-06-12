@@ -240,6 +240,7 @@ textarea.inp{resize:vertical;min-height:65px;}
 
 
 
+#v-analytics{display:none !important;}
 </style>
 </head>
 <body>
@@ -306,9 +307,9 @@ textarea.inp{resize:vertical;min-height:65px;}
         <span style="margin-left:auto;font-size:10px;color:var(--m1);" id="dash-clk"></span>
       </div>
       <div class="g2 px gap8">
-        <div class="stat hi"><div class="sl">Faturamento hoje</div><div class="sv" style="color:var(--pm);font-size:22px;">R$412</div><div class="ss tx-g">↑ 14% vs ontem</div></div>
-        <div class="stat"><div class="sl">Pedidos hoje</div><div class="sv">21</div><div class="ss">9 em andamento</div></div>
-        <div class="stat"><div class="sl">Ticket médio</div><div class="sv" style="font-size:20px;">R$19</div></div>
+        <div class="stat hi"><div class="sl">Faturamento hoje</div><div class="sv" style="color:var(--pm);font-size:22px;" id="dash-fat">R$0</div><div class="ss tx-g">↑ 14% vs ontem</div></div>
+        <div class="stat"><div class="sl">Pedidos hoje</div><div class="sv" id="dash-ped"> 0</div><div class="ss" id="dash-and"> 0 em andamento</div></div>
+        <div class="stat"><div class="sl">Ticket médio</div><div class="sv" style="font-size:20px;" id="dash-tkt">R$0</div></div>
         <div class="stat"><div class="sl">Pendentes</div><div class="sv tx-o" id="dash-pend">0</div></div>
       </div>
       <div class="sp"></div>
@@ -1351,7 +1352,7 @@ const S = {
     {id:'dashboard',label:'📊 Dashboard'},{id:'pedidos',label:'📋 Pedidos'},{id:'pdv',label:'🏪 PDV'},
     {id:'produtos',label:'🍇 Produtos'},{id:'adicionais',label:'➕ Adicionais'},{id:'entregadores',label:'🛵 Entregadores'},
     {id:'financas',label:'💰 Finanças'},{id:'credito',label:'🤝 Crédito'},{id:'caixa',label:'🔐 Caixa'},
-    {id:'analytics',label:'📈 Analytics'},{id:'config',label:'⚙️ Config'},{id:'usuarios',label:'👥 Usuários'},
+    {id:'config',label:'⚙️ Config'},{id:'usuarios',label:'👥 Usuários'},
   ],
 };
 
@@ -1369,7 +1370,7 @@ const MENUS={
     {grp:'Operação',items:[{id:'criar-pedido',ic:'✏️',nm:'Criar Pedido',ds:'Manual'},{id:'self-service',ic:'🏪',nm:'Self-Service',ds:'PDV balcão'}]},
     {grp:'Cardápio',items:[{id:'produtos',ic:'🍇',nm:'Produtos',ds:'Cardápio'},{id:'adicionais',ic:'➕',nm:'Adicionais',ds:'Toppings'}]},
     {grp:'Financeiro',items:[{id:'financas',ic:'💰',nm:'Finanças',ds:'Receitas/despesas'},{id:'credito',ic:'🤝',nm:'Crédito',ds:'A prazo'},{id:'caixa-diario',ic:'📅',nm:'Caixa Diário',ds:'Fechamento'},{id:'caixa-op',ic:'🔐',nm:'Caixa Operacional',ds:'Turno'},{id:'historico-caixa',ic:'🗄️',nm:'Histórico Caixa',ds:'Anteriores'}]},
-    {grp:'Gestão',items:[{id:'entregadores',ic:'🛵',nm:'Entregadores',ds:'Equipe'},{id:'analytics',ic:'📈',nm:'Analytics',ds:'Visitantes'},{id:'config',ic:'⚙️',nm:'Configurações',ds:'Sistema'},{id:'usuarios',ic:'👥',nm:'Usuários',ds:'Permissões'}]},
+    {grp:'Gestão',items:[{id:'entregadores',ic:'🛵',nm:'Entregadores',ds:'Equipe'},{id:'config',ic:'⚙️',nm:'Configurações',ds:'Sistema'},{id:'usuarios',ic:'👥',nm:'Usuários',ds:'Permissões'}]},
   ],
   atendente:[{grp:'Operação',items:[{id:'novos-pedidos',ic:'🔔',nm:'Novos Pedidos',ds:'Pendentes',bd:true},{id:'gestao-pedidos',ic:'📋',nm:'Pedidos',ds:'Ver todos'},{id:'criar-pedido',ic:'✏️',nm:'Criar Pedido',ds:'Manual'},{id:'self-service',ic:'🏪',nm:'PDV Balcão',ds:'Presencial'},{id:'credito',ic:'🤝',nm:'Crédito',ds:'Fiado'},{id:'caixa-op',ic:'🔐',nm:'Caixa',ds:'Turno'}]}],
   entregador:[{grp:'Entregas',items:[{id:'entregador-view',ic:'🛵',nm:'Minhas Entregas',ds:'Corridas'}]}],
@@ -1413,7 +1414,7 @@ function renderView(v){
     'produtos':()=>renderProds(),'adicionais':renderAdics,'entregadores':renderDels,
     'financas':()=>renderFinancas(),'credito':()=>renderCredito(),
     'caixa-diario':renderCaixaDia,'caixa-op':renderCaixaOp,'historico-caixa':()=>renderHC(7),
-    'analytics':()=>renderAnalytics(S.analPeriodo),'config':renderConfig,'usuarios':renderUsuarios,
+    'config':renderConfig,'usuarios':renderUsuarios,
     'cardapio':renderCardapio,'entregador-view':renderDelView,
   };
   if(map[v]) map[v]();
@@ -1454,22 +1455,58 @@ function closeSBOut(e){if(e.target===document.getElementById('sidebar'))closeSB(
 
 function renderDash(){
   setInterval(()=>{const el=document.getElementById('dash-clk');if(el)el.textContent=new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});},1000);
-  const vals=[288,342,198,412,380,441,412];
-  const days=['Seg','Ter','Qua','Qui','Sex','Sab','Dom'];
-  const max=Math.max(...vals);
-  const c=document.getElementById('dash-chart');const l=document.getElementById('dash-lbls');
-  if(c){
-    c.innerHTML=vals.map((v,i)=>`<div class="cb" style="height:${(v/max*100).toFixed(0)}%;${i===3?'background:linear-gradient(to top,var(--acc),var(--pm));':''}"></div>`).join('');
-    l.innerHTML=days.map(d=>`<span>${d}</span>`).join('');
+
+  // ── Faturamento e pedidos do dia (dados reais) ──
+  var hojeStr = new Date().toLocaleDateString('pt-BR');
+  function isHoje(o){
+    // pedidos finalizados/entregues contam como faturamento
+    return true; // sem timestamp confiável por pedido, conta os do estado atual
   }
-  const rec=document.getElementById('dash-recent');
-  if(rec)rec.innerHTML=S.orders.slice(0,3).map(o=>`
+  var pedidosHoje = S.orders.filter(function(o){ return o.st!=='cancelado'; });
+  var faturamento = pedidosHoje.reduce(function(s,o){ return s + (+o.tot||0); }, 0);
+  var qtdPedidos = pedidosHoje.length;
+  var emAndamento = S.orders.filter(function(o){ return o.st==='preparo'||o.st==='entrega'; }).length;
+  var pendentes = S.orders.filter(function(o){ return o.st==='pendente'; }).length;
+  var ticket = qtdPedidos>0 ? (faturamento/qtdPedidos) : 0;
+
+  var fEl=document.getElementById('dash-fat'); if(fEl) fEl.textContent='R$'+faturamento.toFixed(0);
+  var pdEl=document.getElementById('dash-ped'); if(pdEl) pdEl.textContent=qtdPedidos;
+  var anEl=document.getElementById('dash-and'); if(anEl) anEl.textContent=emAndamento+' em andamento';
+  var tkEl=document.getElementById('dash-tkt'); if(tkEl) tkEl.textContent='R$'+ticket.toFixed(0);
+
+  // ── Gráfico: faturamento por método dos últimos pedidos (real) ──
+  // Sem histórico diário ainda; mostra distribuição por status dos pedidos atuais.
+  var c=document.getElementById('dash-chart');var l=document.getElementById('dash-lbls');
+  if(c){
+    if(S.orders.length===0){
+      c.innerHTML='<div style="width:100%;text-align:center;color:var(--m1);font-size:11px;padding:30px 0;">Sem dados ainda</div>';
+      if(l) l.innerHTML='';
+    } else {
+      // agrupa faturamento por status
+      var grupos={pendente:0,preparo:0,entrega:0,entregue:0};
+      S.orders.forEach(function(o){ if(grupos[o.st]!==undefined) grupos[o.st]+=(+o.tot||0); });
+      var vals=Object.values(grupos); var labels=['Pend','Prep','Entr','OK'];
+      var max=Math.max.apply(null,vals.concat([1]));
+      c.innerHTML=vals.map(function(v){return '<div class="cb" style="height:'+(v/max*100).toFixed(0)+'%;"></div>';}).join('');
+      if(l) l.innerHTML=labels.map(function(d){return '<span>'+d+'</span>';}).join('');
+    }
+  }
+
+  // ── Pedidos recentes (real) ──
+  var rec=document.getElementById('dash-recent');
+  if(rec){
+    if(S.orders.length===0){
+      rec.innerHTML='<div style="text-align:center;color:var(--m1);font-size:11px;padding:20px 0;">Nenhum pedido ainda</div>';
+    } else {
+      rec.innerHTML=S.orders.slice(0,3).map(function(o){return `
     <div class="ri" data-onclick="openOrderM('${o.id}')">
       <div class="ri-ic">${o.st==='entregue'?'✅':o.st==='entrega'?'🛵':'🍇'}</div>
-      <div class="ri-info"><div class="ri-nm">#${o.id} · ${o.cli}</div><div class="ri-sub">${o.its.substring(0,32)}...</div></div>
-      <div class="ri-r"><div class="chip ${SC[o.st]}" style="font-size:9px;padding:3px 7px;">${SL[o.st]}</div><div class="ri-val">R$${o.tot}</div></div>
-    </div>`).join('');
-  const p=document.getElementById('dash-pend');if(p)p.textContent=S.orders.filter(o=>o.st==='pendente').length;
+      <div class="ri-info"><div class="ri-nm">#${o.id} · ${o.cli||'Cliente'}</div><div class="ri-sub">${(o.its||'').substring(0,32)}</div></div>
+      <div class="ri-r"><div class="chip ${SC[o.st]||''}" style="font-size:9px;padding:3px 7px;">${SL[o.st]||o.st}</div><div class="ri-val">R$${(+o.tot||0).toFixed(0)}</div></div>
+    </div>`;}).join('');
+    }
+  }
+  var p=document.getElementById('dash-pend');if(p)p.textContent=pendentes;
 }
 
 function renderNovos(){
