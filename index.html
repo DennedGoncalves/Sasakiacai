@@ -12,6 +12,9 @@ html{-webkit-tap-highlight-color:transparent;}
 body{background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;height:100dvh;overflow:hidden;-webkit-font-smoothing:antialiased;}
 #shell{display:flex;flex-direction:column;height:100dvh;max-width:480px;margin:0 auto;}
 #content{flex:1;overflow-y:auto;overflow-x:hidden;}
+/* #main-col: no mobile, preenche o shell (flex column) */
+#main-col { display: flex; flex-direction: column; flex: 1; min-height: 0; height: 100%; }
+
 #content::-webkit-scrollbar{width:2px;}
 #content::-webkit-scrollbar-thumb{background:var(--b1);}
 #topbar{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:rgba(7,5,10,.9);backdrop-filter:blur(24px);border-bottom:1px solid var(--b1);flex-shrink:0;z-index:40;}
@@ -178,6 +181,86 @@ textarea.inp{resize:vertical;min-height:65px;}
 .tx-g{color:var(--g);}.tx-r{color:var(--r);}.tx-o{color:var(--o);}.tx-p{color:var(--p);}.tx-m{color:var(--m1);}.tx-gold{color:var(--gold);}
 .font-b{font-family:'Syne',sans-serif;font-weight:800;}.font-xs{font-size:10px;}.hidden{display:none!important;}
 .gap8{gap:8px;}.gap10{gap:10px;}.gap12{gap:12px;}.divider{height:1px;background:var(--b1);}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LAYOUT DESKTOP — loja (>= 900px). Mobile permanece intacto.
+═══════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 900px) {
+  /* Shell ocupa a tela toda */
+  #shell { max-width: 100% !important; flex-direction: row !important; height: 100dvh; }
+
+  /* Sidebar fixa sempre visível à esquerda */
+  #sidebar {
+    position: relative !important; inset: auto !important;
+    display: block !important; width: 260px; flex-shrink: 0;
+    background: var(--s1) !important; backdrop-filter: none !important;
+    border-right: 1px solid var(--b1); height: 100dvh; overflow-y: auto;
+  }
+  #sbp {
+    width: 260px !important; max-width: 260px !important; height: 100%;
+    transform: none !important; border-radius: 0 !important;
+    box-shadow: none !important; animation: none !important;
+  }
+  /* Esconde o botão hamburguer e o bottom-nav no desktop */
+  #topbar .ib { display: none !important; }
+  #bnav { display: none !important; }
+
+  /* Coluna principal: topbar + conteúdo */
+  #main-col { display: flex; flex-direction: column; flex: 1; height: 100dvh; overflow: hidden; }
+  #topbar { flex-shrink: 0; }
+  #content { flex: 1; overflow-y: auto; padding: 0; }
+
+  /* Conteúdo das views com largura ampla e centralizado */
+  .view { max-width: 1200px; margin: 0 auto; padding: 0 24px; width: 100%; }
+
+  /* Grids de cards aproveitam a largura */
+  .view .g2 { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* ═══ SELF-SERVICE: duas colunas (adição | comanda) ═══ */
+  #v-self-service { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+  #v-self-service > div:first-child {
+    flex-direction: row !important; min-height: 0 !important;
+    height: calc(100dvh - 64px) !important; gap: 0; align-items: stretch;
+  }
+  /* Coluna esquerda: peso + atalhos + cardápio (rola) */
+  #ss-left {
+    flex: 1.3 !important; overflow-y: auto; padding: 4px 0;
+    border-right: 1px solid var(--b1); flex-direction: column; min-width: 0;
+  }
+  /* Coluna direita: comanda — lista rola, total e pagamento fixos */
+  #ss-right {
+    flex: 1 !important; min-width: 360px; max-width: 480px;
+    flex-direction: column; background: var(--s1); height: 100%; min-height: 0;
+  }
+  /* Dentro da comanda: lista de itens cresce e rola; rodapé fica fixo embaixo */
+  #ss-right #cmd-itens { flex: 1 1 auto !important; overflow-y: auto; min-height: 0 !important; }
+  #ss-right > div:last-child { flex-shrink: 0; }
+  /* Total da comanda maior no desktop */
+  #cmd-total-display { font-size: 34px !important; }
+  /* Cardápio em grade maior */
+  #cmd-prod-grid { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* Tabelas/listas mais largas */
+  .list-row, .prod-row, .order-row { font-size: 13px; }
+
+  /* Topbar mais espaçado */
+  #topbar { padding: 16px 28px; }
+  .tb-logo { font-size: 26px; }
+}
+
+/* Telas grandes (>=1400px) — cardápio com 4 colunas */
+@media (min-width: 1400px) {
+  #cmd-prod-grid { grid-template-columns: repeat(4, 1fr) !important; }
+  .view .g2 { grid-template-columns: repeat(4, 1fr) !important; }
+}
+
+
+/* ss-left / ss-right: neutros no mobile, viram colunas só no desktop */
+#ss-left, #ss-right { display: contents; }
+@media (min-width: 900px) {
+  #ss-left, #ss-right { display: flex; }
+}
+
 </style>
 </head>
 <body>
@@ -192,19 +275,19 @@ textarea.inp{resize:vertical;min-height:65px;}
     <div class="chip" style="font-size:9px;border-color:var(--b2);color:var(--m2);">Supabase ready</div>
   </div>
   <div style="display:flex;flex-direction:column;gap:9px;width:100%;max-width:340px;">
-    <div onclick="window.doLogin('cliente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div data-onclick="doLogin('cliente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#2d0a40,#5c1a7a);display:flex;align-items:center;justify-content:center;font-size:22px;">👤</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Cliente</div><div style="font-size:10px;color:var(--m1);">Cardápio e pedidos</div></div>
     </div>
-    <div onclick="window.doLogin('atendente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div data-onclick="doLogin('atendente')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#0a2040,#1a5c7a);display:flex;align-items:center;justify-content:center;font-size:22px;">🧑‍💼</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Atendente / Caixa</div><div style="font-size:10px;color:var(--m1);">Pedidos, PDV e caixa</div></div>
     </div>
-    <div onclick="window.doLogin('entregador')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div data-onclick="doLogin('entregador')" style="display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#0a3020,#1a7a3a);display:flex;align-items:center;justify-content:center;font-size:22px;">🛵</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Entregador</div><div style="font-size:10px;color:var(--m1);">Minhas entregas</div></div>
     </div>
-    <div onclick="window.doLogin('admin')" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(168,85,247,.04));border:1px solid rgba(168,85,247,.3);border-radius:var(--rr);padding:13px;cursor:pointer;">
+    <div data-onclick="doLogin('admin')" style="display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,rgba(168,85,247,.12),rgba(168,85,247,.04));border:1px solid rgba(168,85,247,.3);border-radius:var(--rr);padding:13px;cursor:pointer;">
       <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#3a1800,#7a4000);display:flex;align-items:center;justify-content:center;font-size:22px;">👑</div>
       <div><div style="font-family:'Syne',sans-serif;font-size:14px;font-weight:700;">Administrador</div><div style="font-size:10px;color:var(--m1);">Acesso total · 16 módulos</div></div>
     </div>
@@ -212,18 +295,26 @@ textarea.inp{resize:vertical;min-height:65px;}
 </div>
 
 <div id="shell" style="display:none;">
+<div id="sidebar" data-onclick="closeSBOut(event)">
+  <div id="sbp">
+    <div class="sb-head"><div class="sb-logo">SASAKI ERP</div><div class="sb-role" id="sb-role-lbl">—</div></div>
+    <div id="sb-menu"></div>
+  </div>
+</div>
+<div id="main-col">
+
   <div id="topbar">
     <div style="display:flex;align-items:center;gap:9px;">
-      <div class="ib" onclick="window.toggleSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+      <div class="ib" data-onclick="toggleSB()"><svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
       <div class="tb-logo">SASAKI</div>
     </div>
     <div class="tb-r">
       <div class="tb-role" id="tb-role">—</div>
-      <div class="ib" onclick="window.openM('modal-notifs')">
+      <div class="ib" data-onclick="openM('modal-notifs')">
         <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         <div class="ib-bd hidden" id="notif-badge">0</div>
       </div>
-      <div class="ib" onclick="window.doLogin('login')"><svg viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg></div>
+      <div class="ib" data-onclick="doLogin('login')"><svg viewBox="0 0 24 24"><path d="M17 16l4-4m0 0l-4-4m4 4H7"/></svg></div>
     </div>
   </div>
   <div id="content">
@@ -247,7 +338,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         <div class="chart-wrap" id="dash-chart"></div>
         <div class="chart-lbls" id="dash-lbls"></div>
       </div>
-      <div class="sh mt20"><span class="sh-t">Pedidos recentes</span><span class="sh-a" onclick="window.goTo('gestao-pedidos')">Ver todos →</span></div>
+      <div class="sh mt20"><span class="sh-t">Pedidos recentes</span><span class="sh-a" data-onclick="goTo('gestao-pedidos')">Ver todos →</span></div>
       <div class="card px" style="margin:0 16px;" id="dash-recent"></div>
       <div class="sp3"></div>
     </div>
@@ -259,7 +350,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         <span class="sh-t">Novos pedidos</span>
         <div class="flex gap8 aic">
           <div class="chip ch-o npulse" id="np-ct">0 aguardando</div>
-          <button class="btn btn-sm btn-s" onclick="window.playBeep()">🔔 Som</button>
+          <button class="btn btn-sm btn-s" data-onclick="playBeep()">🔔 Som</button>
         </div>
       </div>
       <div class="fcol gap8 px" id="np-list"></div>
@@ -270,11 +361,11 @@ textarea.inp{resize:vertical;min-height:65px;}
     <div class="view" id="v-gestao-pedidos">
       <div class="sp"></div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="window.fltOrd(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="window.fltOrd(this,'pendente')">Pendentes</div>
-        <div class="chip ch-d" onclick="window.fltOrd(this,'preparo')">Preparo</div>
-        <div class="chip ch-d" onclick="window.fltOrd(this,'entrega')">Entrega</div>
-        <div class="chip ch-d" onclick="window.fltOrd(this,'entregue')">Entregues</div>
+        <div class="chip ch-p" data-onclick="fltOrd(this,'todos')">Todos</div>
+        <div class="chip ch-d" data-onclick="fltOrd(this,'pendente')">Pendentes</div>
+        <div class="chip ch-d" data-onclick="fltOrd(this,'preparo')">Preparo</div>
+        <div class="chip ch-d" data-onclick="fltOrd(this,'entrega')">Entrega</div>
+        <div class="chip ch-d" data-onclick="fltOrd(this,'entregue')">Entregues</div>
       </div>
       <div class="fcol gap8 px" id="gp-list"></div>
       <div class="sp3"></div>
@@ -290,11 +381,11 @@ textarea.inp{resize:vertical;min-height:65px;}
         </h1>
       </div>
       <div class="scr" style="padding-bottom:10px;">
-        <div class="chip ch-p" onclick="window.fltCli(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="window.fltCli(this,'acai')">🍇 Açaí</div>
-        <div class="chip ch-d" onclick="window.fltCli(this,'tigela')">🥣 Tigela</div>
-        <div class="chip ch-d" onclick="window.fltCli(this,'adicional')">➕ Adicional</div>
-        <div class="chip ch-d" onclick="window.fltCli(this,'bebida')">🥤 Bebida</div>
+        <div class="chip ch-p" data-onclick="fltCli(this,'todos')">Todos</div>
+        <div class="chip ch-d" data-onclick="fltCli(this,'acai')">🍇 Açaí</div>
+        <div class="chip ch-d" data-onclick="fltCli(this,'tigela')">🥣 Tigela</div>
+        <div class="chip ch-d" data-onclick="fltCli(this,'adicional')">➕ Adicional</div>
+        <div class="chip ch-d" data-onclick="fltCli(this,'bebida')">🥤 Bebida</div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 16px;" id="client-grid"></div>
       <div class="sp3"></div>
@@ -353,7 +444,7 @@ textarea.inp{resize:vertical;min-height:65px;}
 
         <div class="fld"><div class="lbl">Observações</div><input class="inp" id="cp-obs" placeholder="Sem açúcar, extra granola..."></div>
 
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.createOrder()">
+        <button class="btn btn-p btn-w" style="padding:14px;" data-onclick="createOrder()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           Criar pedido
         </button>
@@ -370,6 +461,7 @@ textarea.inp{resize:vertical;min-height:65px;}
     <div class="view" id="v-self-service">
       <div style="display:flex;flex-direction:column;min-height:100%;">
 
+        <div id="ss-left">
         <!-- TOP BAR DA COMANDA -->
         <div style="background:var(--s1);border-bottom:1px solid var(--b1);padding:10px 14px;flex-shrink:0;">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
@@ -385,10 +477,10 @@ textarea.inp{resize:vertical;min-height:65px;}
           <!-- Cliente + ações rápidas -->
           <div style="display:flex;gap:7px;align-items:center;">
             <input id="cmd-cliente" class="inp" style="flex:1;padding:7px 10px;font-size:12px;" placeholder="👤 Cliente (opcional)">
-            <button class="btn btn-s btn-sm" onclick="window.cmdScanner()" id="cmd-scanner-btn" title="Modo scanner (Ctrl+B)">
+            <button class="btn btn-s btn-sm" data-onclick="cmdScanner()" id="cmd-scanner-btn" title="Modo scanner (Ctrl+B)">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 9V6a1 1 0 011-1h3M3 15v3a1 1 0 001 1h3m11-13h3a1 1 0 011 1v3m-4 11h3a1 1 0 001-1v-3"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
             </button>
-            <button class="btn btn-d btn-sm" onclick="window.cmdNova()" title="Nova comanda">🗑️</button>
+            <button class="btn btn-d btn-sm" data-onclick="cmdNova()" title="Nova comanda">🗑️</button>
           </div>
         </div>
 
@@ -400,24 +492,27 @@ textarea.inp{resize:vertical;min-height:65px;}
               <div style="font-size:9px;color:var(--m1);font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.7px;margin-bottom:3px;">⚖️ Peso em gramas</div>
               <div style="display:flex;gap:5px;align-items:center;">
                 <input id="cmd-peso-g" class="inp" type="number" placeholder="Ex: 350" style="padding:9px 11px;font-size:16px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;width:110px;"
-                  onkeydown="if(event.key==='Enter')window.cmdAddPeso()">
+                  data-onkeydown="if(event.key==='Enter')cmdAddPeso()">
                 <div style="font-size:10px;color:var(--m1);min-width:52px;" id="cmd-peso-preview">→ 0,000 kg<br><span style="color:var(--p);" id="cmd-peso-val-preview">R$ 0,00</span></div>
-                <button class="btn btn-p" style="padding:9px 14px;font-size:18px;font-weight:700;" onclick="window.cmdAddPeso()">+</button>
+                <button class="btn btn-p" style="padding:9px 14px;font-size:18px;font-weight:700;" data-onclick="cmdAddPeso()">+</button>
               </div>
             </div>
           </div>
           <!-- Botões de ação -->
           <div style="display:flex;gap:7px;">
-            <button class="btn btn-s f1 btn-sm" onclick="window.openM('modal-cmd-produtos')">
+            <button class="btn btn-s f1 btn-sm" data-onclick="openM('modal-cmd-produtos')">
               <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 001.94-1.5L23 6H6"/></svg>
               Cardápio
             </button>
-            <button class="btn btn-s f1 btn-sm" onclick="window.cmdPendentes()" id="cmd-pend-btn">
+            <button class="btn btn-s f1 btn-sm" data-onclick="cmdPendentes()" id="cmd-pend-btn">
               📋 Pendentes <span id="cmd-pend-ct" style="background:var(--acc);color:#fff;border-radius:100px;padding:0 5px;font-size:9px;margin-left:2px;display:none;">0</span>
             </button>
           </div>
         </div>
 
+        </div><!-- /ss-left -->
+
+        <div id="ss-right">
         <!-- LISTA DE ITENS DA COMANDA -->
         <div id="cmd-itens" style="flex:1;min-height:120px;padding:8px 14px;"></div>
 
@@ -427,16 +522,16 @@ textarea.inp{resize:vertical;min-height:65px;}
         <!-- RODAPÉ — FINALIZAR -->
         <div style="background:var(--s1);border-top:1px solid var(--b1);padding:10px 14px;flex-shrink:0;padding-bottom:calc(10px + env(safe-area-inset-bottom));">
           <div style="display:flex;gap:7px;margin-bottom:7px;">
-            <button class="btn btn-s btn-sm f1" onclick="window.cmdSalvarPendente()">💾 Salvar</button>
-            <button class="btn btn-o btn-sm f1" onclick="window.openM('modal-cmd-entregar')">🛵 Entrega</button>
-            <button class="btn btn-ok btn-sm f1" onclick="window.openM('modal-cmd-fiado')">🤝 Fiado</button>
+            <button class="btn btn-s btn-sm f1" data-onclick="cmdSalvarPendente()">💾 Salvar</button>
+            <button class="btn btn-o btn-sm f1" data-onclick="openM('modal-cmd-entregar')">🛵 Entrega</button>
+            <button class="btn btn-ok btn-sm f1" data-onclick="openM('modal-cmd-fiado')">🤝 Fiado</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;">
-            <button class="btn btn-s btn-sm" onclick="window.cmdPagar('dinheiro')">💵 Dinheiro</button>
-            <button class="btn btn-p btn-sm" onclick="window.cmdPagar('pix')">💳 PIX</button>
-            <button class="btn btn-s btn-sm" onclick="window.cmdPagar('cartao')">💳 Cartão</button>
+            <button class="btn btn-s btn-sm" data-onclick="cmdPagar('dinheiro')">💵 Dinheiro</button>
+            <button class="btn btn-p btn-sm" data-onclick="cmdPagar('pix')">💳 PIX</button>
+            <button class="btn btn-s btn-sm" data-onclick="cmdPagar('cartao')">💳 Cartão</button>
           </div>
-          <button class="btn btn-s btn-w btn-sm" style="margin-top:7px;" onclick="window.cmdPagar('multiplo')">⚡ Múltiplos pagamentos</button>
+          <button class="btn btn-s btn-w btn-sm" style="margin-top:7px;" data-onclick="cmdPagar('multiplo')">⚡ Múltiplos pagamentos</button>
         </div>
       </div>
     </div>
@@ -448,17 +543,17 @@ textarea.inp{resize:vertical;min-height:65px;}
 
       <!-- Busca + botão novo -->
       <div class="flex gap8 px aic" style="margin-bottom:10px;">
-        <input class="inp f1" placeholder="🔍 Buscar produto..." oninput="window.fltProds(this.value)" id="prod-search">
-        <button class="btn btn-p btn-sm" onclick="window.openProdM(null)">＋ Novo</button>
+        <input class="inp f1" placeholder="🔍 Buscar produto..." data-oninput="fltProds(this.value)" id="prod-search">
+        <button class="btn btn-p btn-sm" data-onclick="openProdM(null)">＋ Novo</button>
       </div>
 
       <!-- Filtro categoria -->
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="window.fltPCat(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="window.fltPCat(this,'acai')">🍇 Açaí</div>
-        <div class="chip ch-d" onclick="window.fltPCat(this,'tigela')">🥣 Tigela</div>
-        <div class="chip ch-d" onclick="window.fltPCat(this,'adicional')">➕ Adicional</div>
-        <div class="chip ch-d" onclick="window.fltPCat(this,'bebida')">🥤 Bebida</div>
+        <div class="chip ch-p" data-onclick="fltPCat(this,'todos')">Todos</div>
+        <div class="chip ch-d" data-onclick="fltPCat(this,'acai')">🍇 Açaí</div>
+        <div class="chip ch-d" data-onclick="fltPCat(this,'tigela')">🥣 Tigela</div>
+        <div class="chip ch-d" data-onclick="fltPCat(this,'adicional')">➕ Adicional</div>
+        <div class="chip ch-d" data-onclick="fltPCat(this,'bebida')">🥤 Bebida</div>
       </div>
 
       <!-- Resumo estoque -->
@@ -485,7 +580,7 @@ textarea.inp{resize:vertical;min-height:65px;}
           <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;">Adicionais / Toppings</div>
           <div style="font-size:10px;color:var(--m1);">Itens que o cliente pode adicionar ao pedido</div>
         </div>
-        <button class="btn btn-p btn-sm" onclick="window.openAdicM(null)">＋ Novo</button>
+        <button class="btn btn-p btn-sm" data-onclick="openAdicM(null)">＋ Novo</button>
       </div>
       <div class="g2 px gap8" style="margin-bottom:12px;">
         <div style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);padding:12px;">
@@ -509,7 +604,7 @@ textarea.inp{resize:vertical;min-height:65px;}
           <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;">Entregadores</div>
           <div style="font-size:10px;color:var(--m1);">Controle de equipe, comissões e saldos</div>
         </div>
-        <button class="btn btn-p btn-sm" onclick="window.openDelM(null)">＋ Novo</button>
+        <button class="btn btn-p btn-sm" data-onclick="openDelM(null)">＋ Novo</button>
       </div>
 
       <!-- Stats -->
@@ -566,18 +661,18 @@ textarea.inp{resize:vertical;min-height:65px;}
       <!-- Filtro tipo -->
       <div class="sh mt20">
         <span class="sh-t">Lançamentos</span>
-        <button class="btn btn-p btn-sm" onclick="window.openM('modal-fin-add')">＋ Lançar</button>
+        <button class="btn btn-p btn-sm" data-onclick="openM('modal-fin-add')">＋ Lançar</button>
       </div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="window.fltFin(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="window.fltFin(this,'receita')">↑ Receitas</div>
-        <div class="chip ch-d" onclick="window.fltFin(this,'despesa')">↓ Despesas</div>
-        <div class="chip ch-d" onclick="window.fltFin(this,'recorrente')">🔁 Recorrentes</div>
+        <div class="chip ch-p" data-onclick="fltFin(this,'todos')">Todos</div>
+        <div class="chip ch-d" data-onclick="fltFin(this,'receita')">↑ Receitas</div>
+        <div class="chip ch-d" data-onclick="fltFin(this,'despesa')">↓ Despesas</div>
+        <div class="chip ch-d" data-onclick="fltFin(this,'recorrente')">🔁 Recorrentes</div>
       </div>
       <div class="card px" style="margin:0 16px;" id="fin-list"></div>
 
       <!-- Recorrentes fixas -->
-      <div class="sh mt20"><span class="sh-t">Despesas fixas / recorrentes</span><span class="sh-a" onclick="window.openM('modal-recorrente')">＋ Adicionar</span></div>
+      <div class="sh mt20"><span class="sh-t">Despesas fixas / recorrentes</span><span class="sh-a" data-onclick="openM('modal-recorrente')">＋ Adicionar</span></div>
       <div class="card px" style="margin:0 16px;" id="fin-recorrentes"></div>
 
       <!-- Pró-labore -->
@@ -589,7 +684,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         </div>
         <div class="g2 gap8">
           <div class="fld"><div class="lbl">Novo valor (R$)</div><input class="inp" id="prolabore-inp" type="number" placeholder="2000"></div>
-          <button class="btn btn-gld btn-w" style="margin-top:auto;" onclick="window.saveProlabore()">Registrar retirada</button>
+          <button class="btn btn-gld btn-w" style="margin-top:auto;" data-onclick="saveProlabore()">Registrar retirada</button>
         </div>
       </div>
 
@@ -625,14 +720,14 @@ textarea.inp{resize:vertical;min-height:65px;}
       <!-- Lista -->
       <div class="flex gap8 px aic mt14">
         <span class="sh-t f1">Clientes a prazo</span>
-        <button class="btn btn-p btn-sm" onclick="window.openM('modal-cred-add')">＋ Novo</button>
+        <button class="btn btn-p btn-sm" data-onclick="openM('modal-cred-add')">＋ Novo</button>
       </div>
       <div class="sp"></div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="window.fltCred(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="window.fltCred(this,'devendo')">Com dívida</div>
-        <div class="chip ch-d" onclick="window.fltCred(this,'limite')">No limite</div>
-        <div class="chip ch-d" onclick="window.fltCred(this,'quites')">Quites</div>
+        <div class="chip ch-p" data-onclick="fltCred(this,'todos')">Todos</div>
+        <div class="chip ch-d" data-onclick="fltCred(this,'devendo')">Com dívida</div>
+        <div class="chip ch-d" data-onclick="fltCred(this,'limite')">No limite</div>
+        <div class="chip ch-d" data-onclick="fltCred(this,'quites')">Quites</div>
       </div>
       <div class="card px" style="margin:0 16px;" id="cred-list"></div>
 
@@ -675,7 +770,7 @@ textarea.inp{resize:vertical;min-height:65px;}
           <div id="cd-chart-lbls" style="display:flex;gap:4px;margin-top:3px;"></div>
         </div>
 
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.fecharCaixaDia()">
+        <button class="btn btn-p btn-w" style="padding:14px;" data-onclick="fecharCaixaDia()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           Fechar caixa do dia e gerar relatório
         </button>
@@ -693,11 +788,11 @@ textarea.inp{resize:vertical;min-height:65px;}
 
         <!-- Botões de movimentação -->
         <div class="g2 gap8">
-          <button class="btn btn-ok btn-w" onclick="window.openM('modal-sup')">
+          <button class="btn btn-ok btn-w" data-onclick="openM('modal-sup')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
             Suprimento
           </button>
-          <button class="btn btn-d btn-w" onclick="window.openM('modal-san')">
+          <button class="btn btn-d btn-w" data-onclick="openM('modal-san')">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg>
             Sangria
           </button>
@@ -718,7 +813,7 @@ textarea.inp{resize:vertical;min-height:65px;}
         </div>
 
         <!-- Fechar turno -->
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.openM('modal-fech')">
+        <button class="btn btn-p btn-w" style="padding:14px;" data-onclick="openM('modal-fech')">
           🔐 Conferir e fechar turno
         </button>
 
@@ -747,10 +842,10 @@ textarea.inp{resize:vertical;min-height:65px;}
         <span class="sh-t">Histórico de turnos</span>
       </div>
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="window.fltHC(this,7)">7 dias</div>
-        <div class="chip ch-d" onclick="window.fltHC(this,15)">15 dias</div>
-        <div class="chip ch-d" onclick="window.fltHC(this,30)">30 dias</div>
-        <div class="chip ch-d" onclick="window.fltHC(this,999)">Todos</div>
+        <div class="chip ch-p" data-onclick="fltHC(this,7)">7 dias</div>
+        <div class="chip ch-d" data-onclick="fltHC(this,15)">15 dias</div>
+        <div class="chip ch-d" data-onclick="fltHC(this,30)">30 dias</div>
+        <div class="chip ch-d" data-onclick="fltHC(this,999)">Todos</div>
       </div>
 
       <div class="card px" style="margin:0 16px;" id="hc-list"></div>
@@ -762,9 +857,9 @@ textarea.inp{resize:vertical;min-height:65px;}
 
       <!-- Período -->
       <div class="scr" style="padding-bottom:10px;">
-        <div class="chip ch-p" onclick="window.fltAna(this,7)">7 dias</div>
-        <div class="chip ch-d" onclick="window.fltAna(this,14)">14 dias</div>
-        <div class="chip ch-d" onclick="window.fltAna(this,30)">30 dias</div>
+        <div class="chip ch-p" data-onclick="fltAna(this,7)">7 dias</div>
+        <div class="chip ch-d" data-onclick="fltAna(this,14)">14 dias</div>
+        <div class="chip ch-d" data-onclick="fltAna(this,30)">30 dias</div>
       </div>
 
       <!-- KPIs principais -->
@@ -977,12 +1072,12 @@ INSERT INTO config (chave, valor) VALUES ('preco_kg', '49.90'::jsonb)
 ON CONFLICT (chave) DO NOTHING;</div>
             <div class="fld"><div class="lbl">Supabase Project URL</div><input class="inp" id="sb-url" placeholder="https://xxxxx.supabase.co"></div>
             <div class="fld"><div class="lbl">Anon / Public Key</div><input class="inp" id="sb-key" placeholder="eyJhbGciOiJIUzI1NiIs..."></div>
-            <button class="btn btn-ok btn-w" onclick="window.testSB()">
+            <button class="btn btn-ok btn-w" data-onclick="testSB()">
               <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               Testar conexão
             </button>
             <div id="sb-res" style="font-size:11px;text-align:center;color:var(--m1);"></div>
-            <button class="btn btn-s btn-w" onclick="window.sbSyncNow()" style="margin-top:6px;">
+            <button class="btn btn-s btn-w" data-onclick="sbSyncNow()" style="margin-top:6px;">
               🔄 Sincronizar dados agora
             </button>
           </div>
@@ -996,12 +1091,12 @@ ON CONFLICT (chave) DO NOTHING;</div>
           </div>
           <div class="cfg-body">
             <div style="font-size:11px;color:var(--m2);">Ações irreversíveis. Confirme antes de executar.</div>
-            <button class="btn btn-d btn-w" onclick="window.toast('⚠️ Ação bloqueada: use o painel Supabase para resetar dados')">🗑️ Limpar todos os pedidos</button>
-            <button class="btn btn-d btn-w" onclick="window.toast('⚠️ Ação bloqueada: contate o suporte')">⚠️ Resetar sistema completo</button>
+            <button class="btn btn-d btn-w" data-onclick="toast('⚠️ Ação bloqueada: use o painel Supabase para resetar dados')">🗑️ Limpar todos os pedidos</button>
+            <button class="btn btn-d btn-w" data-onclick="toast('⚠️ Ação bloqueada: contate o suporte')">⚠️ Resetar sistema completo</button>
           </div>
         </div>
 
-        <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.saveConfig()">
+        <button class="btn btn-p btn-w" style="padding:14px;" data-onclick="saveConfig()">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
           Salvar todas as configurações
         </button>
@@ -1024,42 +1119,234 @@ ON CONFLICT (chave) DO NOTHING;</div>
       <!-- Lista + botão novo -->
       <div class="flex gap8 px aic" style="margin-bottom:12px;">
         <span class="sh-t f1">Usuários do sistema</span>
-        <button class="btn btn-p btn-sm" onclick="window.openUsrM(null)">＋ Novo usuário</button>
+        <button class="btn btn-p btn-sm" data-onclick="openUsrM(null)">＋ Novo usuário</button>
       </div>
 
       <!-- Filtro perfil -->
       <div class="scr" style="padding-bottom:9px;">
-        <div class="chip ch-p" onclick="window.fltUsr(this,'todos')">Todos</div>
-        <div class="chip ch-d" onclick="window.fltUsr(this,'admin')">👑 Admin</div>
-        <div class="chip ch-d" onclick="window.fltUsr(this,'atendente')">🧑‍💼 Atendente</div>
-        <div class="chip ch-d" onclick="window.fltUsr(this,'entregador')">🛵 Entregador</div>
+        <div class="chip ch-p" data-onclick="fltUsr(this,'todos')">Todos</div>
+        <div class="chip ch-d" data-onclick="fltUsr(this,'admin')">👑 Admin</div>
+        <div class="chip ch-d" data-onclick="fltUsr(this,'atendente')">🧑‍💼 Atendente</div>
+        <div class="chip ch-d" data-onclick="fltUsr(this,'entregador')">🛵 Entregador</div>
       </div>
 
       <div class="card px" style="margin:0 16px;" id="usr-list"></div>
 
       <!-- Permissões por perfil -->
-      <div class="sh mt20"><span class="sh-t">Permissões por perfil</span><span class="sh-a" onclick="window.openM('modal-perms')">Ver / editar →</span></div>
+      <div class="sh mt20"><span class="sh-t">Permissões por perfil</span><span class="sh-a" data-onclick="openM('modal-perms')">Ver / editar →</span></div>
       <div class="card px" style="margin:0 16px;" id="perm-summary"></div>
 
       <div class="sp3"></div>
-    </div>
+    </div><!-- /ss-right -->
+      </div>
   </div>
   <div id="bnav"></div>
+
+</div>
 </div>
 
-<div id="sidebar" onclick="window.closeSBOut(event)">
-  <div id="sbp">
-    <div class="sb-head"><div class="sb-logo">SASAKI ERP</div><div class="sb-role" id="sb-role-lbl">—</div></div>
-    <div id="sb-menu"></div>
+
+
+<div id="toast"></div>
+<div class="overlay" id="modal-notifs" data-onclick="closeOL(event,'modal-notifs')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Notificações</div><button class="m-close" data-onclick="closeM('modal-notifs')">✕</button></div><div class="m-body" id="notifs-body"></div></div></div>
+<div class="overlay" id="modal-order" data-onclick="closeOL(event,'modal-order')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="od-title">Pedido</div><button class="m-close" data-onclick="closeM('modal-order')">✕</button></div><div class="m-body" id="od-body"></div></div></div>
+<div class="overlay" id="modal-prod-det" data-onclick="closeOL(event,'modal-prod-det')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="pd-title">Produto</div><button class="m-close" data-onclick="closeM('modal-prod-det')">✕</button></div><div class="m-body" id="pd-body"></div></div></div>
+<div class="overlay" id="modal-cart" data-onclick="closeOL(event,'modal-cart')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Carrinho</div><button class="m-close" data-onclick="closeM('modal-cart')">✕</button></div><div class="m-body" id="cart-body"></div></div></div>
+<div class="overlay" id="modal-pdv-pay" data-onclick="closeOL(event,'modal-pdv-pay')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Pagamento</div><button class="m-close" data-onclick="closeM('modal-pdv-pay')">✕</button></div><div class="m-body"><div style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--p);margin-bottom:4px;" id="pdv-pay-val">R$ 0,00</div><div style="text-align:center;font-size:11px;color:var(--m1);margin-bottom:14px;" id="pdv-pay-items">—</div><div class="g2 gap8"><button class="btn btn-p" data-onclick="pdvFinish('PIX')">💳 PIX</button><button class="btn btn-s" data-onclick="pdvFinish('Débito')">💳 Débito</button><button class="btn btn-s" data-onclick="pdvFinish('Crédito')">💳 Crédito</button><button class="btn btn-s" data-onclick="pdvFinish('Dinheiro')">💵 Dinheiro</button></div></div></div></div>
+
+<!-- PAGAMENTO VENDA POR PESO -->
+<div class="overlay" id="modal-peso-pay" data-onclick="closeOL(event,'modal-peso-pay')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title">⚖️ Cobrar por peso</div><button class="m-close" data-onclick="closeM('modal-peso-pay')">✕</button></div>
+    <div class="m-body">
+      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;margin-bottom:4px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:11px;color:var(--m1);">Peso</span>
+          <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;" id="peso-modal-kg">0,000 kg</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
+          <span style="font-size:11px;color:var(--m1);">Preço/kg</span>
+          <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;" id="peso-modal-preco">R$ 0,00/kg</span>
+        </div>
+        <div id="peso-modal-adics" style="font-size:10px;color:var(--m1);margin-bottom:6px;"></div>
+        <div style="height:1px;background:var(--b2);margin:8px 0;"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;">Total</span>
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="peso-modal-total">R$ 0,00</span>
+        </div>
+      </div>
+      <div class="g2 gap8">
+        <button class="btn btn-p" data-onclick="pesoFinish('PIX')">💳 PIX</button>
+        <button class="btn btn-s" data-onclick="pesoFinish('Débito')">💳 Débito</button>
+        <button class="btn btn-s" data-onclick="pesoFinish('Crédito')">💳 Crédito</button>
+        <button class="btn btn-s" data-onclick="pesoFinish('Dinheiro')">💵 Dinheiro</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<div id="toast"></div>
-<div class="overlay" id="modal-notifs" onclick="window.closeOL(event,'modal-notifs')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Notificações</div><button class="m-close" onclick="window.closeM('modal-notifs')">✕</button></div><div class="m-body" id="notifs-body"></div></div></div>
-<div class="overlay" id="modal-order" onclick="window.closeOL(event,'modal-order')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="od-title">Pedido</div><button class="m-close" onclick="window.closeM('modal-order')">✕</button></div><div class="m-body" id="od-body"></div></div></div>
-<div class="overlay" id="modal-prod-det" onclick="window.closeOL(event,'modal-prod-det')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title" id="pd-title">Produto</div><button class="m-close" onclick="window.closeM('modal-prod-det')">✕</button></div><div class="m-body" id="pd-body"></div></div></div>
-<div class="overlay" id="modal-cart" onclick="window.closeOL(event,'modal-cart')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Carrinho</div><button class="m-close" onclick="window.closeM('modal-cart')">✕</button></div><div class="m-body" id="cart-body"></div></div></div>
-<div class="overlay" id="modal-pdv-pay" onclick="window.closeOL(event,'modal-pdv-pay')"><div class="modal"><div class="mh"></div><div class="m-head"><div class="m-title">Pagamento</div><button class="m-close" onclick="window.closeM('modal-pdv-pay')">✕</button></div><div class="m-body"><div style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--p);margin-bottom:4px;" id="pdv-pay-val">R$ 0,00</div><div style="text-align:center;font-size:11px;color:var(--m1);margin-bottom:14px;" id="pdv-pay-items">—</div><div class="g2 gap8"><button class="btn btn-p" onclick="window.pdvFinish('PIX')">💳 PIX</button><button class="btn btn-s" onclick="window.pdvFinish('Débito')">💳 Débito</button><button class="btn b<script>
+<!-- CONFIGURAR PREÇO/KG (admin) -->
+<div class="overlay" id="modal-peso-config" data-onclick="closeOL(event,'modal-peso-config')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title">⚙️ Preço por kg</div><button class="m-close" data-onclick="closeM('modal-peso-config')">✕</button></div>
+    <div class="m-body">
+      <div style="font-size:11px;color:var(--m2);background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:var(--rs);padding:10px 12px;">
+        Esse preço vale para açaí, sorvete e qualquer mistura vendida por peso no Self-Service.
+      </div>
+      <div class="fld">
+        <div class="lbl">Preço por kg (R$)</div>
+        <input class="inp" id="peso-config-val" type="number" step="0.50" placeholder="Ex: 49,90" style="font-size:22px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--s2);border-radius:var(--rs);">
+        <div>
+          <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;">Venda por peso ativa</div>
+          <div style="font-size:10px;color:var(--m1);">Exibe seção no PDV</div>
+        </div>
+        <div class="toggle tog-on" id="peso-ativo-tog" data-onclick="togEl(this)"><div class="tgl-k"></div></div>
+      </div>
+      <div class="g2 gap8">
+        <button class="btn btn-s" data-onclick="closeM('modal-peso-config')">Cancelar</button>
+        <button class="btn btn-p" data-onclick="savePesoConfig()">✅ Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- MODAL: Produtos do cardápio -->
+<div class="overlay" id="modal-cmd-produtos" data-onclick="closeOL(event,'modal-cmd-produtos')">
+  <div class="modal" style="max-height:94dvh;">
+    <div class="mh"></div>
+    <div class="m-head">
+      <div class="m-title">🍇 Adicionar produto</div>
+      <button class="m-close" data-onclick="closeM('modal-cmd-produtos')">✕</button>
+    </div>
+    <div style="padding:12px 16px 0;">
+      <input class="inp" id="cmd-prod-search" placeholder="🔍 Buscar por nome ou código..." data-oninput="cmdFiltrarProd()" style="margin-bottom:8px;">
+      <div class="scr" style="padding:0;margin-bottom:10px;" id="cmd-cat-chips"></div>
+    </div>
+    <div id="cmd-prod-grid" style="padding:0 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:9px;overflow-y:auto;max-height:55dvh;"></div>
+  </div>
+</div>
+
+<!-- MODAL: Quantidade/variação ao adicionar produto -->
+<div class="overlay" id="modal-cmd-qtd" data-onclick="closeOL(event,'modal-cmd-qtd')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title" id="cmdqtd-title">Produto</div><button class="m-close" data-onclick="closeM('modal-cmd-qtd')">✕</button></div>
+    <div class="m-body">
+      <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--s2);border-radius:var(--rs);">
+        <div style="font-size:44px;" id="cmdqtd-emoji"></div>
+        <div><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;" id="cmdqtd-nome"></div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--p);" id="cmdqtd-preco"></div>
+          <div style="font-size:10px;color:var(--m1);" id="cmdqtd-est"></div>
+        </div>
+      </div>
+      <div class="fld">
+        <div class="lbl">Quantidade</div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <button class="btn btn-s btn-ico" data-onclick="cmdQtdChg(-1)">−</button>
+          <span id="cmdqtd-val" style="font-family:'Bebas Neue',sans-serif;font-size:32px;min-width:40px;text-align:center;">1</span>
+          <button class="btn btn-s btn-ico" data-onclick="cmdQtdChg(1)">+</button>
+        </div>
+      </div>
+      <div id="cmdqtd-obs-wrap" class="fld"><div class="lbl">Observação (opcional)</div><input class="inp" id="cmdqtd-obs" placeholder="Ex: sem granola, extra mel..."></div>
+      <div id="cmdqtd-aviso" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:var(--rs);padding:9px 12px;font-size:11px;color:var(--r);"></div>
+      <div class="g2 gap8">
+        <button class="btn btn-s" data-onclick="closeM('modal-cmd-qtd')">Cancelar</button>
+        <button class="btn btn-p" id="cmdqtd-confirm" data-onclick="cmdConfirmarProd()">✅ Adicionar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Pagamento Dinheiro -->
+<div class="overlay" id="modal-cmd-dinheiro" data-onclick="closeOL(event,'modal-cmd-dinheiro')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title">💵 Pagamento em Dinheiro</div><button class="m-close" data-onclick="closeM('modal-cmd-dinheiro')">✕</button></div>
+    <div class="m-body">
+      <div class="stat hi"><div class="sl">Total da comanda</div><div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--p);" id="din-total">R$ 0,00</div></div>
+      <div class="fld">
+        <div class="lbl">Valor recebido (R$)</div>
+        <input class="inp" id="din-recebido" type="number" step="0.01" placeholder="0,00" style="font-size:20px;font-family:'Bebas Neue',sans-serif;" data-oninput="calcTroco()">
+      </div>
+      <div id="din-troco-wrap" style="display:none;padding:14px;border-radius:var(--rs);text-align:center;">
+        <div style="font-size:11px;color:var(--m1);font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.8px;">Troco</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;" id="din-troco">R$ 0,00</div>
+      </div>
+      <!-- Atalhos de troco -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;" id="din-atalhos"></div>
+      <button class="btn btn-p btn-w" style="padding:14px;" data-onclick="cmdFinalizarDinheiro()">✅ Finalizar venda</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Pagamento Múltiplo -->
+<div class="overlay" id="modal-cmd-multiplo" data-onclick="closeOL(event,'modal-cmd-multiplo')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title">⚡ Múltiplos pagamentos</div><button class="m-close" data-onclick="closeM('modal-cmd-multiplo')">✕</button></div>
+    <div class="m-body">
+      <div class="stat hi"><div class="sl">Total</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="mult-total">R$ 0,00</div></div>
+      <div class="g2 gap8">
+        <div class="fld"><div class="lbl">Método 1</div>
+          <select class="inp" id="mult-met1"><option value="pix">💳 PIX</option><option value="cartao">💳 Cartão</option><option value="dinheiro">💵 Dinheiro</option></select>
+        </div>
+        <div class="fld"><div class="lbl">Valor (R$)</div><input class="inp" id="mult-val1" type="number" step="0.01" placeholder="0,00" data-oninput="calcMultResto()"></div>
+      </div>
+      <div class="g2 gap8">
+        <div class="fld"><div class="lbl">Método 2</div>
+          <select class="inp" id="mult-met2"><option value="cartao">💳 Cartão</option><option value="pix">💳 PIX</option><option value="dinheiro">💵 Dinheiro</option></select>
+        </div>
+        <div class="fld"><div class="lbl">Restante</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--p);padding:8px 0;" id="mult-resto">R$ 0,00</div></div>
+      </div>
+      <div id="mult-aviso" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.22);border-radius:var(--rs);padding:9px 12px;font-size:11px;color:var(--r);"></div>
+      <button class="btn btn-p btn-w" style="padding:14px;" data-onclick="cmdFinalizarMultiplo()">✅ Confirmar pagamento</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Fiado -->
+<div class="overlay" id="modal-cmd-fiado" data-onclick="closeOL(event,'modal-cmd-fiado')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title">🤝 Venda a Prazo</div><button class="m-close" data-onclick="closeM('modal-cmd-fiado')">✕</button></div>
+    <div class="m-body">
+      <div class="stat hi"><div class="sl">Total</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="fiado-total">R$ 0,00</div></div>
+      <div class="fld"><div class="lbl">Selecionar cliente</div>
+        <select class="inp" id="fiado-cliente-sel" data-onchange="cmdVerificaFiado()"><option value="">— Selecione —</option></select>
+      </div>
+      <div id="fiado-status" style="display:none;border-radius:var(--rs);padding:12px 14px;font-size:11px;"></div>
+      <div class="fld" id="fiado-venc-wrap" style="display:none;"><div class="lbl">Vencimento</div><input class="inp" id="fiado-venc" type="date"></div>
+      <button class="btn btn-p btn-w" style="padding:14px;" id="fiado-btn-ok" data-onclick="cmdFinalizarFiado()" disabled>✅ Registrar venda a prazo</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Entregador -->
+<div class="overlay" id="modal-cmd-entregar" data-onclick="closeOL(event,'modal-cmd-entregar')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title">🛵 Converter em Entrega</div><button class="m-close" data-onclick="closeM('modal-cmd-entregar')">✕</button></div>
+    <div class="m-body">
+      <div class="fld"><div class="lbl">Endereço de entrega</div><input class="inp" id="del-end" placeholder="Rua, número, bairro..."></div>
+      <div class="fld"><div class="lbl">Entregador</div>
+        <select class="inp" id="del-entregador-sel"><option value="">— Selecione —</option></select>
+      </div>
+      <div class="fld"><div class="lbl">Forma de pagamento</div>
+        <select class="inp" id="del-pgto"><option value="pix">PIX</option><option value="dinheiro">Dinheiro</option><option value="cartao">Cartão</option></select>
+      </div>
+      <button class="btn btn-p btn-w" style="padding:14px;" data-onclick="cmdFinalizarEntrega()">✅ Registrar entrega</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Comandas Pendentes -->
+<div class="overlay" id="modal-cmd-pendentes" data-onclick="closeOL(event,'modal-cmd-pendentes')">
+  <div class="modal"><div class="mh"></div>
+    <div class="m-head"><div class="m-title">📋 Comandas Pendentes</div><button class="m-close" data-onclick="closeM('modal-cmd-pendentes')">✕</button></div>
+    <div class="m-body" id="cmd-pend-list"></div>
+  </div>
+</div>
+
+
+<script>
 
 /* ═══ STATE ═══ */
 const S = {
@@ -1197,15 +1484,15 @@ function goTo(vid){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('on'));
   const el=document.getElementById('v-'+vid);
   if(el){el.classList.add('on');S.view=vid;}
-  document.querySelectorAll('.sbi').forEach(i=>i.classList.toggle('on',i.dataset.id===vid));
-  document.querySelectorAll('.bn').forEach(b=>b.classList.toggle('on',b.dataset.id===vid));
+  document.querySelectorAll('.sbi').forEach(i=>i.classList.toggle('on',i.dataset.id==vid));
+  document.querySelectorAll('.bn').forEach(b=>b.classList.toggle('on',b.dataset.id==vid));
   closeSB(); renderView(vid);
   document.getElementById('content').scrollTop=0;
 }
 function renderView(v){
   const map={
     'dashboard':renderDash,'novos-pedidos':renderNovos,'gestao-pedidos':()=>renderGestao('todos'),
-    'criar-pedido':renderCriarPedido,'self-service':renderPDV,
+    'criar-pedido':renderCriarPedido,'self-service':renderSelfService,
     'produtos':()=>renderProds(),'adicionais':renderAdics,'entregadores':renderDels,
     'financas':()=>renderFinancas(),'credito':()=>renderCredito(),
     'caixa-diario':renderCaixaDia,'caixa-op':renderCaixaOp,'historico-caixa':()=>renderHC(7),
@@ -1220,7 +1507,7 @@ function buildSB(){
     h+='<div class="sb-grp"><div class="sb-lbl">'+g.grp+'</div>';
     g.items.forEach(i=>{
       const bc=i.bd?S.orders.filter(o=>o.st==='pendente').length:0;
-      h+='<div class="sbi" data-id="'+i.id+'" onclick="window.goTo(\''+i.id+'\')"><div class="sbi-ic">'+i.ic+'</div><div><div class="sbi-nm">'+i.nm+'</div><div class="sbi-ds">'+i.ds+'</div></div>'+(bc>0?'<div class="sbi-bd">'+bc+'</div>':'')+'</div>';
+      h+='<div class="sbi" data-id="'+i.id+'" data-onclick="goTo(\''+i.id+'\')"><div class="sbi-ic">'+i.ic+'</div><div><div class="sbi-nm">'+i.nm+'</div><div class="sbi-ds">'+i.ds+'</div></div>'+(bc>0?'<div class="sbi-bd">'+bc+'</div>':'')+'</div>';
     });
     h+='</div>';
   });
@@ -1228,7 +1515,7 @@ function buildSB(){
 }
 function buildBnav(){
   const items=BNAV[S.role]||[];
-  document.getElementById('bnav').innerHTML=items.map(i=>'<button class="bn" data-id="'+i.id+'" onclick="window.goTo(\''+i.id+'\')"><span style="font-size:17px;">'+i.ic+'</span><span class="bn-lbl">'+i.lb+'</span></button>').join('');
+  document.getElementById('bnav').innerHTML=items.map(i=>'<button class="bn" data-id="'+i.id+'" data-onclick="goTo(\''+i.id+'\')"><span style="font-size:17px;">'+i.ic+'</span><span class="bn-lbl">'+i.lb+'</span></button>').join('');
 }
 function renderStub(){}
 
@@ -1260,7 +1547,7 @@ function renderDash(){
   }
   const rec=document.getElementById('dash-recent');
   if(rec)rec.innerHTML=S.orders.slice(0,3).map(o=>`
-    <div class="ri" onclick="window.openOrderM('${o.id}')">
+    <div class="ri" data-onclick="openOrderM('${o.id}')">
       <div class="ri-ic">${o.st==='entregue'?'✅':o.st==='entrega'?'🛵':'🍇'}</div>
       <div class="ri-info"><div class="ri-nm">#${o.id} · ${o.cli}</div><div class="ri-sub">${o.its.substring(0,32)}...</div></div>
       <div class="ri-r"><div class="chip ${SC[o.st]}" style="font-size:9px;padding:3px 7px;">${SL[o.st]}</div><div class="ri-val">R$${o.tot}</div></div>
@@ -1280,8 +1567,8 @@ function renderNovos(){
       </div>
       <div class="oc-it">${o.its}</div>
       <div class="oc-ft">
-        <div class="oc-tot">R$ ${o.tot.toFixed(2).replace('.',',')}</div>
-        <button class="btn btn-p btn-sm" onclick="window.advOrder('${o.id}');window.renderNovos();">✅ Aceitar</button>
+        <div class="oc-tot">R$ ${(o.tot||0).toFixed(2).replace('.',',')}</div>
+        <button class="btn btn-p btn-sm" data-onclick="advOrder('${o.id}');renderNovos();">✅ Aceitar</button>
       </div>
     </div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--m1);">Nenhum pedido novo 🎉</div>';
   updNotifBadge();
@@ -1291,15 +1578,15 @@ function renderGestao(filter='todos'){
   let orders=filter==='todos'?S.orders:S.orders.filter(o=>o.st===filter);
   const el=document.getElementById('gp-list');if(!el)return;
   el.innerHTML=orders.map(o=>`
-    <div class="oc" onclick="window.openOrderM('${o.id}')">
+    <div class="oc" data-onclick="openOrderM('${o.id}')">
       <div class="oc-hd">
         <div><div class="oc-id">#${o.id} · ${o.cli}</div><div class="oc-tm">${o.tm} · ${o.pgto}${o.del?' · 🛵 '+o.del:''}</div></div>
         <div class="chip ${SC[o.st]}" style="font-size:10px;">${SL[o.st]}</div>
       </div>
       <div class="oc-it">${o.its}</div>
       <div class="oc-ft">
-        <div class="oc-tot">R$ ${o.tot.toFixed(2).replace('.',',')}</div>
-        ${o.st!=='entregue'?`<button class="btn btn-p btn-sm" onclick="event.window.stopPropagation();window.advOrder('${o.id}');window.renderGestao();">${SNLBL[o.st]}</button>`:'<div class="chip ch-g" style="font-size:9px;">✅ Concluído</div>'}
+        <div class="oc-tot">R$ ${(o.tot||0).toFixed(2).replace('.',',')}</div>
+        ${o.st!=='entregue'?`<button class="btn btn-p btn-sm" data-onclick="event.stopPropagation();advOrder('${o.id}');renderGestao();">${SNLBL[o.st]}</button>`:'<div class="chip ch-g" style="font-size:9px;">✅ Concluído</div>'}
       </div>
     </div>`).join('');
 }
@@ -1314,7 +1601,7 @@ function renderCardapio(cat='todos'){
   if(cat!=='todos')prods=prods.filter(p=>p.cat===cat);
   const g=document.getElementById('client-grid');if(!g)return;
   g.innerHTML=prods.map(p=>`
-    <div onclick="window.openProdDet(${p.id})" style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);overflow:hidden;cursor:pointer;transition:all .18s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">
+    <div data-onclick="openProdDet('${p.id}')" style="background:var(--s1);border:1px solid var(--b1);border-radius:var(--rr);overflow:hidden;cursor:pointer;transition:all .18s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">
       <div style="width:100%;aspect-ratio:1;background:linear-gradient(145deg,#1a0d24,#271040);display:flex;align-items:center;justify-content:center;font-size:48px;position:relative;">
         ${p.emoji}
         ${p.badge?`<div style="position:absolute;top:7px;left:7px;background:var(--acc);color:#fff;font-size:8px;font-weight:700;font-family:'Syne',sans-serif;padding:2px 5px;border-radius:4px;text-transform:uppercase;">${p.badge}</div>`:''}
@@ -1324,7 +1611,7 @@ function renderCardapio(cat='todos'){
         <div style="font-size:9px;color:var(--m1);margin-bottom:7px;">${p.desc}</div>
         <div style="display:flex;justify-content:space-between;align-items:center;">
           <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--p);">R$${p.preco}</div>
-          <button onclick="event.window.stopPropagation();window.addCart(${p.id})" style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmousedown="this.style.transform='window.scale(.88)'" onmouseup="this.style.transform=''">
+          <button data-onclick="event.stopPropagation();addCart('${p.id}')" style="width:24px;height:24px;border-radius:6px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;" onmousedown="this.style.transform='scale(.88)'" onmouseup="this.style.transform=''">
             <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
           </button>
         </div>
@@ -1339,8 +1626,8 @@ function fltCli(el,cat){
 }
 
 function addCart(id){
-  const p=S.products.find(x=>x.id===id);if(!p)return;
-  const ex=S.cart.find(x=>x.id===id);
+  const p=S.products.find(x=>x.id==id);if(!p)return;
+  const ex=S.cart.find(x=>x.id==id);
   if(ex)ex.qty++;else S.cart.push({...p,qty:1});
   updCartBar();toast(`${p.emoji} Adicionado!`);
 }
@@ -1352,7 +1639,7 @@ function updCartBar(){
   if(!bar){
     bar=document.createElement('div');bar.id='cli-cart-bar';
     bar.style.cssText='padding:11px 16px calc(11px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(7,5,10,1) 52%,transparent);position:sticky;bottom:0;';
-    bar.innerHTML=`<button onclick="window.openM('modal-cart')" style="width:100%;padding:14px 18px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;border-radius:var(--rr);display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 5px 22px rgba(168,85,247,.38);">
+    bar.innerHTML=`<button data-onclick="openM('modal-cart')" style="width:100%;padding:14px 18px;background:linear-gradient(135deg,var(--p),var(--pm));border:none;border-radius:var(--rr);display:flex;align-items:center;justify-content:space-between;cursor:pointer;box-shadow:0 5px 22px rgba(168,85,247,.38);">
       <div style="display:flex;align-items:center;gap:10px;"><div id="cli-cc" style="width:26px;height:26px;border-radius:6px;background:rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:#fff;">0</div><span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff;">Ver carrinho</span></div>
       <span id="cli-cp" style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:#fff;">R$0</span>
     </button>`;
@@ -1364,7 +1651,7 @@ function updCartBar(){
 }
 
 function openProdDet(id){
-  const p=S.products.find(x=>x.id===id);if(!p)return;
+  const p=S.products.find(x=>x.id==id);if(!p)return;
   document.getElementById('pd-title').textContent=p.nome;
   document.getElementById('pd-body').innerHTML=`
     <div style="text-align:center;font-size:64px;margin-bottom:10px;">${p.emoji}</div>
@@ -1376,12 +1663,12 @@ function openProdDet(id){
       <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:var(--m1);">Status</span><div class="chip ${p.on?'ch-g':'ch-r'}" style="font-size:9px;">${p.on?'Ativo':'Inativo'}</div></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--s2);border-radius:var(--rs);">
         <span style="font-size:11px;font-family:'Syne',sans-serif;font-weight:700;">Disponível no cardápio</span>
-        <div class="toggle ${p.on?'tog-on':'tog-off'}" onclick="window.toggleProdOn(${p.id},this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${p.on?'tog-on':'tog-off'}" data-onclick="toggleProdOn('${p.id}',this)"><div class="tgl-k"></div></div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-      <button class="btn btn-s" onclick="window.closeM('modal-prod-det')">Fechar</button>
-      <button class="btn btn-p" onclick="window.closeM('modal-prod-det');window.openProdM(${p.id})">✏️ Editar</button>
+      <button class="btn btn-s" data-onclick="closeM('modal-prod-det')">Fechar</button>
+      <button class="btn btn-p" data-onclick="closeM('modal-prod-det');openProdM('${p.id}')">✏️ Editar</button>
     </div>`;
   openM('modal-prod-det');
 }
@@ -1395,20 +1682,20 @@ function buildCartM(){
       <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--b1);">
         <span style="font-size:26px;">${i.emoji}</span>
         <div style="flex:1;"><div class="font-b" style="font-size:12px;">${i.nome}</div><div style="font-size:10px;color:var(--m1);">R$${i.preco} cada</div></div>
-        <button class="btn btn-s btn-ico" onclick="window.chgCartQty(${i.id},-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+        <button class="btn btn-s btn-ico" data-onclick="chgCartQty('${i.id}',-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
         <span class="font-b" style="font-size:13px;min-width:18px;text-align:center;">${i.qty}</span>
-        <button class="btn btn-s btn-ico" onclick="window.chgCartQty(${i.id},1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+        <button class="btn btn-s btn-ico" data-onclick="chgCartQty('${i.id}',1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
         <span class="font-b tx-p" style="font-size:12px;min-width:38px;text-align:right;">R$${(i.preco*i.qty).toFixed(0)}</span>
       </div>`).join('')}
     <div style="display:flex;justify-content:space-between;padding:10px 0;" class="font-b"><span>Total</span><span style="color:var(--p);">R$${total.toFixed(2).replace('.',',')}</span></div>
     ${S.cart.length>0?`
       <div class="fld"><div class="lbl">Endereço de entrega</div><input class="inp" id="checkout-addr" placeholder="Rua, número..."></div>
-      <button class="btn btn-p btn-w" onclick="window.cliCheckout()">Confirmar pedido</button>`:''}`
+      <button class="btn btn-p btn-w" data-onclick="cliCheckout()">Confirmar pedido</button>`:''}`
   ;
 }
 
 function chgCartQty(id,d){
-  const i=S.cart.find(x=>x.id===id);if(!i)return;
+  const i=S.cart.find(x=>x.id==id);if(!i)return;
   i.qty+=d;if(i.qty<=0)S.cart=S.cart.filter(x=>x.id!==id);
   updCartBar();buildCartM();
 }
@@ -1432,8 +1719,8 @@ function renderDelView(){
       <div class="oc-hd"><div><div class="oc-id">#${o.id} · ${o.cli}</div><div class="oc-tm">${o.its.substring(0,36)}</div></div><div class="chip ch-g" style="font-size:10px;">Entrega</div></div>
       <div style="display:flex;align-items:center;gap:8px;padding:8px 0;"><span style="font-size:16px;">📍</span><span style="font-size:11px;color:var(--m2);">${o.end}</span></div>
       <div class="oc-ft">
-        <div class="oc-tot">R$ ${o.tot.toFixed(0)}</div>
-        <button class="btn btn-ok btn-sm" onclick="window.advOrder('${o.id}');window.renderDelView();">✅ Entregue</button>
+        <div class="oc-tot">R$ ${(o.tot||0).toFixed(0)}</div>
+        <button class="btn btn-ok btn-sm" data-onclick="advOrder('${o.id}');renderDelView();">✅ Entregue</button>
       </div>
     </div>`).join(''):'<div style="text-align:center;padding:40px;color:var(--m1);">Nenhuma entrega 🛵</div>';
 }
@@ -1449,7 +1736,7 @@ function renderCriarPedido(){
   const chips=document.getElementById('cp-prod-chips');
   if(chips){
     chips.innerHTML=S.products.filter(p=>p.on).map(p=>
-      `<button onclick="window.cpAddItem(${p.id})" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .14s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${p.emoji} ${p.nome.substring(0,14)} · R$${p.preco}</button>`
+      `<button data-onclick="cpAddItem('${p.id}')" style="flex-shrink:0;display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .14s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${p.emoji} ${p.nome.substring(0,14)} · R$${p.preco}</button>`
     ).join('');
   }
   renderCpItems();
@@ -1469,7 +1756,7 @@ function renderProds(cat=_prodCat,q=''){
 
   const el=document.getElementById('prod-list');if(!el)return;
   el.innerHTML=prods.map(p=>`
-    <div class="ri" onclick="window.openProdDet(${p.id})">
+    <div class="ri" data-onclick="openProdDet('${p.id}')">
       <div class="ri-ic">${p.emoji}</div>
       <div class="ri-info">
         <div class="ri-nm">${p.nome} ${p.badge?`<span style="background:var(--acc);color:#fff;font-size:8px;font-family:'Syne',sans-serif;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;">${p.badge}</span>`:''}</div>
@@ -1478,7 +1765,7 @@ function renderProds(cat=_prodCat,q=''){
       <div class="ri-r">
         <div class="chip ${p.on?'ch-g':'ch-r'}" style="font-size:9px;padding:3px 7px;">${p.on?'Ativo':'Off'}</div>
         <div class="ri-val">R$${p.preco}</div>
-        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();window.delProd(${p.id})">Del</button>
+        <button class="btn btn-d btn-xs" data-onclick="event.stopPropagation();delProd('${p.id}')">Del</button>
       </div>
     </div>`).join('');
 }
@@ -1488,7 +1775,7 @@ function renderAdics(){
   if(ct)ct.textContent=S.adicionais.length;
   const el=document.getElementById('adic-list');if(!el)return;
   el.innerHTML=S.adicionais.map(a=>`
-    <div class="ri" onclick="window.openAdicDet(${a.id})">
+    <div class="ri" data-onclick="openAdicDet('${a.id}')">
       <div class="ri-ic">${a.emoji}</div>
       <div class="ri-info">
         <div class="ri-nm">${a.nome}</div>
@@ -1497,7 +1784,7 @@ function renderAdics(){
       <div class="ri-r">
         <div class="chip ${a.on?'ch-g':'ch-r'}" style="font-size:9px;padding:3px 7px;">${a.on?'Ativo':'Off'}</div>
         <div class="ri-val">R$${a.preco}</div>
-        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();window.delAdic(${a.id})">Del</button>
+        <button class="btn btn-d btn-xs" data-onclick="event.stopPropagation();delAdic('${a.id}')">Del</button>
       </div>
     </div>`).join('');
 }
@@ -1511,7 +1798,7 @@ function renderDels(){
 
   const el=document.getElementById('del-list');if(!el)return;
   el.innerHTML=S.entregadores.map(d=>`
-    <div class="ri" onclick="window.openDelDet(${d.id})">
+    <div class="ri" data-onclick="openDelDet('${d.id}')">
       <div class="ri-ic">🛵</div>
       <div class="ri-info">
         <div class="ri-nm">${d.nome}</div>
@@ -1519,7 +1806,7 @@ function renderDels(){
       </div>
       <div class="ri-r">
         <div class="chip ${d.st==='ativo'?'ch-g':'ch-r'}" style="font-size:9px;padding:3px 7px;">${d.st}</div>
-        <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${d.sal>0?'var(--o)':'var(--g)'};">${d.sal>0?'Dever R$'+d.sal.toFixed(0):'✅ Quitado'}</div>
+        <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${d.sal>0?'var(--o)':'var(--g)'};">${d.sal>0?'Dever R$'+(d.sal||0).toFixed(0):'✅ Quitado'}</div>
       </div>
     </div>`).join('');
 }
@@ -1530,7 +1817,17 @@ function renderCaixaDia(){
 
   // Pega dados do turno atual (hoje)
   const hoje=S.caixaHistorico[0];
-  si('cd-total','R$'+hoje.total.toFixed(2).replace('.',','));
+  if (!hoje) {
+    document.getElementById('cd-total') && (document.getElementById('cd-total').textContent = 'Sem dados');
+    return;
+  }
+  // Garantir campos com fallback
+  hoje.total = hoje.total || 0;
+  hoje.pedidos = hoje.pedidos || 0;
+  hoje.sangrias = hoje.sangrias || 0;
+  hoje.suprimentos = hoje.suprimentos || 0;
+  hoje.metodos = hoje.metodos || {pix:0, debito:0, credito:0, dinheiro:0};
+  si('cd-total','R$'+(hoje.total||0).toFixed(2).replace('.',','));
   si('cd-pedidos',hoje.pedidos+' pedidos · média R$'+(hoje.total/hoje.pedidos).toFixed(2).replace('.',','));
 
   const metodos={
@@ -1550,8 +1847,8 @@ function renderCaixaDia(){
     </div>`).join('');
 
   si('cd-liquido','R$'+(hoje.total).toFixed(2).replace('.',','));
-  si('cd-sangrias','-R$'+hoje.sangrias.toFixed(0));
-  si('cd-suprimentos','+R$'+hoje.suprimentos.toFixed(0));
+  si('cd-sangrias','-R$'+(hoje.sangrias||0).toFixed(0));
+  si('cd-suprimentos','+R$'+(hoje.suprimentos||0).toFixed(0));
 
   // Gráfico hora a hora
   const horas=['10h','11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h'];
@@ -1610,7 +1907,7 @@ function renderCaixaOp(){
     <div class="move-item">
       <div style="width:32px;height:32px;border-radius:8px;background:${m.tipo==='suprimento'?'rgba(52,211,153,.12)':'rgba(248,113,113,.12)'};display:flex;align-items:center;justify-content:center;font-size:14px;">${m.tipo==='suprimento'?'➕':'➖'}</div>
       <div style="flex:1;"><div class="ri-nm" style="font-size:11px;">${m.tipo==='suprimento'?'Suprimento':'Sangria'} · ${m.motivo||'—'}</div><div class="ri-sub">${m.hora} · ${m.resp||'—'}</div></div>
-      <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${m.tipo==='suprimento'?'var(--g)':'var(--r)'};">${m.tipo==='suprimento'?'+':'-'}R$${m.val.toFixed(2)}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${m.tipo==='suprimento'?'var(--g)':'var(--r)'};">${m.tipo==='suprimento'?'+':'-'}R$${(m.val||0).toFixed(2)}</div>
     </div>`).join(''):'<div style="text-align:center;padding:18px;font-size:11px;color:var(--m1);">Nenhuma movimentação no turno</div>';
 
   // Atualiza modal de fechamento
@@ -1627,30 +1924,28 @@ function renderHC(dias=7){
   const el=document.getElementById('hc-list');
   if(!el)return;
   el.innerHTML=list.map(h=>`
-    <div class="ri" onclick="window.openTurnoDet(${h.id})">
-      <div class="ri-ic" style="background:${h.dif===0?'rgba(52,211,153,.12)':h.dif>0?'rgba(251,191,36,.12)':'rgba(248,113,113,.12)'};">
-        ${h.dif===0?'✅':h.dif>0?'⬆️':'⬇️'}
+    <div class="ri" data-onclick="openTurnoDet('${h.id}')">
+      <div class="ri-ic" style="background:${(h.dif||0)===0?'rgba(52,211,153,.12)':(h.dif||0)>0?'rgba(251,191,36,.12)':'rgba(248,113,113,.12)'};">
+        ${(h.dif||0)===0?'✅':(h.dif||0)>0?'⬆️':'⬇️'}
       </div>
       <div class="ri-info">
-        <div class="ri-nm">${h.data} · ${h.op}</div>
-        <div class="ri-sub">${h.aber} → ${h.fech} · ${h.pedidos} pedidos${h.obs?' · '+h.obs:''}</div>
+        <div class="ri-nm">${(h.data||'--')} · ${(h.op||'—')}</div>
+        <div class="ri-sub">${(h.aber||'--')} → ${(h.fech||'--')} · ${(h.pedidos||0)} pedidos${h.obs?' · '+h.obs:''}</div>
       </div>
       <div class="ri-r">
-        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--p);">R$${h.total.toFixed(0)}</div>
-        ${h.dif!==0?`<div style="font-size:9px;font-family:'Syne',sans-serif;font-weight:700;color:${h.dif>0?'var(--gold)':'var(--r)'};">${h.dif>0?'+':''} R$${h.dif.toFixed(2)}</div>`:''}
+        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--p);">R$${(h.total||0).toFixed(0)}</div>
+        ${(h.dif||0)!==0?`<div style="font-size:9px;font-family:'Syne',sans-serif;font-weight:700;color:${(h.dif||0)>0?'var(--gold)':'var(--r)'};">${(h.dif||0)>0?'+':''} R$${(h.dif||0).toFixed(2)}</div>`:''}
       </div>
     </div>`).join('');
 }
-
 function renderConfig(){
-  // Métodos de pagamento
-  const metEl=document.getElementById('cfg-metodos');
+  const metEl = document.getElementById('cfg-metodos');
   const metLabels={pix:'💳 PIX',debito:'💳 Cartão Débito',credito:'💳 Cartão Crédito',dinheiro:'💵 Dinheiro',fiado:'🤝 Fiado (Crédito)'};
   if(metEl){
     metEl.innerHTML=Object.entries(S.cfgMetodos).map(([k,v])=>`
       <div class="cfg-row">
         <div><div class="cfg-row-lbl">${metLabels[k]}</div></div>
-        <div class="toggle ${v?'tog-on':'tog-off'}" data-cfg-met="${k}" onclick="window.togCfgMet('${k}',this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${v?'tog-on':'tog-off'}" data-cfg-met="${k}" data-onclick="togCfgMet('${k}',this)"><div class="tgl-k"></div></div>
       </div>`).join('');
   }
 
@@ -1667,7 +1962,7 @@ function renderConfig(){
     opEl.innerHTML=Object.entries(S.cfgOps).map(([k,v])=>`
       <div class="cfg-row">
         <div><div class="cfg-row-lbl">${opLabels[k].lbl}</div><div class="cfg-row-sub">${opLabels[k].sub}</div></div>
-        <div class="toggle ${v?'tog-on':'tog-off'}" onclick="window.togCfgOp('${k}',this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${v?'tog-on':'tog-off'}" data-onclick="togCfgOp('${k}',this)"><div class="tgl-k"></div></div>
       </div>`).join('');
   }
 
@@ -1684,7 +1979,7 @@ function renderConfig(){
     nfEl.innerHTML=Object.entries(S.cfgNotifs).map(([k,v])=>`
       <div class="cfg-row">
         <div><div class="cfg-row-lbl">${nfLabels[k].lbl}</div><div class="cfg-row-sub">${nfLabels[k].sub}</div></div>
-        <div class="toggle ${v?'tog-on':'tog-off'}" onclick="window.togCfgNf('${k}',this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${v?'tog-on':'tog-off'}" data-onclick="togCfgNf('${k}',this)"><div class="tgl-k"></div></div>
       </div>`).join('');
   }
 }
@@ -1816,7 +2111,7 @@ function renderAnalytics(dias=7){
 }
 
 function advOrder(id){
-  const o=S.orders.find(x=>x.id===id);
+  const o=S.orders.find(x=>x.id==id);
   if(!o||!SN[o.st])return;
   o.st=SN[o.st];
   toast(`Pedido #${id} → ${SL[o.st]}`);
@@ -1824,20 +2119,20 @@ function advOrder(id){
 }
 
 function openOrderM(id){
-  const o=S.orders.find(x=>x.id===id);if(!o)return;
+  const o=S.orders.find(x=>x.id==id);if(!o)return;
   document.getElementById('od-title').textContent=`Pedido #${o.id}`;
   document.getElementById('od-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:10px;">
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--m1);font-size:12px;">Cliente</span><span class="font-b" style="font-size:12px;">${o.cli}</span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;"><span style="color:var(--m1);font-size:12px;">Status</span><div class="chip ${SC[o.st]}" style="font-size:9px;">${SL[o.st]}</div></div>
-      <div style="display:flex;justify-content:space-between;"><span style="color:var(--m1);font-size:12px;">Total</span><span class="font-b tx-p" style="font-size:12px;">R$${o.tot.toFixed(2)}</span></div>
+      <div style="display:flex;justify-content:space-between;"><span style="color:var(--m1);font-size:12px;">Total</span><span class="font-b tx-p" style="font-size:12px;">R$${(o.tot||0).toFixed(2)}</span></div>
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--m1);font-size:12px;">Pagamento</span><span class="font-b" style="font-size:12px;">${o.pgto}</span></div>
       <div style="display:flex;justify-content:space-between;"><span style="color:var(--m1);font-size:12px;">Endereço</span><span style="font-size:11px;text-align:right;max-width:60%;">${o.end}</span></div>
       ${o.del?`<div style="display:flex;justify-content:space-between;"><span style="color:var(--m1);font-size:12px;">Entregador</span><span class="font-b" style="font-size:12px;">🛵 ${o.del}</span></div>`:''}
       <div style="height:1px;background:var(--b1);"></div>
       <div style="font-size:11px;color:var(--m2);line-height:1.6;">${o.its}</div>
-      ${o.st!=='entregue'?`<button class="btn btn-p btn-w" onclick="window.advOrder('${o.id}');window.closeM('modal-order');window.renderView(S.view);">${SNLBL[o.st]}</button>`:''}
-      <button class="btn btn-s btn-w" onclick="window.closeM('modal-order')">Fechar</button>
+      ${o.st!=='entregue'?`<button class="btn btn-p btn-w" data-onclick="advOrder('${o.id}');closeM('modal-order');renderView(S.view);">${SNLBL[o.st]}</button>`:''}
+      <button class="btn btn-s btn-w" data-onclick="closeM('modal-order')">Fechar</button>
     </div>`;
   openM('modal-order');
 }
@@ -1874,7 +2169,7 @@ function startOrderSim(){
 
 function closeM(id){var _cmEl=document.getElementById(id); if(_cmEl) _cmEl.classList.remove('open');}
 
-function closeOL(e,id){if(e.target.id===id)closeM(id);}
+function closeOL(e,id){if(e.target.id==id)closeM(id);}
 
 function toast(msg){
   const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');
@@ -1897,26 +2192,26 @@ function playBeep(){
 function v(id){const el=document.getElementById(id);return el?el.value:'';}
 
 function cpAddItem(id){
-  const p=S.products.find(x=>x.id===id);if(!p)return;
-  const ex=S.cpItems.find(x=>x.id===id);
+  const p=S.products.find(x=>x.id==id);if(!p)return;
+  const ex=S.cpItems.find(x=>x.id==id);
   if(ex)ex.qty++;else S.cpItems.push({...p,qty:1});
   S.cpItemsTotal=S.cpItems.reduce((s,x)=>s+x.preco*x.qty,0);
-  document.getElementById('cp-tot').value=S.cpItemsTotal.toFixed(2);
+  document.getElementById('cp-tot').value=(S.cpItemsTotal||0).toFixed(2);
   renderCpItems();
 }
 
 function cpRemItem(id){
   S.cpItems=S.cpItems.filter(x=>x.id!==id);
   S.cpItemsTotal=S.cpItems.reduce((s,x)=>s+x.preco*x.qty,0);
-  document.getElementById('cp-tot').value=S.cpItemsTotal>0?S.cpItemsTotal.toFixed(2):'';
+  document.getElementById('cp-tot').value=S.cpItemsTotal>0?(S.cpItemsTotal||0).toFixed(2):'';
   renderCpItems();
 }
 
 function cpChgQty(id,d){
-  const i=S.cpItems.find(x=>x.id===id);if(!i)return;
+  const i=S.cpItems.find(x=>x.id==id);if(!i)return;
   i.qty+=d;if(i.qty<=0){cpRemItem(id);return;}
   S.cpItemsTotal=S.cpItems.reduce((s,x)=>s+x.preco*x.qty,0);
-  document.getElementById('cp-tot').value=S.cpItemsTotal.toFixed(2);
+  document.getElementById('cp-tot').value=(S.cpItemsTotal||0).toFixed(2);
   renderCpItems();
 }
 
@@ -1930,11 +2225,11 @@ function renderCpItems(){
     <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--s2);border-radius:var(--rs);border:1px solid var(--b1);">
       <span style="font-size:22px;">${i.emoji}</span>
       <span style="flex:1;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;">${i.nome}</span>
-      <button class="btn btn-s btn-ico" onclick="window.cpChgQty(${i.id},-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
+      <button class="btn btn-s btn-ico" data-onclick="cpChgQty('${i.id}',-1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14"/></svg></button>
       <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;min-width:20px;text-align:center;">${i.qty}</span>
-      <button class="btn btn-s btn-ico" onclick="window.cpChgQty(${i.id},1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+      <button class="btn btn-s btn-ico" data-onclick="cpChgQty('${i.id}',1)"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
       <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--p);min-width:42px;text-align:right;">R$${(i.preco*i.qty).toFixed(0)}</span>
-      <button class="btn btn-d btn-ico" onclick="window.cpRemItem(${i.id})"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <button class="btn btn-d btn-ico" data-onclick="cpRemItem('${i.id}')"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
     </div>`).join('');
 }
 
@@ -1986,8 +2281,8 @@ function pdvN(n){
 function pdvDel(){S.pdvInput=S.pdvInput.slice(0,-1);updPDV();}
 
 function pdvAddProd(id){
-  const p=S.products.find(x=>x.id===id);if(!p)return;
-  const ex=S.pdvCart.find(x=>x.id===id);
+  const p=S.products.find(x=>x.id==id);if(!p)return;
+  const ex=S.pdvCart.find(x=>x.id==id);
   if(ex)ex.qty++;else S.pdvCart.push({...p,qty:1});
   S.pdvInput='';
   updPDV();renderPDVCart();
@@ -2000,7 +2295,7 @@ function pdvSearch(q){
   const found=S.products.filter(p=>p.on&&(p.bc===q||p.nome.toLowerCase().includes(q.toLowerCase())));
   if(!found.length){res.innerHTML='<div style="font-size:11px;color:var(--m1);padding:4px 0;">Nenhum produto encontrado</div>';return;}
   res.innerHTML=found.slice(0,4).map(p=>`
-    <button onclick="window.pdvAddProd(${p.id});document.window.getElementById('pdv-bc').value='';document.window.getElementById('pdv-search-result').innerHTML='';" style="width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rs);cursor:pointer;margin-bottom:5px;text-align:left;">
+    <button data-onclick="pdvAddProd('${p.id}');document.getElementById('pdv-bc').value='';document.getElementById('pdv-search-result').innerHTML='';" style="width:100%;display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rs);cursor:pointer;margin-bottom:5px;text-align:left;">
       <span style="font-size:24px;">${p.emoji}</span>
       <div style="flex:1;"><div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--tx);">${p.nome}</div><div style="font-size:10px;color:var(--m1);">cód: ${p.bc}</div></div>
       <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--p);">R$${p.preco}</span>
@@ -2008,7 +2303,7 @@ function pdvSearch(q){
 }
 
 function pdvQtyChange(id,d){
-  const i=S.pdvCart.find(x=>x.id===id);if(!i)return;
+  const i=S.pdvCart.find(x=>x.id==id);if(!i)return;
   i.qty+=d;if(i.qty<=0)S.pdvCart=S.pdvCart.filter(x=>x.id!==id);
   updPDV();renderPDVCart();
 }
@@ -2019,9 +2314,9 @@ function renderPDVCart(){
     <div style="display:flex;align-items:center;gap:7px;padding:6px 0;border-bottom:1px solid var(--b1);">
       <span style="font-size:20px;">${i.emoji}</span>
       <span style="flex:1;font-size:11px;font-family:'Syne',sans-serif;font-weight:700;">${i.nome}</span>
-      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" onclick="window.pdvQtyChange(${i.id},-1)">−</button>
+      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" data-onclick="pdvQtyChange('${i.id}',-1)">−</button>
       <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;min-width:18px;text-align:center;">${i.qty}</span>
-      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" onclick="window.pdvQtyChange(${i.id},1)">+</button>
+      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:11px;" data-onclick="pdvQtyChange('${i.id}',1)">+</button>
       <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--p);min-width:38px;text-align:right;">R$${(i.preco*i.qty).toFixed(0)}</span>
     </div>`).join('');
 }
@@ -2083,7 +2378,7 @@ function renderPDVHistory(){
     <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--b1);">
       <div style="width:32px;height:32px;border-radius:8px;background:rgba(52,211,153,.12);display:flex;align-items:center;justify-content:center;font-size:14px;">💳</div>
       <div style="flex:1;"><div style="font-family:'Syne',sans-serif;font-size:11px;font-weight:700;">#${h.id} · ${h.pgto}</div><div style="font-size:10px;color:var(--m1);">${h.hora} · ${h.its.substring(0,32)}</div></div>
-      <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--g);">R$${h.total.toFixed(2)}</div>
+      <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--g);">R$${(h.total||0).toFixed(2)}</div>
     </div>`).join('');
 }
 
@@ -2095,7 +2390,7 @@ function fltPCat(el,cat){
 }
 
 function openProdM(id){
-  const p=id?S.products.find(x=>x.id===id):null;
+  const p=id?S.products.find(x=>x.id==id):null;
   document.getElementById('pm-title').textContent=p?'Editar produto':'Novo produto';
   document.getElementById('pm-id').value=id||'';
   document.getElementById('pm-nome').value=p?p.nome:'';
@@ -2113,7 +2408,7 @@ function openProdM(id){
 }
 
 function toggleProdOn(id,togEl){
-  const p=S.products.find(x=>x.id===id);if(!p)return;
+  const p=S.products.find(x=>x.id==id);if(!p)return;
   p.on=!p.on;
   togEl.className='toggle '+(p.on?'tog-on':'tog-off');
   renderProds();toast(p.on?`✅ ${p.nome} ativado`:`🔴 ${p.nome} desativado`);
@@ -2126,7 +2421,7 @@ function saveProd(){
   const on=document.getElementById('pm-tog').classList.contains('tog-on');
   const id=parseInt(gi('pm-id'))||null;
   if(!nome){toast('⚠️ Nome obrigatório');return;}
-  if(id){const p=S.products.find(x=>x.id===id);Object.assign(p,{nome,desc,preco,emoji,cat,est,min,bc,badge,on});}
+  if(id){const p=S.products.find(x=>x.id==id);Object.assign(p,{nome,desc,preco,emoji,cat,est,min,bc,badge,on});}
   else S.products.push({id:Date.now(),nome,desc,preco,emoji,cat,est,min,bc,badge,on});
   closeM('modal-prod');renderProds();
   toast('✅ Produto salvo!');
@@ -2139,7 +2434,7 @@ function delProd(id){
 }
 
 function openAdicM(id){
-  const a=id?S.adicionais.find(x=>x.id===id):null;
+  const a=id?S.adicionais.find(x=>x.id==id):null;
   document.getElementById('am-title').textContent=a?'Editar adicional':'Novo adicional';
   document.getElementById('am-id').value=id||'';
   document.getElementById('am-nome').value=a?a.nome:'';
@@ -2152,7 +2447,7 @@ function openAdicM(id){
 }
 
 function openAdicDet(id){
-  const a=S.adicionais.find(x=>x.id===id);if(!a)return;
+  const a=S.adicionais.find(x=>x.id==id);if(!a)return;
   // reutiliza modal de produto detalhe
   document.getElementById('pd-title').textContent=a.nome;
   document.getElementById('pd-body').innerHTML=`
@@ -2163,18 +2458,18 @@ function openAdicDet(id){
       <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:var(--m1);">Descrição</span><span style="font-size:11px;text-align:right;max-width:60%;">${a.desc||'—'}</span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--s2);border-radius:var(--rs);">
         <span style="font-size:11px;font-family:'Syne',sans-serif;font-weight:700;">Disponível para seleção</span>
-        <div class="toggle ${a.on?'tog-on':'tog-off'}" onclick="window.toggleAdicOn(${a.id},this)"><div class="tgl-k"></div></div>
+        <div class="toggle ${a.on?'tog-on':'tog-off'}" data-onclick="toggleAdicOn('${a.id}',this)"><div class="tgl-k"></div></div>
       </div>
     </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-      <button class="btn btn-s" onclick="window.closeM('modal-prod-det')">Fechar</button>
-      <button class="btn btn-p" onclick="window.closeM('modal-prod-det');window.openAdicM(${a.id})">✏️ Editar</button>
+      <button class="btn btn-s" data-onclick="closeM('modal-prod-det')">Fechar</button>
+      <button class="btn btn-p" data-onclick="closeM('modal-prod-det');openAdicM('${a.id}')">✏️ Editar</button>
     </div>`;
   openM('modal-prod-det');
 }
 
 function toggleAdicOn(id,el){
-  const a=S.adicionais.find(x=>x.id===id);if(!a)return;
+  const a=S.adicionais.find(x=>x.id==id);if(!a)return;
   a.on=!a.on;el.className='toggle '+(a.on?'tog-on':'tog-off');
   renderAdics();toast(a.on?`✅ ${a.nome} ativado`:`🔴 ${a.nome} desativado`);
 }
@@ -2185,7 +2480,7 @@ function saveAdic(){
   const on=document.getElementById('am-tog').classList.contains('tog-on');
   const id=parseInt(gi('am-id'))||null;
   if(!nome){toast('⚠️ Nome obrigatório');return;}
-  if(id){const a=S.adicionais.find(x=>x.id===id);Object.assign(a,{nome,emoji,preco,est,desc,on});}
+  if(id){const a=S.adicionais.find(x=>x.id==id);Object.assign(a,{nome,emoji,preco,est,desc,on});}
   else S.adicionais.push({id:Date.now(),nome,emoji,preco,est,desc,on});
   closeM('modal-adic');renderAdics();
   toast('✅ Adicional salvo!');
@@ -2197,7 +2492,7 @@ function delAdic(id){
 }
 
 function openDelM(id){
-  const d=id?S.entregadores.find(x=>x.id===id):null;
+  const d=id?S.entregadores.find(x=>x.id==id):null;
   document.getElementById('dm-title').textContent=d?'Editar entregador':'Novo entregador';
   document.getElementById('dm-id').value=id||'';
   document.getElementById('dm-nome').value=d?d.nome:'';
@@ -2210,7 +2505,7 @@ function openDelM(id){
 }
 
 function openDelDet(id){
-  const d=S.entregadores.find(x=>x.id===id);if(!d)return;
+  const d=S.entregadores.find(x=>x.id==id);if(!d)return;
   document.getElementById('dd-title').textContent=d.nome;
   document.getElementById('dd-body').innerHTML=`
     <div style="display:flex;flex-direction:column;gap:10px;">
@@ -2220,22 +2515,22 @@ function openDelDet(id){
       <div style="display:flex;justify-content:space-between;"><span style="font-size:11px;color:var(--m1);">Corridas hoje</span><span class="font-b" style="font-size:12px;">${d.corridas}</span></div>
       <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:${d.sal>0?'rgba(251,146,60,.08)':'rgba(52,211,153,.08)'};border:1px solid ${d.sal>0?'rgba(251,146,60,.25)':'rgba(52,211,153,.25)'};border-radius:var(--rs);">
         <div><div class="font-b" style="font-size:12px;">${d.sal>0?'Saldo a pagar':'Em dia'}</div><div style="font-size:10px;color:var(--m1);">${d.sal>0?'Corridas ainda não pagas':'Pagamentos em dia'}</div></div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:${d.sal>0?'var(--o)':'var(--g)'};">${d.sal>0?'R$'+d.sal.toFixed(0):'✅'}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:${d.sal>0?'var(--o)':'var(--g)'};">${d.sal>0?'R$'+(d.sal||0).toFixed(0):'✅'}</div>
       </div>
       ${d.sal>0?`
         <div class="fld"><div class="lbl">Registrar pagamento (R$)</div><input class="inp" id="del-pag-${d.id}" type="number" max="${d.sal}" placeholder="0,00"></div>
-        <button class="btn btn-ok btn-w" onclick="window.pagarDel(${d.id})">✅ Registrar pagamento</button>
+        <button class="btn btn-ok btn-w" data-onclick="pagarDel('${d.id}')">✅ Registrar pagamento</button>
       `:''}
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <button class="btn btn-s" onclick="window.closeM('modal-del-det')">Fechar</button>
-        <button class="btn btn-p" onclick="window.closeM('modal-del-det');window.openDelM(${d.id})">✏️ Editar</button>
+        <button class="btn btn-s" data-onclick="closeM('modal-del-det')">Fechar</button>
+        <button class="btn btn-p" data-onclick="closeM('modal-del-det');openDelM('${d.id}')">✏️ Editar</button>
       </div>
     </div>`;
   openM('modal-del-det');
 }
 
 function pagarDel(id){
-  const d=S.entregadores.find(x=>x.id===id);if(!d)return;
+  const d=S.entregadores.find(x=>x.id==id);if(!d)return;
   const val=parseFloat((document.getElementById('del-pag-'+id)||{}).value)||0;
   if(val<=0||val>d.sal){toast('⚠️ Valor inválido');return;}
   d.sal=parseFloat((d.sal-val).toFixed(2));
@@ -2248,7 +2543,7 @@ function saveDel(){
   const sal=parseFloat(gi('dm-sal'))||0,st=gi('dm-st'),vei=gi('dm-vei');
   const id=parseInt(gi('dm-id'))||null;
   if(!nome){toast('⚠️ Nome obrigatório');return;}
-  if(id){const d=S.entregadores.find(x=>x.id===id);Object.assign(d,{nome,tel,com,sal,st,vei});}
+  if(id){const d=S.entregadores.find(x=>x.id==id);Object.assign(d,{nome,tel,com,sal,st,vei});}
   else S.entregadores.push({id:Date.now(),nome,tel,com,sal,st,vei,corridas:0});
   closeM('modal-del');renderDels();
   // atualiza select do criar pedido
@@ -2307,8 +2602,8 @@ function renderFinancas(flt=_finFlt){
         <div class="ri-sub">${f.cat} · ${f.data}${f.obs?' · '+f.obs:''}</div>
       </div>
       <div class="ri-r">
-        <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${f.tipo==='receita'?'var(--g)':'var(--r)'};">${f.tipo==='receita'?'+':'-'}R$${f.val.toFixed(2)}</div>
-        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();window.delFin(${f.id})">Del</button>
+        <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${f.tipo==='receita'?'var(--g)':'var(--r)'};">${f.tipo==='receita'?'+':'-'}R$${(f.val||0).toFixed(2)}</div>
+        <button class="btn btn-d btn-xs" data-onclick="event.stopPropagation();delFin('${f.id}')">Del</button>
       </div>
     </div>`).join(''):'<div style="text-align:center;padding:20px;font-size:11px;color:var(--m1);">Nenhum lançamento</div>';
 
@@ -2320,7 +2615,7 @@ function renderFinancas(flt=_finFlt){
       <div class="ri-info"><div class="ri-nm">${r.desc}</div><div class="ri-sub">${r.cat} · todo dia ${r.dia}</div></div>
       <div class="ri-r">
         <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:var(--r);">-R$${r.val.toLocaleString('pt-BR')}/mês</div>
-        <button class="btn btn-d btn-xs" onclick="event.window.stopPropagation();S.recorrentes=S.recorrentes.window.filter(x=>x.id!=${r.id});window.renderFinancas();">Del</button>
+        <button class="btn btn-d btn-xs" data-onclick="event.stopPropagation();S.recorrentes=S.recorrentes.filter(x=>x.id!=${r.id});renderFinancas();">Del</button>
       </div>
     </div>`).join('');
 }
@@ -2374,7 +2669,7 @@ function renderCredito(flt=_credFlt){
 
   si('cred-total','R$'+totDiv.toFixed(2).replace('.',','));
   si('cred-ct',devendo.length+' devendo · '+S.credits.length+' cadastrados');
-  si('cred-maior','R$'+maior.div.toFixed(0));
+  si('cred-maior','R$'+(maior.div||0).toFixed(0));
   si('cred-maior-nm',maior.nome);
 
   const alEl=document.getElementById('cred-alerta');
@@ -2395,7 +2690,7 @@ function renderCredito(flt=_credFlt){
     const pct=c.lim>0?Math.min(100,(c.div/c.lim*100)):0;
     const cor=pct>=100?'var(--r)':pct>=70?'var(--o)':'var(--g)';
     return `
-      <div class="ri" onclick="window.openCredDet(${c.id})">
+      <div class="ri" data-onclick="openCredDet('${c.id}')">
         <div class="ri-ic" style="background:rgba(168,85,247,.1);">🤝</div>
         <div class="ri-info">
           <div class="ri-nm">${c.nome}</div>
@@ -2406,7 +2701,7 @@ function renderCredito(flt=_credFlt){
           <div style="font-size:9px;color:var(--m1);margin-top:2px;">R$${c.div} de R$${c.lim} (${pct.toFixed(0)}%)</div>
         </div>
         <div class="ri-r">
-          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:${c.div>0?'var(--o)':'var(--g)'};">${c.div>0?'-R$'+c.div.toFixed(0):'✅'}</div>
+          <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:${c.div>0?'var(--o)':'var(--g)'};">${c.div>0?'-R$'+(c.div||0).toFixed(0):'✅'}</div>
           ${pct>=100?'<div class="chip ch-r" style="font-size:8px;padding:2px 6px;">LIMITE</div>':''}
         </div>
       </div>`;
@@ -2422,13 +2717,13 @@ function saveCred(){
   const nome=gi('ca-nome'),tel=gi('ca-tel'),lim=parseFloat(gi('ca-lim'))||100,div=parseFloat(gi('ca-div'))||0,obs=gi('ca-obs');
   const id=parseInt(gi('ca-id'))||null;
   if(!nome){toast('⚠️ Informe o nome');return;}
-  if(id){const c=S.credits.find(x=>x.id===id);Object.assign(c,{nome,tel,lim,div,obs});}
+  if(id){const c=S.credits.find(x=>x.id==id);Object.assign(c,{nome,tel,lim,div,obs});}
   else S.credits.push({id:Date.now(),nome,tel,lim,div,obs});
   closeM('modal-cred-add');renderCredito();toast('✅ Cliente salvo!');
 }
 
 function openCredDet(id){
-  const c=S.credits.find(x=>x.id===id);if(!c)return;
+  const c=S.credits.find(x=>x.id==id);if(!c)return;
   const pct=c.lim>0?Math.min(100,(c.div/c.lim*100)):0;
   const cor=pct>=100?'var(--r)':pct>=70?'var(--o)':'var(--g)';
   document.getElementById('cd-title').textContent=c.nome;
@@ -2439,7 +2734,7 @@ function openCredDet(id){
   document.getElementById('cd-body').innerHTML=`
     <div class="fcol gap10">
       <div class="flex jcb"><span class="font-xs tx-m">Telefone</span><span class="font-b" style="font-size:12px;">${c.tel}</span></div>
-      <div class="flex jcb"><span class="font-xs tx-m">Limite</span><span class="font-b" style="font-size:12px;">R$${c.lim.toFixed(2)}</span></div>
+      <div class="flex jcb"><span class="font-xs tx-m">Limite</span><span class="font-b" style="font-size:12px;">R$${(c.lim||0).toFixed(2)}</span></div>
       <div class="flex jcb"><span class="font-xs tx-m">Disponível</span><span class="font-b" style="font-size:12px;color:${cor};">R$${(c.lim-c.div).toFixed(2)}</span></div>
       <div>
         <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--m1);margin-bottom:4px;"><span>Uso do limite</span><span>${pct.toFixed(0)}%</span></div>
@@ -2453,14 +2748,14 @@ function openCredDet(id){
         <div class="lbl" style="margin-bottom:6px;">Registrar pagamento</div>
         <div style="display:flex;gap:8px;">
           <input class="inp f1" id="cred-pag-${id}" type="number" step="0.01" placeholder="R$ 0,00">
-          <button class="btn btn-ok" onclick="window.credPagar(${id})">✅ Pagar</button>
+          <button class="btn btn-ok" data-onclick="credPagar('${id}')">✅ Pagar</button>
         </div>
       </div>
       <div>
         <div class="lbl" style="margin-bottom:6px;">Adicionar dívida (fiado)</div>
         <div style="display:flex;gap:8px;">
           <input class="inp f1" id="cred-add-${id}" type="number" step="0.01" placeholder="R$ 0,00">
-          <button class="btn btn-d" onclick="window.credFiado(${id})">+ Fiado</button>
+          <button class="btn btn-d" data-onclick="credFiado('${id}')">+ Fiado</button>
         </div>
       </div>
 
@@ -2470,20 +2765,20 @@ function openCredDet(id){
         ${lancs.slice(0,5).map(l=>`
           <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--b1);">
             <span style="font-size:11px;color:var(--m2);">${l.tipo==='pag'?'✅ Pag.':'📝 Fiado'} · ${l.data}</span>
-            <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${l.tipo==='pag'?'var(--g)':'var(--r)'};">${l.tipo==='pag'?'+':'-'}R$${l.val.toFixed(2)}</span>
+            <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;color:${l.tipo==='pag'?'var(--g)':'var(--r)'};">${l.tipo==='pag'?'+':'-'}R$${(l.val||0).toFixed(2)}</span>
           </div>`).join('')}`:''
       }
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-        <button class="btn btn-s" onclick="window.closeM('modal-cred-det')">Fechar</button>
-        <button class="btn btn-p" onclick="window.editCred(${id})">✏️ Editar</button>
+        <button class="btn btn-s" data-onclick="closeM('modal-cred-det')">Fechar</button>
+        <button class="btn btn-p" data-onclick="editCred('${id}')">✏️ Editar</button>
       </div>
     </div>`;
   openM('modal-cred-det');
 }
 
 function credPagar(id){
-  const c=S.credits.find(x=>x.id===id);if(!c)return;
+  const c=S.credits.find(x=>x.id==id);if(!c)return;
   const val=parseFloat((document.getElementById('cred-pag-'+id)||{}).value)||0;
   if(val<=0||val>c.div){toast('⚠️ Valor inválido');return;}
   c.div=parseFloat((c.div-val).toFixed(2));
@@ -2493,7 +2788,7 @@ function credPagar(id){
 }
 
 function credFiado(id){
-  const c=S.credits.find(x=>x.id===id);if(!c)return;
+  const c=S.credits.find(x=>x.id==id);if(!c)return;
   const val=parseFloat((document.getElementById('cred-add-'+id)||{}).value)||0;
   if(val<=0){toast('⚠️ Valor inválido');return;}
   if(c.div+val>c.lim){toast('⚠️ Limite insuficiente! Disponível: R$'+(c.lim-c.div).toFixed(2));return;}
@@ -2504,7 +2799,7 @@ function credFiado(id){
 }
 
 function editCred(id){
-  const c=S.credits.find(x=>x.id===id);if(!c)return;
+  const c=S.credits.find(x=>x.id==id);if(!c)return;
   document.getElementById('ca-title').textContent='Editar cliente';
   document.getElementById('ca-id').value=id;
   document.getElementById('ca-nome').value=c.nome;
@@ -2574,7 +2869,7 @@ function fltHC(el,dias){
 }
 
 function openTurnoDet(id){
-  const h=S.caixaHistorico.find(x=>x.id===id);if(!h)return;
+  const h=S.caixaHistorico.find(x=>x.id==id);if(!h)return;
   document.getElementById('td-title').textContent='Turno · '+h.data;
   const metLabels={pix:'💳 PIX',debito:'💳 Débito',credito:'💳 Crédito',dinheiro:'💵 Dinheiro'};
   document.getElementById('td-body').innerHTML=`
@@ -2587,14 +2882,14 @@ function openTurnoDet(id){
       <div style="height:1px;background:var(--b1);"></div>
       ${Object.entries(h.metodos).map(([k,v])=>`<div class="flex jcb"><span class="font-xs tx-m">${metLabels[k]}</span><span class="font-b" style="font-size:12px;color:var(--g);">R$${v.toFixed(2)}</span></div>`).join('')}
       <div style="height:1px;background:var(--b2);"></div>
-      <div class="flex jcb"><span class="font-b" style="font-size:13px;">Total</span><span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--p);">R$${h.total.toFixed(2)}</span></div>
+      <div class="flex jcb"><span class="font-b" style="font-size:13px;">Total</span><span style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--p);">R$${(h.total||0).toFixed(2)}</span></div>
       ${h.sangrias>0?`<div class="flex jcb"><span class="font-xs tx-m">Sangrias</span><span class="font-b" style="font-size:12px;color:var(--r);">-R$${h.sangrias}</span></div>`:''}
       ${h.suprimentos>0?`<div class="flex jcb"><span class="font-xs tx-m">Suprimentos</span><span class="font-b" style="font-size:12px;color:var(--g);">+R$${h.suprimentos}</span></div>`:''}
       <div style="display:flex;align-items:center;gap:8px;padding:10px;background:${h.dif===0?'rgba(52,211,153,.08)':h.dif>0?'rgba(251,191,36,.08)':'rgba(248,113,113,.08)'};border:1px solid ${h.dif===0?'rgba(52,211,153,.25)':h.dif>0?'rgba(251,191,36,.25)':'rgba(248,113,113,.25)'};border-radius:var(--rs);">
         <span style="font-size:16px;">${h.dif===0?'✅':h.dif>0?'⬆️':'⬇️'}</span>
-        <div><div class="font-b" style="font-size:12px;">${h.dif===0?'Conferido sem divergência':h.dif>0?'Sobra de R$'+h.dif.toFixed(2):'Falta de R$'+Math.abs(h.dif).toFixed(2)}</div>${h.obs?`<div class="font-xs tx-m">${h.obs}</div>`:''}</div>
+        <div><div class="font-b" style="font-size:12px;">${h.dif===0?'Conferido sem divergência':h.dif>0?'Sobra de R$'+(h.dif||0).toFixed(2):'Falta de R$'+Math.abs(h.dif).toFixed(2)}</div>${h.obs?`<div class="font-xs tx-m">${h.obs}</div>`:''}</div>
       </div>
-      <button class="btn btn-s btn-w" onclick="window.closeM('modal-turno-det')">Fechar</button>
+      <button class="btn btn-s btn-w" data-onclick="closeM('modal-turno-det')">Fechar</button>
     </div>`;
   openM('modal-turno-det');
 }
@@ -2636,7 +2931,7 @@ function renderUsuarios(){
   const el=document.getElementById('usr-list');
   if(el){
     el.innerHTML=list.map(u=>`
-      <div class="user-card" onclick="window.openUsrDet(${u.id})">
+      <div class="user-card" data-onclick="openUsrDet('${u.id}')">
         <div class="user-avatar" style="background:${ROLE_COLORS[u.role]};">${u.nome.charAt(0)}</div>
         <div class="user-info">
           <div class="user-nm">${u.nome} ${!u.ativo?'<span style="font-size:9px;color:var(--r);background:rgba(248,113,113,.1);padding:1px 6px;border-radius:4px;font-family:Syne,sans-serif;">inativo</span>':''}</div>
@@ -2656,7 +2951,7 @@ function renderUsuarios(){
       const count=Object.values(perms).filter(v=>v).length;
       const total=Object.keys(perms).length;
       return `
-        <div class="ri" onclick="window.openM('modal-perms');window.showPermTab('${r}')">
+        <div class="ri" data-onclick="openM('modal-perms');showPermTab('${r}')">
           <div class="ri-ic" style="background:${ROLE_COLORS[r]};">${r==='admin'?'👑':r==='atendente'?'🧑‍💼':'🛵'}</div>
           <div class="ri-info"><div class="ri-nm">${ROLE_LABELS[r]}</div><div class="ri-sub">${count} de ${total} módulos habilitados</div></div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">
@@ -2669,7 +2964,7 @@ function renderUsuarios(){
 }
 
 function openUsrM(id){
-  const u=id?S.usuarios.find(x=>x.id===id):null;
+  const u=id?S.usuarios.find(x=>x.id==id):null;
   document.getElementById('um-title').textContent=u?'Editar usuário':'Novo usuário';
   document.getElementById('um-id').value=id||'';
   document.getElementById('um-nome').value=u?u.nome:'';
@@ -2697,14 +2992,14 @@ function saveUsr(){
   const id=parseInt(gi('um-id'))||null;
   if(!nome||!email){toast('⚠️ Nome e email obrigatórios');return;}
   if(!id&&pw.length<6){toast('⚠️ Senha mínima: 6 caracteres');return;}
-  if(id){const u=S.usuarios.find(x=>x.id===id);Object.assign(u,{nome,email,role,tel,ativo});}
+  if(id){const u=S.usuarios.find(x=>x.id==id);Object.assign(u,{nome,email,role,tel,ativo});}
   else S.usuarios.push({id:Date.now(),nome,email,role,tel,ativo,criado:new Date().toLocaleDateString('pt-BR'),ultimo:'Agora',log:['Cadastrado agora']});
   closeM('modal-usr');renderUsuarios();
   toast('✅ Usuário salvo!');
 }
 
 function openUsrDet(id){
-  const u=S.usuarios.find(x=>x.id===id);if(!u)return;
+  const u=S.usuarios.find(x=>x.id==id);if(!u)return;
   document.getElementById('ud-title').textContent=u.nome;
   document.getElementById('ud-body').innerHTML=`
     <div style="display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:12px;">
@@ -2726,16 +3021,16 @@ function openUsrDet(id){
         ${u.log.slice(0,4).map(l=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--b1);"><span style="font-size:14px;">📌</span><span style="font-size:11px;color:var(--m2);">${l}</span></div>`).join('')}
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px;">
-        <button class="btn btn-s" onclick="window.closeM('modal-usr-det')">Fechar</button>
-        <button class="btn btn-p" onclick="window.closeM('modal-usr-det');window.openUsrM(${u.id})">✏️ Editar</button>
+        <button class="btn btn-s" data-onclick="closeM('modal-usr-det')">Fechar</button>
+        <button class="btn btn-p" data-onclick="closeM('modal-usr-det');openUsrM('${u.id}')">✏️ Editar</button>
       </div>
-      ${u.id!==1?`<button class="btn btn-d btn-w" onclick="window.toggleUsrAtivo(${u.id})">${u.ativo?'🔴 Desativar conta':'✅ Reativar conta'}</button>`:''}
+      ${u.id!==1?`<button class="btn btn-d btn-w" data-onclick="toggleUsrAtivo('${u.id}')">${u.ativo?'🔴 Desativar conta':'✅ Reativar conta'}</button>`:''}
     </div>`;
   openM('modal-usr-det');
 }
 
 function toggleUsrAtivo(id){
-  const u=S.usuarios.find(x=>x.id===id);if(!u)return;
+  const u=S.usuarios.find(x=>x.id==id);if(!u)return;
   u.ativo=!u.ativo;
   closeM('modal-usr-det');renderUsuarios();
   toast(u.ativo?`✅ ${u.nome} reativado`:`🔴 ${u.nome} desativado`);
@@ -2753,7 +3048,7 @@ function showPermTab(role){
   const perms=S.permissions[role];
   el.innerHTML=S.permModules.map(m=>`
     <div class="perm-row">
-      <div class="perm-chk ${perms[m.id]?'on':''}" onclick="window.togPerm('${role}','${m.id}',this)">
+      <div class="perm-chk ${perms[m.id]?'on':''}" data-onclick="togPerm('${role}','${m.id}',this)">
         ${perms[m.id]?'<svg width="11" height="11" fill="none" stroke="#fff" stroke-width="3" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>':''}
       </div>
       <div style="flex:1;">
@@ -2800,7 +3095,7 @@ function renderPesoSection() {
   const chips = document.getElementById('peso-adic-chips');
   if (chips) {
     chips.innerHTML = S.adicionais.filter(a => a.on).map(a =>
-      `<button onclick="window.pesoAddAdic(${a.id})" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .12s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${a.emoji} ${a.nome.substring(0,12)} R$${a.preco}</button>`
+      `<button data-onclick="pesoAddAdic('${a.id}')" style="display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:100px;background:var(--s2);border:1.5px solid var(--b1);font-size:11px;font-family:'Syne',sans-serif;font-weight:700;color:var(--m2);cursor:pointer;white-space:nowrap;transition:all .12s;" onmouseenter="this.style.borderColor='var(--b2)'" onmouseleave="this.style.borderColor='var(--b1)'">${a.emoji} ${a.nome.substring(0,12)} R$${a.preco}</button>`
     ).join('');
   }
 
@@ -2850,9 +3145,9 @@ function renderPesoAdicList() {
     `<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--s2);border-radius:var(--rx);border:1px solid var(--b1);">
       <span style="font-size:18px;">${i.emoji}</span>
       <span style="flex:1;font-family:'Syne',sans-serif;font-size:11px;font-weight:700;">${i.nome}</span>
-      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.pesoRemAdic(${i.id})">−</button>
+      <button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" data-onclick="pesoRemAdic('${i.id}')">−</button>
       <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:800;min-width:16px;text-align:center;">${i.qty}</span>
-      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.pesoAddAdic(${i.id})">+</button>
+      <button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" data-onclick="pesoAddAdic('${i.id}')">+</button>
       <span style="font-family:'Syne',sans-serif;font-size:11px;font-weight:800;color:var(--p);min-width:36px;text-align:right;">R$${(i.preco * i.qty).toFixed(2)}</span>
     </div>`
   ).join('');
@@ -2969,7 +3264,7 @@ function buildNotifBody() {
       '<span style="font-size:18px;">🔔</span><div><div style="font-size:12px;">' + S.notifs[i].msg + '</div>' +
       '<div style="font-size:10px;color:var(--m1);">' + S.notifs[i].time + '</div></div></div>';
   }
-  h += '<button class="btn btn-s btn-w" style="margin-top:8px;" onclick="S.notifs=[];window.updNotifBadge();window.closeM(' + "'modal-notifs'" + ')">Limpar</button>';
+  h += '<button class="btn btn-s btn-w" style="margin-top:8px;" data-onclick="S.notifs=[];updNotifBadge();closeM(' + "'modal-notifs'" + ')">Limpar</button>';
   nb.innerHTML = h;
 }
 
@@ -2988,7 +3283,7 @@ function renderPDV() {
     var prods = S.products.filter(function(p){return p.on;}).slice(0,8);
     for (var i=0; i<prods.length; i++) {
       var p = prods[i];
-      html2 += '<button onclick="window.pdvAddProd(' + p.id + ')" style="display:inline-flex;flex-direction:column;align-items:center;padding:8px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);cursor:pointer;min-width:68px;">' +
+      html2 += '<button data-onclick="pdvAddProd(' + p.id + ')" style="display:inline-flex;flex-direction:column;align-items:center;padding:8px 10px;background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);cursor:pointer;min-width:68px;">' +
         '<span style="font-size:26px;">' + p.emoji + '</span>' +
         '<span style="font-size:9px;font-family:Syne,sans-serif;font-weight:700;margin-top:4px;">' + p.nome.substring(0,12) + '</span>' +
         '<span style="font-size:10px;color:var(--p);font-weight:700;margin-top:2px;">R$' + p.preco + '</span></button>';
@@ -3069,18 +3364,18 @@ function cmdRenderItens() {
         '<div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:700;">' + it.desc + '</div>' +
         (it.obs ? '<div style="font-size:10px;color:var(--m1);">' + it.obs + '</div>' : '') +
         (it.tipo === 'peso'
-          ? '<div style="font-size:10px;color:var(--m1);">' + it.kg.toFixed(3).replace('.',',') + ' kg × ' + cmdFmtVal(cmdPrecoKg()) + '/kg</div>'
+          ? '<div style="font-size:10px;color:var(--m1);">' + (it.kg||0).toFixed(3).replace('.',',') + ' kg × ' + cmdFmtVal(cmdPrecoKg()) + '/kg</div>'
           : '<div style="font-size:10px;color:var(--m1);">Un: ' + cmdFmtVal(it.unitario) + '</div>') +
         (it.tipo !== 'peso' ?
           '<div style="display:flex;align-items:center;gap:8px;margin-top:5px;">' +
-          '<button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.cmdChgQtd(' + idx + ',-1)">−</button>' +
+          '<button class="btn btn-s" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" data-onclick="cmdChgQtd(' + idx + ',-1)">−</button>' +
           '<span style="font-family:\'Syne\',sans-serif;font-size:13px;font-weight:800;min-width:18px;text-align:center;">' + it.qty + '</span>' +
-          '<button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" onclick="window.cmdChgQtd(' + idx + ',1)">+</button>' +
+          '<button class="btn btn-p" style="width:22px;height:22px;padding:0;border-radius:5px;font-size:12px;" data-onclick="cmdChgQtd(' + idx + ',1)">+</button>' +
           '</div>' : '') +
       '</div>' +
       '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;">' +
         '<div style="font-family:\'Syne\',sans-serif;font-size:13px;font-weight:800;color:var(--p);">' + cmdFmtVal(it.total) + '</div>' +
-        '<button class="btn btn-d btn-xs" onclick="window.cmdRemItem(' + idx + ')">✕</button>' +
+        '<button class="btn btn-d btn-xs" data-onclick="cmdRemItem(' + idx + ')">✕</button>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -3161,7 +3456,7 @@ function cmdAbrirCardapio() {
     var cats = ['todos','acai','tigela','adicional','bebida'];
     var labels = {todos:'Todos',acai:'🍇 Açaí',tigela:'🥣 Tigela',adicional:'➕ Adicionais',bebida:'🥤 Bebidas'};
     chips.innerHTML = cats.map(function(c) {
-      return '<div class="chip ' + (c==='todos'?'ch-p':'ch-d') + '" onclick="window.cmdCatFlt(this,\'' + c + '\')">' + labels[c] + '</div>';
+      return '<div class="chip ' + (c==='todos'?'ch-p':'ch-d') + '" data-onclick="cmdCatFlt(this,\'' + c + '\')">' + labels[c] + '</div>';
     }).join('');
   }
 }
@@ -3190,7 +3485,7 @@ function cmdFiltrarProd() {
   }
   grid.innerHTML = prods.map(function(p) {
     var semEst = p.est <= 0;
-    return '<div onclick="' + (semEst ? '' : 'window.cmdSelecionarProd(' + p.id + ')') + '" style="background:var(--s2);border:1.5px solid ' + (semEst?'rgba(248,113,113,.25)':'var(--b1)') + ';border-radius:var(--rr);overflow:hidden;cursor:' + (semEst?'not-allowed':'pointer') + ';opacity:' + (semEst?'.5':'1') + ';transition:all .14s;" ' + (!semEst?'onmouseenter="this.style.borderColor=\'var(--b2)\'" onmouseleave="this.style.borderColor=\'var(--b1)\'"':'') + '>' +
+    return '<div data-onclick="' + (semEst ? '' : 'cmdSelecionarProd(' + p.id + ')') + '" style="background:var(--s2);border:1.5px solid ' + (semEst?'rgba(248,113,113,.25)':'var(--b1)') + ';border-radius:var(--rr);overflow:hidden;cursor:' + (semEst?'not-allowed':'pointer') + ';opacity:' + (semEst?'.5':'1') + ';transition:all .14s;" ' + (!semEst?'onmouseenter="this.style.borderColor=\'var(--b2)\'" onmouseleave="this.style.borderColor=\'var(--b1)\'"':'') + '>' +
       '<div style="width:100%;aspect-ratio:1.2;background:linear-gradient(145deg,#1a0d24,#271040);display:flex;align-items:center;justify-content:center;font-size:36px;position:relative;">' +
         p.emoji +
         (semEst ? '<div style="position:absolute;inset:0;background:rgba(248,113,113,.15);display:flex;align-items:center;justify-content:center;font-family:\'Syne\',sans-serif;font-size:9px;font-weight:700;color:var(--r);">SEM ESTOQUE</div>' : '') +
@@ -3208,7 +3503,7 @@ function cmdFiltrarProd() {
 }
 
 function cmdSelecionarProd(id) {
-  var p = S.products.find(function(x){ return x.id===id; });
+  var p = S.products.find(function(x){ return x.id==id; });
   if (!p) return;
   if (p.est <= 0) { toast('⚠️ Produto sem estoque'); return; }
   S.comanda.prodSelecionado = p;
@@ -3216,7 +3511,7 @@ function cmdSelecionarProd(id) {
   var t = document.getElementById('cmdqtd-title'); if (t) t.textContent = p.nome;
   var em = document.getElementById('cmdqtd-emoji'); if (em) em.textContent = p.emoji;
   var nm = document.getElementById('cmdqtd-nome'); if (nm) nm.textContent = p.nome;
-  var pr = document.getElementById('cmdqtd-preco'); if (pr) pr.textContent = 'R$ ' + p.preco.toFixed(2).replace('.',',');
+  var pr = document.getElementById('cmdqtd-preco'); if (pr) pr.textContent = 'R$ ' + (p.preco||0).toFixed(2).replace('.',',');
   var es = document.getElementById('cmdqtd-est'); if (es) es.textContent = 'Estoque: ' + p.est + ' un';
   var av = document.getElementById('cmdqtd-aviso'); if (av) av.style.display='none';
   var qv = document.getElementById('cmdqtd-val'); if (qv) qv.textContent = '1';
@@ -3242,7 +3537,7 @@ function cmdConfirmarProd() {
   var qty = S.comanda.prodQtd;
   // Verifica estoque total na comanda
   var jaNoCarrinho = S.comanda.ativa.itens
-    .filter(function(i){ return i.prodId===p.id; })
+    .filter(function(i){ return i.prodId==p.id; })
     .reduce(function(s,i){ return s+i.qty; }, 0);
   if (jaNoCarrinho + qty > p.est) {
     var av = document.getElementById('cmdqtd-aviso');
@@ -3307,7 +3602,7 @@ function cmdProcessarScanner(code) {
   if (!p) { toast('⚠️ Código não encontrado: ' + code); return; }
   if (p.est <= 0) { toast('⚠️ ' + p.nome + ' sem estoque'); return; }
   cmdEnsureAtiva();
-  var ex = S.comanda.ativa.itens.find(function(i){ return i.prodId===p.id && i.tipo==='produto'; });
+  var ex = S.comanda.ativa.itens.find(function(i){ return i.prodId==p.id && i.tipo==='produto'; });
   if (ex) {
     if (ex.qty >= p.est) { toast('⚠️ Estoque máximo atingido'); return; }
     ex.qty++; ex.total = ex.unitario * ex.qty;
@@ -3350,8 +3645,8 @@ function cmdPendentes() {
           '<div style="font-family:\'Syne\',sans-serif;font-size:12px;font-weight:700;">#' + String(c.num).padStart(3,'0') + ' · ' + c.cliente + '</div>' +
           '<div style="font-size:10px;color:var(--m1);">' + c.itens.length + ' item(ns) · ' + cmdFmtVal(c.totalSnapshot) + '</div>' +
         '</div>' +
-        '<button class="btn btn-p btn-sm" onclick="window.cmdReabrir(' + i + ')">↩️ Reabrir</button>' +
-        '<button class="btn btn-d btn-sm" onclick="window.cmdDeletarPend(' + i + ')">✕</button>' +
+        '<button class="btn btn-p btn-sm" data-onclick="cmdReabrir(' + i + ')">↩️ Reabrir</button>' +
+        '<button class="btn btn-d btn-sm" data-onclick="cmdDeletarPend(' + i + ')">✕</button>' +
       '</div>';
     }).join('');
   }
@@ -3392,7 +3687,7 @@ function cmdPagar(metodo) {
   var semEst = [];
   S.comanda.ativa.itens.forEach(function(it) {
     if (it.tipo !== 'produto') return;
-    var p = S.products.find(function(x){ return x.id===it.prodId; });
+    var p = S.products.find(function(x){ return x.id==it.prodId; });
     if (p && it.qty > p.est) semEst.push(p.nome + ' (estoque: ' + p.est + ')');
   });
   if (semEst.length) { toast('⚠️ Estoque insuficiente: ' + semEst.join(', ')); return; }
@@ -3409,7 +3704,7 @@ function cmdPagar(metodo) {
     var atalhos = [5,10,20,50,100];
     var atch = document.getElementById('din-atalhos');
     if (atch) atch.innerHTML = atalhos.filter(function(v){ return v >= total; }).map(function(v) {
-      return '<button class="btn btn-s btn-sm" onclick="document.window.getElementById(\'din-recebido\').value=\'' + v + '\';window.calcTroco()">R$' + v + '</button>';
+      return '<button class="btn btn-s btn-sm" data-onclick="document.getElementById(\'din-recebido\').value=\'' + v + '\';calcTroco()">R$' + v + '</button>';
     }).join('');
     openM('modal-cmd-dinheiro');
   } else if (metodo === 'pix') {
@@ -3498,7 +3793,7 @@ function cmdAbrirFiado() {
 function cmdVerificaFiado() {
   var sel = document.getElementById('fiado-cliente-sel');
   var id = sel ? parseInt(sel.value) : 0;
-  var c = S.credits.find(function(x){ return x.id===id; });
+  var c = S.credits.find(function(x){ return x.id==id; });
   var fs = document.getElementById('fiado-status');
   var fb = document.getElementById('fiado-btn-ok');
   var fv = document.getElementById('fiado-venc-wrap');
@@ -3527,7 +3822,7 @@ function cmdVerificaFiado() {
 function cmdFinalizarFiado() {
   var sel = document.getElementById('fiado-cliente-sel');
   var id = sel ? parseInt(sel.value) : 0;
-  var c = S.credits.find(function(x){ return x.id===id; });
+  var c = S.credits.find(function(x){ return x.id==id; });
   if (!c) { toast('⚠️ Selecione um cliente'); return; }
   var total = cmdTotal();
   c.div = parseFloat((c.div + total).toFixed(2));
@@ -3552,7 +3847,7 @@ function cmdFinalizarEntrega() {
   var pgto = (document.getElementById('del-pgto')||{}).value || 'pix';
   if (!end) { toast('⚠️ Informe o endereço'); return; }
   if (!delId) { toast('⚠️ Selecione um entregador'); return; }
-  var del = S.entregadores.find(function(d){ return d.id===delId; });
+  var del = S.entregadores.find(function(d){ return d.id==delId; });
   closeM('modal-cmd-entregar');
   cmdRegistrarVenda(pgto === 'pix' ? 'PIX' : pgto === 'dinheiro' ? 'Dinheiro' : 'Cartão', cmdTotal(), 'Entrega: ' + end + ' · ' + (del ? del.nome : ''));
 }
@@ -3562,11 +3857,11 @@ function cmdRegistrarVenda(pgto, total, obs) {
   // Baixar estoque
   S.comanda.ativa.itens.forEach(function(it) {
     if (it.tipo !== 'produto') return;
-    var p = S.products.find(function(x){ return x.id===it.prodId; });
+    var p = S.products.find(function(x){ return x.id==it.prodId; });
     if (p) p.est = Math.max(0, p.est - it.qty);
   });
   var cli = (document.getElementById('cmd-cliente')||{}).value || 'Consumidor Final';
-  var its = S.comanda.ativa.itens.map(function(i){ return (i.tipo==='peso'?i.kg.toFixed(3).replace('.',',')+'kg ':'') + (i.qty>1?i.qty+'× ':'') + i.desc; }).join(', ');
+  var its = S.comanda.ativa.itens.map(function(i){ return (i.tipo==='peso'?(i.kg||0).toFixed(3).replace('.',',')+'kg ':'') + (i.qty>1?i.qty+'× ':'') + i.desc; }).join(', ');
   var id = String(S.nextOrderId++).padStart(3,'0');
   S.orders.unshift({
     id: id, cli: cli, its: its.substring(0,60), tot: total,
@@ -3719,15 +4014,23 @@ async function sbLoadAll() {
     var adics = await sbReq('GET', 'adicionais', { qs: 'select=*&order=nome' });
     if (adics) S.adicionais = adics.map(function(a) {
       return { id: a.id, _uuid: a.id, nome: a.nome, preco: +a.preco || 0,
-        emoji: a.emoji || '➕', on: a.ativo !== false };
+        emoji: a.emoji || '➕', on: a.ativo !== false,
+        desc: a.nome, est: 99, corridas: 0 };
     });
 
     var peds = await sbReq('GET', 'pedidos', { qs: 'select=*&order=created_at.desc&limit=200' });
     if (peds) S.orders = peds.map(function(p) {
-      return { id: p.id, _uuid: p.id, cli: p.cliente, its: p.itens,
-        tot: +p.total || 0, st: p.status, end: p.endereco,
-        pgto: p.pgto, del: p.entregador,
-        tm: new Date(p.created_at).toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) };
+      var tm = '--:--';
+      try { tm = new Date(p.created_at).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); } catch(e){}
+      return { id: p.id, _uuid: p.id,
+        cli: p.cliente || 'Consumidor Final',
+        its: typeof p.itens === 'string' ? p.itens : (p.itens ? JSON.stringify(p.itens) : ''),
+        tot: +p.total || 0,
+        st: p.status || 'finalizado',
+        end: p.endereco || 'Balcão',
+        pgto: p.pgto || '',
+        del: p.entregador || '',
+        tm: tm };
     });
 
     var fins = await sbReq('GET', 'financas', { qs: 'select=*&order=created_at.desc&limit=500' });
@@ -3745,7 +4048,8 @@ async function sbLoadAll() {
     var dels = await sbReq('GET', 'entregadores', { qs: 'select=*&order=nome' });
     if (dels) S.entregadores = dels.map(function(d) {
       return { id: d.id, _uuid: d.id, nome: d.nome, tel: d.telefone || '',
-        com: 10, sal: 0, st: d.status || 'ativo', vei: '' };
+        com: 10, sal: 0, st: d.status || 'ativo', vei: '',
+        corridas: 0 };
     });
 
     var usrs = await sbReq('GET', 'usuarios', { qs: 'select=*&order=nome' });
@@ -3756,10 +4060,50 @@ async function sbLoadAll() {
 
     var cxs = await sbReq('GET', 'caixas', { qs: 'select=*&order=created_at.desc&limit=30' });
     if (cxs) S.caixaHistorico = cxs.map(function(c) {
-      return { id: c.id, _uuid: c.id, operador: c.operador,
-        abertura: c.abertura, fechamento: c.fechamento,
-        valorInicial: +c.valor_inicial || 0, vendas: c.vendas || {},
-        total: +c.total || 0, st: c.status };
+      var vendas = c.vendas || {};
+      var metodos = {
+        pix:      +(vendas.pix      || vendas.PIX      || 0),
+        debito:   +(vendas.debito   || vendas.Débito   || 0),
+        credito:  +(vendas.credito  || vendas.Crédito  || 0),
+        dinheiro: +(vendas.dinheiro || vendas.Dinheiro || 0)
+      };
+      var totalMetodos = metodos.pix + metodos.debito + metodos.credito + metodos.dinheiro;
+      var aberISO = c.abertura || '';
+      var fechISO = c.fechamento || '';
+      function fmtHora(iso) {
+        if (!iso) return '--:--';
+        try { return new Date(iso).toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}); } catch(e){return '--:--';}
+      }
+      function fmtData(iso) {
+        if (!iso) return '--/--';
+        try { return new Date(iso).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}); } catch(e){return '--/--';}
+      }
+      var total = +c.total || totalMetodos || 0;
+      var sangrias = +(vendas.sangrias || 0);
+      var suprimentos = +(vendas.suprimentos || 0);
+      var numPedidos = +(vendas.pedidos || 0);
+      return {
+        id: c.id, _uuid: c.id,
+        // campos para renderHC / openTurnoDet
+        op:   c.operador   || 'Operador',
+        aber: fmtHora(aberISO),
+        fech: fmtHora(fechISO),
+        data: fmtData(aberISO),
+        obs:  c.obs || '',
+        dif:  0,
+        pedidos: numPedidos,
+        sangrias: sangrias,
+        suprimentos: suprimentos,
+        metodos: metodos,
+        total: total,
+        // campos extras usados em fecharCaixa / sync
+        operador: c.operador || 'Operador',
+        abertura: aberISO,
+        fechamento: fechISO,
+        valorInicial: +c.valor_inicial || 0,
+        vendas: vendas,
+        st: c.status || 'fechado'
+      };
     });
 
     var cfg = await sbReq('GET', 'config', { qs: 'select=*' });
@@ -3798,7 +4142,7 @@ if (typeof saveProd === 'function') {
 if (typeof delProd === 'function') {
   var _origDelProd = delProd;
   delProd = async function(id) {
-    var p = S.products.find(function(x){ return x.id===id; });
+    var p = S.products.find(function(x){ return x.id==id; });
     var uuid = p ? p._uuid : null;
     _origDelProd(id);
     if (uuid) await sbDelete('produtos', uuid);
@@ -3819,7 +4163,7 @@ if (typeof saveAdic === 'function') {
 if (typeof delAdic === 'function') {
   var _origDelAdic = delAdic;
   delAdic = async function(id) {
-    var a = S.adicionais.find(function(x){ return x.id===id; });
+    var a = S.adicionais.find(function(x){ return x.id==id; });
     var uuid = a ? a._uuid : null;
     _origDelAdic(id);
     if (uuid) await sbDelete('adicionais', uuid);
@@ -3834,7 +4178,7 @@ if (typeof cmdRegistrarVenda === 'function') {
     var order = S.orders[0]; if (!order) return;
     itensSnapshot.forEach(async function(it) {
       if (it.tipo !== 'produto') return;
-      var p = S.products.find(function(x){ return x.id===it.prodId; });
+      var p = S.products.find(function(x){ return x.id==it.prodId; });
       if (p && p._uuid) await sbReq('PATCH', 'produtos', { qs: 'id=eq.'+p._uuid, body: { est: p.est } });
     });
     var uuid = await sbUpsert('pedidos', {
@@ -3860,7 +4204,7 @@ if (typeof saveFin === 'function') {
 if (typeof delFin === 'function') {
   var _origDelFin = delFin;
   delFin = async function(id) {
-    var f = S.finances.find(function(x){ return x.id===id; });
+    var f = S.finances.find(function(x){ return x.id==id; });
     var uuid = f ? f._uuid : null;
     _origDelFin(id);
     if (uuid) await sbDelete('financas', uuid);
@@ -3942,297 +4286,210 @@ if (typeof renderView === 'function') {
   renderView = function(v) { S._currentView = v; _origRenderView(v); };
 }
 
-/* ── Bind all handlers to window ────────────────────────────── */
-window.advOrder = advOrder;
-window.calcMultResto = calcMultResto;
-window.calcTroco = calcTroco;
-window.chgCartQty = chgCartQty;
-window.cliCheckout = cliCheckout;
-window.closeM = closeM;
-window.closeOL = closeOL;
-window.closeSBOut = closeSBOut;
-window.cmdAddPeso = cmdAddPeso;
-window.cmdCatFlt = cmdCatFlt;
-window.cmdChgQtd = cmdChgQtd;
-window.cmdConfirmarProd = cmdConfirmarProd;
-window.cmdDeletarPend = cmdDeletarPend;
-window.cmdFiltrarProd = cmdFiltrarProd;
-window.cmdFinalizarDinheiro = cmdFinalizarDinheiro;
-window.cmdFinalizarEntrega = cmdFinalizarEntrega;
-window.cmdFinalizarFiado = cmdFinalizarFiado;
-window.cmdFinalizarMultiplo = cmdFinalizarMultiplo;
-window.cmdNova = cmdNova;
-window.cmdPagar = cmdPagar;
-window.cmdPendentes = cmdPendentes;
-window.cmdQtdChg = cmdQtdChg;
-window.cmdReabrir = cmdReabrir;
-window.cmdRemItem = cmdRemItem;
-window.cmdSalvarPendente = cmdSalvarPendente;
-window.cmdScanner = cmdScanner;
-window.cmdVerificaFiado = cmdVerificaFiado;
-window.cpAddItem = cpAddItem;
-window.cpChgQty = cpChgQty;
-window.cpRemItem = cpRemItem;
-window.createOrder = createOrder;
-window.credFiado = credFiado;
-window.credPagar = credPagar;
-window.doLogin = doLogin;
-window.editCred = editCred;
-window.fecharCaixaDia = fecharCaixaDia;
-window.fltAna = fltAna;
-window.fltCli = fltCli;
-window.fltCred = fltCred;
-window.fltFin = fltFin;
-window.fltHC = fltHC;
-window.fltOrd = fltOrd;
-window.fltPCat = fltPCat;
-window.fltProds = fltProds;
-window.fltUsr = fltUsr;
-window.goTo = goTo;
-window.openAdicDet = openAdicDet;
-window.openAdicM = openAdicM;
-window.openCredDet = openCredDet;
-window.openDelDet = openDelDet;
-window.openDelM = openDelM;
-window.openM = openM;
-window.openOrderM = openOrderM;
-window.openProdDet = openProdDet;
-window.openProdM = openProdM;
-window.openTurnoDet = openTurnoDet;
-window.openUsrDet = openUsrDet;
-window.openUsrM = openUsrM;
-window.pagarDel = pagarDel;
-window.pdvAddProd = pdvAddProd;
-window.pdvFinish = pdvFinish;
-window.pdvQtyChange = pdvQtyChange;
-window.pesoAddAdic = pesoAddAdic;
-window.pesoFinish = pesoFinish;
-window.pesoRemAdic = pesoRemAdic;
-window.playBeep = playBeep;
-window.saveConfig = saveConfig;
-window.savePesoConfig = savePesoConfig;
-window.saveProlabore = saveProlabore;
-window.sbSyncNow = sbSyncNow;
-window.toast = toast;
-window.togCfgMet = togCfgMet;
-window.togCfgNf = togCfgNf;
-window.togCfgOp = togCfgOp;
-window.togEl = togEl;
-window.togPerm = togPerm;
-window.toggleAdicOn = toggleAdicOn;
-window.toggleProdOn = toggleProdOn;
-window.toggleSB = toggleSB;
-window.toggleUsrAtivo = toggleUsrAtivo;
-if(typeof testSB==="function") window.testSB=testSB;
-if(typeof saveProd==="function") window.saveProd=saveProd;
-if(typeof delProd==="function") window.delProd=delProd;
-if(typeof saveAdic==="function") window.saveAdic=saveAdic;
-if(typeof delAdic==="function") window.delAdic=delAdic;
-if(typeof cmdRegistrarVenda==="function") window.cmdRegistrarVenda=cmdRegistrarVenda;
-if(typeof saveFin==="function") window.saveFin=saveFin;
-if(typeof delFin==="function") window.delFin=delFin;
-if(typeof saveCred==="function") window.saveCred=saveCred;
-if(typeof saveDel==="function") window.saveDel=saveDel;
-if(typeof saveUsr==="function") window.saveUsr=saveUsr;
-if(typeof renderView==="function") window.renderView=renderView;
-if(typeof renderPDV==="function") window.renderPDV=renderPDV;
-if(typeof buildNotifBody==="function") window.buildNotifBody=buildNotifBody;
-if(typeof pesoN==="function") window.pesoN=pesoN;
-if(typeof pesoDel==="function") window.pesoDel=pesoDel;
-if(typeof pesoCancel==="function") window.pesoCancel=pesoCancel;
-if(typeof openPesoConfig==="function") window.openPesoConfig=openPesoConfig;
+/* ── Global binding — works in ANY browser context including sandboxed iframes ── */
+(function() {
+  // Get the TRUE global object regardless of scope restrictions
+  var _g;
+  try { _g = Function('return this')(); } catch(e) { _g = window || self || globalThis || {}; }
+  
+  // Bind every function to the global object
+  var fns = {
+    addCart: typeof addCart !== "undefined" ? addCart : null,
+    addMove: typeof addMove !== "undefined" ? addMove : null,
+    addNotif: typeof addNotif !== "undefined" ? addNotif : null,
+    advOrder: typeof advOrder !== "undefined" ? advOrder : null,
+    buildBnav: typeof buildBnav !== "undefined" ? buildBnav : null,
+    buildCartM: typeof buildCartM !== "undefined" ? buildCartM : null,
+    buildNotifBody: typeof buildNotifBody !== "undefined" ? buildNotifBody : null,
+    buildSB: typeof buildSB !== "undefined" ? buildSB : null,
+    calcMultResto: typeof calcMultResto !== "undefined" ? calcMultResto : null,
+    calcPeso: typeof calcPeso !== "undefined" ? calcPeso : null,
+    calcTroco: typeof calcTroco !== "undefined" ? calcTroco : null,
+    chgCartQty: typeof chgCartQty !== "undefined" ? chgCartQty : null,
+    cliCheckout: typeof cliCheckout !== "undefined" ? cliCheckout : null,
+    closeM: typeof closeM !== "undefined" ? closeM : null,
+    closeOL: typeof closeOL !== "undefined" ? closeOL : null,
+    closeSB: typeof closeSB !== "undefined" ? closeSB : null,
+    closeSBOut: typeof closeSBOut !== "undefined" ? closeSBOut : null,
+    cmdAbrirCardapio: typeof cmdAbrirCardapio !== "undefined" ? cmdAbrirCardapio : null,
+    cmdAbrirEntrega: typeof cmdAbrirEntrega !== "undefined" ? cmdAbrirEntrega : null,
+    cmdAbrirFiado: typeof cmdAbrirFiado !== "undefined" ? cmdAbrirFiado : null,
+    cmdAddPeso: typeof cmdAddPeso !== "undefined" ? cmdAddPeso : null,
+    cmdCatFlt: typeof cmdCatFlt !== "undefined" ? cmdCatFlt : null,
+    cmdChgQtd: typeof cmdChgQtd !== "undefined" ? cmdChgQtd : null,
+    cmdConfirmarProd: typeof cmdConfirmarProd !== "undefined" ? cmdConfirmarProd : null,
+    cmdDeletarPend: typeof cmdDeletarPend !== "undefined" ? cmdDeletarPend : null,
+    cmdEnsureAtiva: typeof cmdEnsureAtiva !== "undefined" ? cmdEnsureAtiva : null,
+    cmdFiltrarProd: typeof cmdFiltrarProd !== "undefined" ? cmdFiltrarProd : null,
+    cmdFinalizarDinheiro: typeof cmdFinalizarDinheiro !== "undefined" ? cmdFinalizarDinheiro : null,
+    cmdFinalizarEntrega: typeof cmdFinalizarEntrega !== "undefined" ? cmdFinalizarEntrega : null,
+    cmdFinalizarFiado: typeof cmdFinalizarFiado !== "undefined" ? cmdFinalizarFiado : null,
+    cmdFinalizarMultiplo: typeof cmdFinalizarMultiplo !== "undefined" ? cmdFinalizarMultiplo : null,
+    cmdFmtVal: typeof cmdFmtVal !== "undefined" ? cmdFmtVal : null,
+    cmdNova: typeof cmdNova !== "undefined" ? cmdNova : null,
+    cmdPagar: typeof cmdPagar !== "undefined" ? cmdPagar : null,
+    cmdPendentes: typeof cmdPendentes !== "undefined" ? cmdPendentes : null,
+    cmdPrecoKg: typeof cmdPrecoKg !== "undefined" ? cmdPrecoKg : null,
+    cmdProcessarScanner: typeof cmdProcessarScanner !== "undefined" ? cmdProcessarScanner : null,
+    cmdQtdChg: typeof cmdQtdChg !== "undefined" ? cmdQtdChg : null,
+    cmdReabrir: typeof cmdReabrir !== "undefined" ? cmdReabrir : null,
+    cmdRegistrarVenda: typeof cmdRegistrarVenda !== "undefined" ? cmdRegistrarVenda : null,
+    cmdRemItem: typeof cmdRemItem !== "undefined" ? cmdRemItem : null,
+    cmdRenderItens: typeof cmdRenderItens !== "undefined" ? cmdRenderItens : null,
+    cmdSalvarPendente: typeof cmdSalvarPendente !== "undefined" ? cmdSalvarPendente : null,
+    cmdScanner: typeof cmdScanner !== "undefined" ? cmdScanner : null,
+    cmdSelecionarProd: typeof cmdSelecionarProd !== "undefined" ? cmdSelecionarProd : null,
+    cmdTotal: typeof cmdTotal !== "undefined" ? cmdTotal : null,
+    cmdUpdDisplay: typeof cmdUpdDisplay !== "undefined" ? cmdUpdDisplay : null,
+    cmdUpdPendBadge: typeof cmdUpdPendBadge !== "undefined" ? cmdUpdPendBadge : null,
+    cmdVerificaFiado: typeof cmdVerificaFiado !== "undefined" ? cmdVerificaFiado : null,
+    cpAddItem: typeof cpAddItem !== "undefined" ? cpAddItem : null,
+    cpChgQty: typeof cpChgQty !== "undefined" ? cpChgQty : null,
+    cpRemItem: typeof cpRemItem !== "undefined" ? cpRemItem : null,
+    createOrder: typeof createOrder !== "undefined" ? createOrder : null,
+    credFiado: typeof credFiado !== "undefined" ? credFiado : null,
+    credPagar: typeof credPagar !== "undefined" ? credPagar : null,
+    delAdic: typeof delAdic !== "undefined" ? delAdic : null,
+    delFin: typeof delFin !== "undefined" ? delFin : null,
+    delProd: typeof delProd !== "undefined" ? delProd : null,
+    doLogin: typeof doLogin !== "undefined" ? doLogin : null,
+    editCred: typeof editCred !== "undefined" ? editCred : null,
+    fecharCaixaDia: typeof fecharCaixaDia !== "undefined" ? fecharCaixaDia : null,
+    fecharTurno: typeof fecharTurno !== "undefined" ? fecharTurno : null,
+    fltAna: typeof fltAna !== "undefined" ? fltAna : null,
+    fltCli: typeof fltCli !== "undefined" ? fltCli : null,
+    fltCred: typeof fltCred !== "undefined" ? fltCred : null,
+    fltFin: typeof fltFin !== "undefined" ? fltFin : null,
+    fltHC: typeof fltHC !== "undefined" ? fltHC : null,
+    fltOrd: typeof fltOrd !== "undefined" ? fltOrd : null,
+    fltPCat: typeof fltPCat !== "undefined" ? fltPCat : null,
+    fltProds: typeof fltProds !== "undefined" ? fltProds : null,
+    fltUsr: typeof fltUsr !== "undefined" ? fltUsr : null,
+    gi: typeof gi !== "undefined" ? gi : null,
+    goTo: typeof goTo !== "undefined" ? goTo : null,
+    openAdicDet: typeof openAdicDet !== "undefined" ? openAdicDet : null,
+    openAdicM: typeof openAdicM !== "undefined" ? openAdicM : null,
+    openCredDet: typeof openCredDet !== "undefined" ? openCredDet : null,
+    openDelDet: typeof openDelDet !== "undefined" ? openDelDet : null,
+    openDelM: typeof openDelM !== "undefined" ? openDelM : null,
+    openM: typeof openM !== "undefined" ? openM : null,
+    openM_peso_pay: typeof openM_peso_pay !== "undefined" ? openM_peso_pay : null,
+    openOrderM: typeof openOrderM !== "undefined" ? openOrderM : null,
+    openPesoConfig: typeof openPesoConfig !== "undefined" ? openPesoConfig : null,
+    openProdDet: typeof openProdDet !== "undefined" ? openProdDet : null,
+    openProdM: typeof openProdM !== "undefined" ? openProdM : null,
+    openTurnoDet: typeof openTurnoDet !== "undefined" ? openTurnoDet : null,
+    openUsrDet: typeof openUsrDet !== "undefined" ? openUsrDet : null,
+    openUsrM: typeof openUsrM !== "undefined" ? openUsrM : null,
+    pagarDel: typeof pagarDel !== "undefined" ? pagarDel : null,
+    pdvAddProd: typeof pdvAddProd !== "undefined" ? pdvAddProd : null,
+    pdvCancel: typeof pdvCancel !== "undefined" ? pdvCancel : null,
+    pdvDel: typeof pdvDel !== "undefined" ? pdvDel : null,
+    pdvFinish: typeof pdvFinish !== "undefined" ? pdvFinish : null,
+    pdvN: typeof pdvN !== "undefined" ? pdvN : null,
+    pdvQtyChange: typeof pdvQtyChange !== "undefined" ? pdvQtyChange : null,
+    pdvSearch: typeof pdvSearch !== "undefined" ? pdvSearch : null,
+    pesoAddAdic: typeof pesoAddAdic !== "undefined" ? pesoAddAdic : null,
+    pesoCancel: typeof pesoCancel !== "undefined" ? pesoCancel : null,
+    pesoDel: typeof pesoDel !== "undefined" ? pesoDel : null,
+    pesoFinish: typeof pesoFinish !== "undefined" ? pesoFinish : null,
+    pesoN: typeof pesoN !== "undefined" ? pesoN : null,
+    pesoRemAdic: typeof pesoRemAdic !== "undefined" ? pesoRemAdic : null,
+    playBeep: typeof playBeep !== "undefined" ? playBeep : null,
+    prevAvatar: typeof prevAvatar !== "undefined" ? prevAvatar : null,
+    renderAdics: typeof renderAdics !== "undefined" ? renderAdics : null,
+    renderAnalytics: typeof renderAnalytics !== "undefined" ? renderAnalytics : null,
+    renderCaixaDia: typeof renderCaixaDia !== "undefined" ? renderCaixaDia : null,
+    renderCaixaOp: typeof renderCaixaOp !== "undefined" ? renderCaixaOp : null,
+    renderCardapio: typeof renderCardapio !== "undefined" ? renderCardapio : null,
+    renderConfig: typeof renderConfig !== "undefined" ? renderConfig : null,
+    renderCpCreated: typeof renderCpCreated !== "undefined" ? renderCpCreated : null,
+    renderCpItems: typeof renderCpItems !== "undefined" ? renderCpItems : null,
+    renderCredito: typeof renderCredito !== "undefined" ? renderCredito : null,
+    renderCriarPedido: typeof renderCriarPedido !== "undefined" ? renderCriarPedido : null,
+    renderDash: typeof renderDash !== "undefined" ? renderDash : null,
+    renderDelView: typeof renderDelView !== "undefined" ? renderDelView : null,
+    renderDels: typeof renderDels !== "undefined" ? renderDels : null,
+    renderFinancas: typeof renderFinancas !== "undefined" ? renderFinancas : null,
+    renderGestao: typeof renderGestao !== "undefined" ? renderGestao : null,
+    renderHC: typeof renderHC !== "undefined" ? renderHC : null,
+    renderNovos: typeof renderNovos !== "undefined" ? renderNovos : null,
+    renderPDV: typeof renderPDV !== "undefined" ? renderPDV : null,
+    renderPDVCart: typeof renderPDVCart !== "undefined" ? renderPDVCart : null,
+    renderPDVHistory: typeof renderPDVHistory !== "undefined" ? renderPDVHistory : null,
+    renderPesoAdicList: typeof renderPesoAdicList !== "undefined" ? renderPesoAdicList : null,
+    renderPesoSection: typeof renderPesoSection !== "undefined" ? renderPesoSection : null,
+    renderProds: typeof renderProds !== "undefined" ? renderProds : null,
+    renderSelfService: typeof renderSelfService !== "undefined" ? renderSelfService : null,
+    renderStub: typeof renderStub !== "undefined" ? renderStub : null,
+    renderUsuarios: typeof renderUsuarios !== "undefined" ? renderUsuarios : null,
+    renderView: typeof renderView !== "undefined" ? renderView : null,
+    saveAdic: typeof saveAdic !== "undefined" ? saveAdic : null,
+    saveConfig: typeof saveConfig !== "undefined" ? saveConfig : null,
+    saveCred: typeof saveCred !== "undefined" ? saveCred : null,
+    saveDel: typeof saveDel !== "undefined" ? saveDel : null,
+    saveFin: typeof saveFin !== "undefined" ? saveFin : null,
+    savePerms: typeof savePerms !== "undefined" ? savePerms : null,
+    savePesoConfig: typeof savePesoConfig !== "undefined" ? savePesoConfig : null,
+    saveProd: typeof saveProd !== "undefined" ? saveProd : null,
+    saveProlabore: typeof saveProlabore !== "undefined" ? saveProlabore : null,
+    saveRecorrente: typeof saveRecorrente !== "undefined" ? saveRecorrente : null,
+    saveUsr: typeof saveUsr !== "undefined" ? saveUsr : null,
+    sbKey: typeof sbKey !== "undefined" ? sbKey : null,
+    sbOk: typeof sbOk !== "undefined" ? sbOk : null,
+    sbSyncNow: typeof sbSyncNow !== "undefined" ? sbSyncNow : null,
+    sbUrl: typeof sbUrl !== "undefined" ? sbUrl : null,
+    setFinTipo: typeof setFinTipo !== "undefined" ? setFinTipo : null,
+    showPermTab: typeof showPermTab !== "undefined" ? showPermTab : null,
+    si: typeof si !== "undefined" ? si : null,
+    startOrderSim: typeof startOrderSim !== "undefined" ? startOrderSim : null,
+    toast: typeof toast !== "undefined" ? toast : null,
+    today: typeof today !== "undefined" ? today : null,
+    togCfgMet: typeof togCfgMet !== "undefined" ? togCfgMet : null,
+    togCfgNf: typeof togCfgNf !== "undefined" ? togCfgNf : null,
+    togCfgOp: typeof togCfgOp !== "undefined" ? togCfgOp : null,
+    togEl: typeof togEl !== "undefined" ? togEl : null,
+    togPerm: typeof togPerm !== "undefined" ? togPerm : null,
+    toggleAdicOn: typeof toggleAdicOn !== "undefined" ? toggleAdicOn : null,
+    toggleProdOn: typeof toggleProdOn !== "undefined" ? toggleProdOn : null,
+    toggleSB: typeof toggleSB !== "undefined" ? toggleSB : null,
+    toggleUsrAtivo: typeof toggleUsrAtivo !== "undefined" ? toggleUsrAtivo : null,
+    updCartBar: typeof updCartBar !== "undefined" ? updCartBar : null,
+    updNotifBadge: typeof updNotifBadge !== "undefined" ? updNotifBadge : null,
+    updPDV: typeof updPDV !== "undefined" ? updPDV : null,
+    updPesoDisplay: typeof updPesoDisplay !== "undefined" ? updPesoDisplay : null,
+    v: typeof v !== "undefined" ? v : null,
+  };
+  for (var k in fns) {
+    if (fns[k] && typeof fns[k] === 'function') {
+      try { _g[k] = fns[k]; } catch(e) {}
+      try { if (typeof window !== 'undefined') window[k] = fns[k]; } catch(e) {}
+    }
+  }
+})();
+/* ═══ DESPACHANTE DELEGADO ═══════════════════════════════════════════════════
+   Executa handlers no ESCOPO DO SCRIPT (eval direto), sem depender de window.
+   Funciona em qualquer contexto: GitHub Pages, file://, iframes sandboxed.
+═══════════════════════════════════════════════════════════════════════════ */
+function __dispatch(el, code, e) {
+  (function() {
+    var event = e;
+    try { eval(code); }
+    catch (err) { console.error('Handler falhou:', code, err && err.message); }
+  }).call(el);
+}
+function __findAndRun(e, attr) {
+  var t = e.target;
+  while (t && t.getAttribute) {
+    var code = t.getAttribute(attr);
+    if (code) { __dispatch(t, code, e); return; }
+    t = t.parentNode;
+  }
+}
+document.addEventListener('click', function(e) { __findAndRun(e, 'data-onclick'); });
+document.addEventListener('input', function(e) { __findAndRun(e, 'data-oninput'); });
+document.addEventListener('change', function(e) { __findAndRun(e, 'data-onchange'); });
+document.addEventListener('keydown', function(e) { __findAndRun(e, 'data-onkeydown'); });
 </script>
-
-<!-- PAGAMENTO VENDA POR PESO -->
-<div class="overlay" id="modal-peso-pay" onclick="window.closeOL(event,'modal-peso-pay')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">⚖️ Cobrar por peso</div><button class="m-close" onclick="window.closeM('modal-peso-pay')">✕</button></div>
-    <div class="m-body">
-      <div style="background:var(--s2);border:1px solid var(--b1);border-radius:var(--rs);padding:12px;margin-bottom:4px;">
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-          <span style="font-size:11px;color:var(--m1);">Peso</span>
-          <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;" id="peso-modal-kg">0,000 kg</span>
-        </div>
-        <div style="display:flex;justify-content:space-between;margin-bottom:6px;">
-          <span style="font-size:11px;color:var(--m1);">Preço/kg</span>
-          <span style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;" id="peso-modal-preco">R$ 0,00/kg</span>
-        </div>
-        <div id="peso-modal-adics" style="font-size:10px;color:var(--m1);margin-bottom:6px;"></div>
-        <div style="height:1px;background:var(--b2);margin:8px 0;"></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;">Total</span>
-          <span style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="peso-modal-total">R$ 0,00</span>
-        </div>
-      </div>
-      <div class="g2 gap8">
-        <button class="btn btn-p" onclick="window.pesoFinish('PIX')">💳 PIX</button>
-        <button class="btn btn-s" onclick="window.pesoFinish('Débito')">💳 Débito</button>
-        <button class="btn btn-s" onclick="window.pesoFinish('Crédito')">💳 Crédito</button>
-        <button class="btn btn-s" onclick="window.pesoFinish('Dinheiro')">💵 Dinheiro</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- CONFIGURAR PREÇO/KG (admin) -->
-<div class="overlay" id="modal-peso-config" onclick="window.closeOL(event,'modal-peso-config')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">⚙️ Preço por kg</div><button class="m-close" onclick="window.closeM('modal-peso-config')">✕</button></div>
-    <div class="m-body">
-      <div style="font-size:11px;color:var(--m2);background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);border-radius:var(--rs);padding:10px 12px;">
-        Esse preço vale para açaí, sorvete e qualquer mistura vendida por peso no Self-Service.
-      </div>
-      <div class="fld">
-        <div class="lbl">Preço por kg (R$)</div>
-        <input class="inp" id="peso-config-val" type="number" step="0.50" placeholder="Ex: 49,90" style="font-size:22px;font-family:'Bebas Neue',sans-serif;letter-spacing:1px;">
-      </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--s2);border-radius:var(--rs);">
-        <div>
-          <div style="font-family:'Syne',sans-serif;font-size:12px;font-weight:700;">Venda por peso ativa</div>
-          <div style="font-size:10px;color:var(--m1);">Exibe seção no PDV</div>
-        </div>
-        <div class="toggle tog-on" id="peso-ativo-tog" onclick="window.togEl(this)"><div class="tgl-k"></div></div>
-      </div>
-      <div class="g2 gap8">
-        <button class="btn btn-s" onclick="window.closeM('modal-peso-config')">Cancelar</button>
-        <button class="btn btn-p" onclick="window.savePesoConfig()">✅ Salvar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-<!-- MODAL: Produtos do cardápio -->
-<div class="overlay" id="modal-cmd-produtos" onclick="window.closeOL(event,'modal-cmd-produtos')">
-  <div class="modal" style="max-height:94dvh;">
-    <div class="mh"></div>
-    <div class="m-head">
-      <div class="m-title">🍇 Adicionar produto</div>
-      <button class="m-close" onclick="window.closeM('modal-cmd-produtos')">✕</button>
-    </div>
-    <div style="padding:12px 16px 0;">
-      <input class="inp" id="cmd-prod-search" placeholder="🔍 Buscar por nome ou código..." oninput="window.cmdFiltrarProd()" style="margin-bottom:8px;">
-      <div class="scr" style="padding:0;margin-bottom:10px;" id="cmd-cat-chips"></div>
-    </div>
-    <div id="cmd-prod-grid" style="padding:0 16px 16px;display:grid;grid-template-columns:1fr 1fr;gap:9px;overflow-y:auto;max-height:55dvh;"></div>
-  </div>
-</div>
-
-<!-- MODAL: Quantidade/variação ao adicionar produto -->
-<div class="overlay" id="modal-cmd-qtd" onclick="window.closeOL(event,'modal-cmd-qtd')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title" id="cmdqtd-title">Produto</div><button class="m-close" onclick="window.closeM('modal-cmd-qtd')">✕</button></div>
-    <div class="m-body">
-      <div style="display:flex;align-items:center;gap:12px;padding:10px;background:var(--s2);border-radius:var(--rs);">
-        <div style="font-size:44px;" id="cmdqtd-emoji"></div>
-        <div><div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:800;" id="cmdqtd-nome"></div>
-          <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--p);" id="cmdqtd-preco"></div>
-          <div style="font-size:10px;color:var(--m1);" id="cmdqtd-est"></div>
-        </div>
-      </div>
-      <div class="fld">
-        <div class="lbl">Quantidade</div>
-        <div style="display:flex;align-items:center;gap:12px;">
-          <button class="btn btn-s btn-ico" onclick="window.cmdQtdChg(-1)">−</button>
-          <span id="cmdqtd-val" style="font-family:'Bebas Neue',sans-serif;font-size:32px;min-width:40px;text-align:center;">1</span>
-          <button class="btn btn-s btn-ico" onclick="window.cmdQtdChg(1)">+</button>
-        </div>
-      </div>
-      <div id="cmdqtd-obs-wrap" class="fld"><div class="lbl">Observação (opcional)</div><input class="inp" id="cmdqtd-obs" placeholder="Ex: sem granola, extra mel..."></div>
-      <div id="cmdqtd-aviso" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.25);border-radius:var(--rs);padding:9px 12px;font-size:11px;color:var(--r);"></div>
-      <div class="g2 gap8">
-        <button class="btn btn-s" onclick="window.closeM('modal-cmd-qtd')">Cancelar</button>
-        <button class="btn btn-p" id="cmdqtd-confirm" onclick="window.cmdConfirmarProd()">✅ Adicionar</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Pagamento Dinheiro -->
-<div class="overlay" id="modal-cmd-dinheiro" onclick="window.closeOL(event,'modal-cmd-dinheiro')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">💵 Pagamento em Dinheiro</div><button class="m-close" onclick="window.closeM('modal-cmd-dinheiro')">✕</button></div>
-    <div class="m-body">
-      <div class="stat hi"><div class="sl">Total da comanda</div><div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--p);" id="din-total">R$ 0,00</div></div>
-      <div class="fld">
-        <div class="lbl">Valor recebido (R$)</div>
-        <input class="inp" id="din-recebido" type="number" step="0.01" placeholder="0,00" style="font-size:20px;font-family:'Bebas Neue',sans-serif;" oninput="window.calcTroco()">
-      </div>
-      <div id="din-troco-wrap" style="display:none;padding:14px;border-radius:var(--rs);text-align:center;">
-        <div style="font-size:11px;color:var(--m1);font-family:'Syne',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.8px;">Troco</div>
-        <div style="font-family:'Bebas Neue',sans-serif;font-size:40px;" id="din-troco">R$ 0,00</div>
-      </div>
-      <!-- Atalhos de troco -->
-      <div style="display:flex;gap:6px;flex-wrap:wrap;" id="din-atalhos"></div>
-      <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.cmdFinalizarDinheiro()">✅ Finalizar venda</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Pagamento Múltiplo -->
-<div class="overlay" id="modal-cmd-multiplo" onclick="window.closeOL(event,'modal-cmd-multiplo')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">⚡ Múltiplos pagamentos</div><button class="m-close" onclick="window.closeM('modal-cmd-multiplo')">✕</button></div>
-    <div class="m-body">
-      <div class="stat hi"><div class="sl">Total</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="mult-total">R$ 0,00</div></div>
-      <div class="g2 gap8">
-        <div class="fld"><div class="lbl">Método 1</div>
-          <select class="inp" id="mult-met1"><option value="pix">💳 PIX</option><option value="cartao">💳 Cartão</option><option value="dinheiro">💵 Dinheiro</option></select>
-        </div>
-        <div class="fld"><div class="lbl">Valor (R$)</div><input class="inp" id="mult-val1" type="number" step="0.01" placeholder="0,00" oninput="window.calcMultResto()"></div>
-      </div>
-      <div class="g2 gap8">
-        <div class="fld"><div class="lbl">Método 2</div>
-          <select class="inp" id="mult-met2"><option value="cartao">💳 Cartão</option><option value="pix">💳 PIX</option><option value="dinheiro">💵 Dinheiro</option></select>
-        </div>
-        <div class="fld"><div class="lbl">Restante</div><div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--p);padding:8px 0;" id="mult-resto">R$ 0,00</div></div>
-      </div>
-      <div id="mult-aviso" style="display:none;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.22);border-radius:var(--rs);padding:9px 12px;font-size:11px;color:var(--r);"></div>
-      <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.cmdFinalizarMultiplo()">✅ Confirmar pagamento</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Fiado -->
-<div class="overlay" id="modal-cmd-fiado" onclick="window.closeOL(event,'modal-cmd-fiado')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">🤝 Venda a Prazo</div><button class="m-close" onclick="window.closeM('modal-cmd-fiado')">✕</button></div>
-    <div class="m-body">
-      <div class="stat hi"><div class="sl">Total</div><div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--p);" id="fiado-total">R$ 0,00</div></div>
-      <div class="fld"><div class="lbl">Selecionar cliente</div>
-        <select class="inp" id="fiado-cliente-sel" onchange="window.cmdVerificaFiado()"><option value="">— Selecione —</option></select>
-      </div>
-      <div id="fiado-status" style="display:none;border-radius:var(--rs);padding:12px 14px;font-size:11px;"></div>
-      <div class="fld" id="fiado-venc-wrap" style="display:none;"><div class="lbl">Vencimento</div><input class="inp" id="fiado-venc" type="date"></div>
-      <button class="btn btn-p btn-w" style="padding:14px;" id="fiado-btn-ok" onclick="window.cmdFinalizarFiado()" disabled>✅ Registrar venda a prazo</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Entregador -->
-<div class="overlay" id="modal-cmd-entregar" onclick="window.closeOL(event,'modal-cmd-entregar')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">🛵 Converter em Entrega</div><button class="m-close" onclick="window.closeM('modal-cmd-entregar')">✕</button></div>
-    <div class="m-body">
-      <div class="fld"><div class="lbl">Endereço de entrega</div><input class="inp" id="del-end" placeholder="Rua, número, bairro..."></div>
-      <div class="fld"><div class="lbl">Entregador</div>
-        <select class="inp" id="del-entregador-sel"><option value="">— Selecione —</option></select>
-      </div>
-      <div class="fld"><div class="lbl">Forma de pagamento</div>
-        <select class="inp" id="del-pgto"><option value="pix">PIX</option><option value="dinheiro">Dinheiro</option><option value="cartao">Cartão</option></select>
-      </div>
-      <button class="btn btn-p btn-w" style="padding:14px;" onclick="window.cmdFinalizarEntrega()">✅ Registrar entrega</button>
-    </div>
-  </div>
-</div>
-
-<!-- MODAL: Comandas Pendentes -->
-<div class="overlay" id="modal-cmd-pendentes" onclick="window.closeOL(event,'modal-cmd-pendentes')">
-  <div class="modal"><div class="mh"></div>
-    <div class="m-head"><div class="m-title">📋 Comandas Pendentes</div><button class="m-close" onclick="window.closeM('modal-cmd-pendentes')">✕</button></div>
-    <div class="m-body" id="cmd-pend-list"></div>
-  </div>
-</div>
-
 </body>
 </html>
