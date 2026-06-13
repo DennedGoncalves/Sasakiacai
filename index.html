@@ -1711,6 +1711,7 @@ function renderProds(cat=_prodCat,q=''){
   const el=document.getElementById('prod-list');if(!el)return;
   el.innerHTML=prods.map(p=>`
     <div class="ri" data-onclick="openProdDet('${p.id}')">
+      ${p.img?`<img src="${p.img}" alt="${p.nome}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;flex-shrink:0;margin-right:-4px;" onerror="this.style.display='none'">`:``}
       <div class="ri-ic">${p.emoji}</div>
       <div class="ri-info">
         <div class="ri-nm">${p.nome} ${p.badge?`<span style="background:var(--acc);color:#fff;font-size:8px;font-family:'Syne',sans-serif;font-weight:700;padding:1px 5px;border-radius:4px;margin-left:4px;">${p.badge}</span>`:''}</div>
@@ -2332,46 +2333,122 @@ function fltPCat(el,cat){
 
 function openProdM(id){
   const p=id?S.products.find(x=>x.id==id):null;
-  document.getElementById('pm-title').textContent=p?'Editar produto':'Novo produto';
+  gi('pm-title') && (document.getElementById('pm-title').textContent=p?'Editar produto':'Novo produto');
   document.getElementById('pm-id').value=id||'';
   document.getElementById('pm-nome').value=p?p.nome:'';
-  document.getElementById('pm-desc').value=p?p.desc:'';
+  document.getElementById('pm-desc').value=p?p.desc||'':'';
   document.getElementById('pm-preco').value=p?p.preco:'';
-  document.getElementById('pm-emoji').value=p?p.emoji:'';
+  document.getElementById('pm-emoji').value=p?p.emoji:'🍇';
   document.getElementById('pm-cat').value=p?p.cat:'acai';
   document.getElementById('pm-est').value=p?p.est:100;
   document.getElementById('pm-min').value=p?p.min:10;
-  document.getElementById('pm-bc').value=p?p.bc:'';
-  document.getElementById('pm-badge').value=p?p.badge:'';
+  document.getElementById('pm-bc').value=p?p.bc||'':'';
+  document.getElementById('pm-badge').value=p?p.badge||'':'';
+  const imgEl=document.getElementById('pm-img');
+  if(imgEl){ imgEl.value=p?p.img||'':''; pmImgPreview(imgEl.value); }
   const tog=document.getElementById('pm-tog');
-  tog.className='toggle '+(p?p.on?'tog-on':'tog-off':'tog-on');
+  if(tog) tog.className='toggle '+(p?p.on?'tog-on':'tog-off':'tog-on');
+  document.getElementById('pm-save-btn').disabled=false;
+  document.getElementById('pm-save-btn').textContent='💾 Salvar produto';
   openM('modal-prod');
 }
 
-function toggleProdOn(id,togEl){
+async function toggleProdOn(id,togEl){
   const p=S.products.find(x=>x.id==id);if(!p)return;
   p.on=!p.on;
-  togEl.className='toggle '+(p.on?'tog-on':'tog-off');
-  renderProds();toast(p.on?`✅ ${p.nome} ativado`:`🔴 ${p.nome} desativado`);
+  if(togEl) togEl.className='toggle '+(p.on?'tog-on':'tog-off');
+  renderProds();
+  toast(p.on?`✅ ${p.nome} ativado`:`🔴 ${p.nome} desativado`);
+  if(p._uuid){
+    try{ await sbUpsert('produtos',{_uuid:p._uuid,ativo:p.on}); }
+    catch(e){ console.error('toggleProdOn sync erro:',e); }
+  }
 }
 
-function saveProd(){
-  const nome=gi('pm-nome'),desc=gi('pm-desc'),preco=parseFloat(gi('pm-preco'))||0;
-  const emoji=gi('pm-emoji')||'🍇',cat=gi('pm-cat'),est=parseInt(gi('pm-est'))||100;
-  const min=parseInt(gi('pm-min'))||10,bc=gi('pm-bc'),badge=gi('pm-badge');
+async function saveProd(){
+  // ── validação ──────────────────────────────────────────────────────────────
+  const nome=(gi('pm-nome')||'').trim();
+  const preco=parseFloat(gi('pm-preco')||'0');
+  const cat=gi('pm-cat')||'acai';
+  if(!nome){ toast('⚠️ Nome obrigatório'); document.getElementById('pm-nome').focus(); return; }
+  if(!preco||preco<=0){ toast('⚠️ Informe um preço válido'); document.getElementById('pm-preco').focus(); return; }
+  if(!cat){ toast('⚠️ Selecione uma categoria'); return; }
+
+  // ── coleta dados ───────────────────────────────────────────────────────────
+  const desc=(gi('pm-desc')||'').trim();
+  const emoji=gi('pm-emoji')||'🍇';
+  const est=parseInt(gi('pm-est')||'100')||0;
+  const min=parseInt(gi('pm-min')||'10')||0;
+  const bc=(gi('pm-bc')||'').trim();
+  const badge=(gi('pm-badge')||'').trim();
+  const img=(gi('pm-img')||'').trim();
   const on=document.getElementById('pm-tog').classList.contains('tog-on');
-  const id=parseInt(gi('pm-id'))||null;
-  if(!nome){toast('⚠️ Nome obrigatório');return;}
-  if(id){const p=S.products.find(x=>x.id==id);Object.assign(p,{nome,desc,preco,emoji,cat,est,min,bc,badge,on});}
-  else S.products.push({id:Date.now(),nome,desc,preco,emoji,cat,est,min,bc,badge,on});
-  closeM('modal-prod');renderProds();
-  toast('✅ Produto salvo!');
+  const rawId=gi('pm-id')||'';
+
+  // ── spinner no botão ───────────────────────────────────────────────────────
+  const btn=document.getElementById('pm-save-btn');
+  if(btn){ btn.disabled=true; btn.textContent='Salvando...'; }
+
+  const existing=rawId?S.products.find(x=>x.id==rawId||x._uuid==rawId):null;
+
+  // ── monta objeto para Supabase ─────────────────────────────────────────────
+  const sbBody={
+    nome, descricao:desc, preco, cat, emoji, ativo:on,
+    est, min, bc, badge, imagem:img
+  };
+  if(existing && existing._uuid){ sbBody._uuid=existing._uuid; }
+
+  let ok=true;
+  try {
+    const res=await sbUpsert('produtos', sbBody);
+    if(res && res.length && res[0]){
+      const saved=res[0];
+      // objeto local padronizado
+      const prod={
+        id: saved.id||existing?.id||Date.now(),
+        _uuid: saved.id||existing?._uuid,
+        nome, desc, preco, cat, emoji, on,
+        est, min, bc, badge, img
+      };
+      if(existing){ Object.assign(existing, prod); }
+      else { S.products.push(prod); }
+      toast('✅ Produto salvo e sincronizado!');
+    } else if(sbOk()){
+      // Supabase ok mas sem retorno (ex: upsert sem RETURNING)
+      if(existing){ Object.assign(existing,{nome,desc,preco,cat,emoji,on,est,min,bc,badge,img}); }
+      else { S.products.push({id:Date.now(),_uuid:null,nome,desc,preco,cat,emoji,on,est,min,bc,badge,img}); }
+      toast('✅ Produto salvo!');
+    } else {
+      // sem Supabase — salva localmente
+      if(existing){ Object.assign(existing,{nome,desc,preco,cat,emoji,on,est,min,bc,badge,img}); }
+      else { S.products.push({id:Date.now(),_uuid:null,nome,desc,preco,cat,emoji,on,est,min,bc,badge,img}); }
+      toast('💾 Produto salvo localmente (sem conexão)');
+    }
+  } catch(e){
+    ok=false;
+    toast('❌ Erro ao salvar: '+e.message);
+    console.error('saveProd erro:',e);
+  }
+
+  if(btn){ btn.disabled=false; btn.textContent='💾 Salvar produto'; }
+  if(ok){
+    closeM('modal-prod');
+    renderProds();
+    if(typeof renderCardapio==='function') renderCardapio();
+  }
 }
 
-function delProd(id){
-  if(!confirm('Excluir este produto?'))return;
-  S.products=S.products.filter(x=>x.id!==id);
-  renderProds();toast('🗑️ Produto removido');
+async function delProd(id){
+  if(!confirm('Excluir este produto? Esta ação não pode ser desfeita.'))return;
+  const p=S.products.find(x=>x.id==id);
+  S.products=S.products.filter(x=>x.id!=id);
+  renderProds();
+  if(p && p._uuid){
+    try{ await sbDelete('produtos', p._uuid); toast('🗑️ Produto excluído'); }
+    catch(e){ toast('🗑️ Removido localmente (erro Supabase: '+e.message+')'); }
+  } else {
+    toast('🗑️ Produto removido');
+  }
 }
 
 function openAdicM(id){
@@ -3949,7 +4026,8 @@ async function sbLoadAll() {
     if (prods) S.products = prods.map(function(p) {
       return { id: p.id, _uuid: p.id, nome: p.nome, preco: +p.preco || 0,
         cat: p.cat || 'acai', emoji: p.emoji || '🍇', on: p.ativo !== false,
-        est: +p.est || 0, bc: p.bc || '', badge: p.badge || '', min: 10 };
+        est: +p.est || 0, bc: p.bc || '', badge: p.badge || '',
+        min: +p.min || 10, desc: p.descricao || '', img: p.imagem || '' };
     });
 
     var adics = await sbReq('GET', 'adicionais', { qs: 'select=*&order=nome' });
@@ -4408,6 +4486,22 @@ if (typeof renderView === 'function') {
     }
   }
 })();
+
+function togPmStatus(el){
+  const isOn=el.classList.contains('tog-on');
+  el.className='toggle '+(isOn?'tog-off':'tog-on');
+}
+function pmImgPreview(url){
+  const prev=document.getElementById('pm-img-prev');
+  const thumb=document.getElementById('pm-img-thumb');
+  if(!prev||!thumb)return;
+  if(url && url.startsWith('http')){
+    thumb.src=url; prev.style.display='block';
+  } else {
+    prev.style.display='none'; thumb.src='';
+  }
+}
+
 /* ═══ DESPACHANTE DELEGADO ═══════════════════════════════════════════════════
    Executa handlers no ESCOPO DO SCRIPT (eval direto), sem depender de window.
    Funciona em qualquer contexto: GitHub Pages, file://, iframes sandboxed.
@@ -4432,5 +4526,109 @@ document.addEventListener('input', function(e) { __findAndRun(e, 'data-oninput')
 document.addEventListener('change', function(e) { __findAndRun(e, 'data-onchange'); });
 document.addEventListener('keydown', function(e) { __findAndRun(e, 'data-onkeydown'); });
 </script>
+
+<!-- ═══ MODAL PRODUTO ════════════════════════════════════════════════ -->
+<div class="overlay" id="modal-prod" data-onclick="closeOL(event,'modal-prod')">
+  <div class="modal" style="max-width:480px;width:100%;">
+    <div class="mh"></div>
+    <div class="m-head">
+      <div class="m-title" id="pm-title">Novo produto</div>
+      <button class="m-close" data-onclick="closeM('modal-prod')">✕</button>
+    </div>
+    <div class="m-body" style="display:flex;flex-direction:column;gap:14px;">
+      <input type="hidden" id="pm-id">
+
+      <!-- Nome -->
+      <div>
+        <div class="lbl">Nome do produto <span style="color:var(--r)">*</span></div>
+        <input class="inp" id="pm-nome" placeholder="Ex: Açaí Especial 500ml" maxlength="60">
+      </div>
+
+      <!-- Descrição -->
+      <div>
+        <div class="lbl">Descrição</div>
+        <textarea class="inp" id="pm-desc" placeholder="Ingredientes, diferenciais..." rows="2"
+          style="resize:vertical;min-height:54px;font-family:inherit;font-size:13px;"></textarea>
+      </div>
+
+      <!-- Preço + Categoria -->
+      <div class="g2 gap8">
+        <div>
+          <div class="lbl">Preço (R$) <span style="color:var(--r)">*</span></div>
+          <input class="inp" id="pm-preco" type="number" min="0" step="0.01" placeholder="0,00">
+        </div>
+        <div>
+          <div class="lbl">Categoria <span style="color:var(--r)">*</span></div>
+          <select class="inp" id="pm-cat" style="appearance:auto;">
+            <option value="acai">🍇 Açaí</option>
+            <option value="tigela">🥣 Tigela</option>
+            <option value="adicional">➕ Adicional</option>
+            <option value="bebida">🥤 Bebida</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Emoji + Badge -->
+      <div class="g2 gap8">
+        <div>
+          <div class="lbl">Emoji / Ícone</div>
+          <input class="inp" id="pm-emoji" placeholder="🍇" maxlength="4">
+        </div>
+        <div>
+          <div class="lbl">Badge (destaque)</div>
+          <input class="inp" id="pm-badge" placeholder="Mais vendido" maxlength="20">
+        </div>
+      </div>
+
+      <!-- Imagem (URL) -->
+      <div>
+        <div class="lbl">Imagem (URL)</div>
+        <input class="inp" id="pm-img" placeholder="https://..." data-oninput="pmImgPreview(this.value)" type="url">
+        <div id="pm-img-prev" style="margin-top:6px;display:none;">
+          <img id="pm-img-thumb" src="" alt="preview"
+            style="width:64px;height:64px;object-fit:cover;border-radius:8px;border:1px solid var(--b1);">
+        </div>
+      </div>
+
+      <!-- Estoque -->
+      <div style="background:var(--s2);border-radius:var(--rr);padding:12px;">
+        <div class="lbl" style="margin-bottom:10px;">📦 Controle de estoque</div>
+        <div class="g2 gap8">
+          <div>
+            <div class="lbl" style="font-size:10px;">Quantidade atual</div>
+            <input class="inp" id="pm-est" type="number" min="0" placeholder="100">
+          </div>
+          <div>
+            <div class="lbl" style="font-size:10px;">Alerta mínimo</div>
+            <input class="inp" id="pm-min" type="number" min="0" placeholder="10">
+          </div>
+        </div>
+      </div>
+
+      <!-- Código de barras -->
+      <div>
+        <div class="lbl">Código de barras (opcional)</div>
+        <input class="inp" id="pm-bc" placeholder="EAN / código interno" maxlength="30">
+      </div>
+
+      <!-- Status -->
+      <div class="flex jcb aic" style="background:var(--s2);border-radius:var(--rr);padding:12px;">
+        <div>
+          <div class="lbl">Status do produto</div>
+          <div style="font-size:11px;color:var(--m1);">Inativo não aparece no cardápio</div>
+        </div>
+        <div class="toggle tog-on" id="pm-tog" data-onclick="togPmStatus(this)">
+          <div class="tgl-k"></div>
+        </div>
+      </div>
+
+      <!-- Salvar -->
+      <button class="btn btn-p" id="pm-save-btn" data-onclick="saveProd()">
+        💾 Salvar produto
+      </button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
