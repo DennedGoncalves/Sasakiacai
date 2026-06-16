@@ -4576,17 +4576,103 @@ function setTopbarMode(mode) {
   S._topbarMode = mode;
 }
 
-function openStaffLogin() {
+
+/* ── Modal staff: alternar entre setup e login ──────────────────── */
+function slShowSetup() {
+  var setup = document.getElementById('sl-setup');
+  var login = document.getElementById('sl-login');
+  if (setup) setup.style.display = 'flex';
+  if (login) login.style.display = 'none';
+  // pré-preencher URL/key se já existirem
+  var u = document.getElementById('sl-sb-url');
+  var k = document.getElementById('sl-sb-key');
+  if (u && sbUrl()) u.value = sbUrl();
+  if (k && sbKey()) k.value = sbKey();
+  var r = document.getElementById('sl-cfg-res');
+  if (r) r.style.display = 'none';
+}
+
+function slShowLogin() {
+  var setup = document.getElementById('sl-setup');
+  var login = document.getElementById('sl-login');
+  if (setup) setup.style.display = 'none';
+  if (login) login.style.display = 'flex';
   var u = document.getElementById('sl-user');
-  var p = document.getElementById('sl-pw');
-  var e = document.getElementById('sl-erro');
-  if (u) u.value = '';
-  if (p) p.value = '';
-  if (e) { e.textContent = ''; e.style.display = 'none'; }
-  var b = document.getElementById('sl-btn');
-  if (b) { b.disabled = false; b.textContent = 'Entrar'; }
+  setTimeout(function() { if (u) u.focus(); }, 100);
+}
+
+async function slSaveConfig() {
+  var url = (document.getElementById('sl-sb-url') || {}).value || '';
+  var key = (document.getElementById('sl-sb-key') || {}).value || '';
+  var res = document.getElementById('sl-cfg-res');
+  var btn = document.getElementById('sl-cfg-btn');
+
+  function cfgMsg(msg, color) {
+    if (res) { res.textContent = msg; res.style.color = color;
+      res.style.background = color === 'var(--g)' ? 'rgba(34,197,94,.08)' : 'rgba(248,113,113,.08)';
+      res.style.display = 'block'; }
+  }
+
+  if (!url || !url.includes('supabase.co')) {
+    cfgMsg('❌ URL inválida. Ex: https://xxxx.supabase.co', 'var(--r)'); return;
+  }
+  if (!key || key.length < 20) {
+    cfgMsg('❌ Anon Key parece inválida', 'var(--r)'); return;
+  }
+
+  if (btn) { btn.disabled = true; btn.textContent = '🔄 Testando conexão...'; }
+
+  // Salva provisoriamente e testa
+  S.config = S.config || {};
+  S.config.sbUrl = url.replace(/\/+$/, '');
+  S.config.sbKey = key;
+
+  try {
+    var r = await fetch(S.config.sbUrl + '/rest/v1/usuarios?select=id&limit=1', {
+      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key }
+    });
+    if (r.ok) {
+      // Salva no localStorage
+      try {
+        localStorage.setItem('sasaki_sb_url', S.config.sbUrl);
+        localStorage.setItem('sasaki_sb_key', S.config.sbKey);
+        // Sincroniza com campos da tela de Config
+        var cu = document.getElementById('sb-url'); if (cu) cu.value = S.config.sbUrl;
+        var ck = document.getElementById('sb-key'); if (ck) ck.value = S.config.sbKey;
+      } catch(e) {}
+      cfgMsg('✅ Conectado! Agora faça login.', 'var(--g)');
+      // Carrega produtos no background
+      sbLoadAll().then(function() { renderCardapio(); }).catch(function(){});
+      // Vai para o painel de login após 1s
+      setTimeout(slShowLogin, 1200);
+    } else {
+      S.config.sbUrl = ''; S.config.sbKey = '';
+      cfgMsg('❌ Erro ' + r.status + ' — verifique URL e Anon Key', 'var(--r)');
+    }
+  } catch(e) {
+    S.config.sbUrl = ''; S.config.sbKey = '';
+    cfgMsg('❌ Sem resposta: ' + e.message, 'var(--r)');
+  }
+
+  if (btn) { btn.disabled = false; btn.textContent = '🔌 Conectar ao banco'; }
+}
+
+function openStaffLogin() {
   openM('modal-staff-login');
-  setTimeout(function() { if (u) u.focus(); }, 200);
+  // Mostra o painel correto: setup se não configurado, login se já configurado
+  if (!sbOk()) {
+    slShowSetup();
+  } else {
+    slShowLogin();
+    var u = document.getElementById('sl-user');
+    var p = document.getElementById('sl-pw');
+    var e = document.getElementById('sl-erro');
+    if (u) u.value = '';
+    if (p) p.value = '';
+    if (e) { e.textContent = ''; e.style.display = 'none'; }
+    var b = document.getElementById('sl-btn');
+    if (b) { b.disabled = false; b.textContent = 'Entrar'; }
+  }
 }
 
 async function staffDoLogin() {
@@ -4600,7 +4686,7 @@ async function staffDoLogin() {
   if (erEl) erEl.style.display = 'none';
   if (!user.trim()) { erro('Informe CPF ou e-mail'); return; }
   if (!pw)          { erro('Informe a senha');        return; }
-  if (!sbOk())      { erro('Sistema ainda não conectado ao banco. Um administrador precisa configurar o Supabase na primeira vez.'); return; }
+  if (!sbOk()) { slShowSetup(); return; }
 
   if (btn) { btn.disabled = true; btn.textContent = 'Entrando...'; }
 
@@ -5103,7 +5189,7 @@ document.addEventListener('DOMContentLoaded', function() { appInit(); });
 <!-- ═══ MODAL LOGIN STAFF ══════════════════════════════════════════════════ -->
 <div class="overlay" id="modal-staff-login" data-onclick="closeOL(event,'modal-staff-login')"
   style="z-index:9999;">
-  <div class="modal" style="max-width:360px;width:100%;">
+  <div class="modal" style="max-width:380px;width:100%;">
     <div class="mh"></div>
     <div class="m-head">
       <div>
@@ -5112,7 +5198,36 @@ document.addEventListener('DOMContentLoaded', function() { appInit(); });
       </div>
       <button class="m-close" data-onclick="closeM('modal-staff-login')">✕</button>
     </div>
-    <div class="m-body" style="display:flex;flex-direction:column;gap:14px;">
+
+    <!-- PAINEL A: Configuração inicial (visível quando Supabase não configurado) -->
+    <div id="sl-setup" style="display:none;flex-direction:column;gap:12px;padding:0 16px 16px;">
+      <div style="background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.2);
+        border-radius:10px;padding:12px;font-size:12px;line-height:1.5;color:var(--m1);">
+        <div style="font-weight:700;color:var(--p);margin-bottom:4px;">⚙️ Primeira configuração</div>
+        Cole abaixo a URL e a Anon Key do seu projeto Supabase.
+        Você encontra em: <span style="color:var(--p);">Supabase → Project Settings → API</span>
+      </div>
+      <div>
+        <div class="lbl">URL do projeto</div>
+        <input class="inp" id="sl-sb-url" placeholder="https://xxxx.supabase.co" type="url"
+          data-onkeydown="if(event.key==='Enter'){document.getElementById('sl-sb-key').focus();}">
+      </div>
+      <div>
+        <div class="lbl">Anon Key</div>
+        <input class="inp" id="sl-sb-key" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          data-onkeydown="if(event.key==='Enter'){slSaveConfig();}">
+      </div>
+      <div id="sl-cfg-res" style="display:none;font-size:12px;border-radius:8px;padding:8px 10px;text-align:center;"></div>
+      <button class="btn btn-p" id="sl-cfg-btn" data-onclick="slSaveConfig()">
+        🔌 Conectar ao banco
+      </button>
+      <button class="btn btn-s" data-onclick="slShowLogin()">
+        Já está configurado → Ir para login
+      </button>
+    </div>
+
+    <!-- PAINEL B: Login (visível quando Supabase já configurado) -->
+    <div id="sl-login" style="display:none;flex-direction:column;gap:14px;padding:0 16px 16px;">
       <div>
         <div class="lbl">CPF ou e-mail</div>
         <input class="inp" id="sl-user" placeholder="seu@email.com ou CPF"
@@ -5128,6 +5243,9 @@ document.addEventListener('DOMContentLoaded', function() { appInit(); });
       <div id="sl-erro" style="display:none;font-size:12px;color:var(--r);
         background:rgba(248,113,113,.08);border-radius:8px;padding:8px 10px;text-align:center;"></div>
       <button class="btn btn-p" id="sl-btn" data-onclick="staffDoLogin()">Entrar</button>
+      <button class="btn btn-s" style="font-size:11px;opacity:.6;" data-onclick="slShowSetup()">
+        ⚙️ Reconfigurar banco de dados
+      </button>
     </div>
   </div>
 </div>
