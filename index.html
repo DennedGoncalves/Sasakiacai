@@ -1400,7 +1400,7 @@ const BNAV={
   admin:[{id:'dashboard',ic:'📊',lb:'Painel'},{id:'novos-pedidos',ic:'🔔',lb:'Pedidos'},{id:'self-service',ic:'🏪',lb:'PDV'},{id:'financas',ic:'💰',lb:'Finanças'},{id:'config',ic:'⚙️',lb:'Config'}],
   atendente:[{id:'novos-pedidos',ic:'🔔',lb:'Pedidos'},{id:'gestao-pedidos',ic:'📋',lb:'Todos'},{id:'criar-pedido',ic:'✏️',lb:'Criar'},{id:'caixa-op',ic:'🔐',lb:'Caixa'}],
   entregador:[{id:'entregador-view',ic:'🛵',lb:'Entregas'}],
-  cliente:[{id:'cardapio',ic:'🍇',lb:'Cardápio'}],
+  cliente:[],
 };
 
 
@@ -1648,6 +1648,9 @@ function updCartBar(){
   bar.style.display=count>0?'block':'none';
   const cc=document.getElementById('cli-cc');const cp=document.getElementById('cli-cp');
   if(cc)cc.textContent=count;if(cp)cp.textContent='R$'+total.toFixed(2).replace('.',',');
+  // Atualiza badge no topbar público
+  var pubBadge=document.getElementById('cart-badge-pub');
+  if(pubBadge){pubBadge.textContent=count;pubBadge.className=count>0?'ib-bd':'ib-bd hidden';}
 }
 
 function openProdDet(id){
@@ -4108,6 +4111,11 @@ async function testSB() {
   S.config = S.config || {};
   S.config.sbUrl = url.replace(/\/+$/, '');
   S.config.sbKey = key;
+  // Persistir credenciais para não perder ao recarregar
+  try {
+    localStorage.setItem('sasaki_sb_url', S.config.sbUrl);
+    localStorage.setItem('sasaki_sb_key', S.config.sbKey);
+  } catch(e) {}
   if (res) { res.style.color = 'var(--m1)'; res.textContent = '🔄 Testando...'; }
   try {
     var r = await fetch(S.config.sbUrl + '/rest/v1/config?select=chave&limit=1', {
@@ -4449,19 +4457,23 @@ function setTopbarMode(mode) {
   var stff = document.getElementById('tb-staff');
   var sb   = document.getElementById('sidebar');
   var bnav = document.getElementById('bnav');
+  var mcol = document.getElementById('main-col');
   if (!pub || !stff) return;
   if (mode === 'public') {
     pub.style.display  = 'flex';
     stff.style.display = 'none';
-    // esconde sidebar e bnav no modo público
-    if (sb)   sb.style.display   = 'none';
+    if (sb)   { sb.style.display = 'none'; sb.classList.remove('open'); }
     if (bnav) bnav.style.display = 'none';
+    // main-col ocupa tudo sem o sidebar
+    if (mcol) mcol.style.marginLeft = '0';
   } else {
     pub.style.display  = 'none';
     stff.style.display = 'flex';
     if (sb)   sb.style.display   = '';
     if (bnav) bnav.style.display = '';
+    if (mcol) mcol.style.marginLeft = '';
   }
+  S._topbarMode = mode;
 }
 
 function openStaffLogin() {
@@ -4488,7 +4500,7 @@ async function staffDoLogin() {
   if (erEl) erEl.style.display = 'none';
   if (!user.trim()) { erro('Informe CPF ou e-mail'); return; }
   if (!pw)          { erro('Informe a senha');        return; }
-  if (!sbOk())      { erro('Configure o Supabase nas configurações do app'); return; }
+  if (!sbOk())      { erro('Sistema ainda não conectado ao banco. Um administrador precisa configurar o Supabase na primeira vez.'); return; }
 
   if (btn) { btn.disabled = true; btn.textContent = 'Entrando...'; }
 
@@ -4539,15 +4551,39 @@ function openCartModal() {
 /* Inicialização — abre como área pública */
 function appInit() {
   S.role = 'cliente';
+  // Restaura credenciais Supabase salvas
+  try {
+    var savedUrl = localStorage.getItem('sasaki_sb_url');
+    var savedKey = localStorage.getItem('sasaki_sb_key');
+    if (savedUrl && savedKey) {
+      S.config = S.config || {};
+      S.config.sbUrl = savedUrl;
+      S.config.sbKey = savedKey;
+      // Preenche campos da tela de config
+      var u = document.getElementById('sb-url'); if (u) u.value = savedUrl;
+      var k = document.getElementById('sb-key'); if (k) k.value = savedKey;
+    }
+  } catch(e) {}
+  // Esconde sidebar de partida (evita flash)
+  var sb = document.getElementById('sidebar');
+  var bn = document.getElementById('bnav');
+  var ls = document.getElementById('ls');
+  if (sb) sb.style.display = 'none';
+  if (bn) bn.style.display = 'none';
+  if (ls) ls.style.display = 'none';
   setTopbarMode('public');
   buildBnav();
-  sbLoadAll().then(function() {
-    renderCardapio();
+  // Carrega produtos do Supabase (se configurado) e exibe cardápio
+  if (sbOk()) {
+    sbLoadAll().then(function() {
+      renderCardapio();
+      goTo('cardapio');
+    }).catch(function() {
+      goTo('cardapio');
+    });
+  } else {
     goTo('cardapio');
-  }).catch(function() {
-    renderCardapio();
-    goTo('cardapio');
-  });
+  }
 }
 
 /* ═══ DESPACHANTE DELEGADO ═══════════════════════════════════════════════════
