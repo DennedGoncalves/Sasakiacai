@@ -4113,7 +4113,18 @@ async function sbReq(method, table, opts) {
       method: method, headers: headers,
       body: opts.body ? JSON.stringify(opts.body) : undefined
     });
-    if (!r.ok) { var t = await r.text(); console.warn('SB', method, table, r.status, t.slice(0,120)); return null; }
+    if (!r.ok) {
+      var t = await r.text();
+      var msg = 'SB ' + method + ' ' + table + ' ' + r.status + ': ' + t.slice(0,120);
+      console.warn(msg);
+      // Mostra erro de permissão de forma clara
+      if (r.status === 403 || r.status === 401) {
+        toast('❌ Sem permissão no banco. Execute o sql-6-grants.sql no Supabase.');
+      } else if (r.status === 42501 || (t && t.includes('permission denied'))) {
+        toast('❌ Permissão negada. Execute o sql-6-grants.sql no Supabase.');
+      }
+      return null;
+    }
     var ct = r.headers.get('content-type') || '';
     return ct.includes('json') ? await r.json() : null;
   } catch(e) { console.warn('SB network:', e.message); return null; }
